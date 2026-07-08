@@ -1,0 +1,22 @@
+//
+//  BitBuffer.swift
+//  SwiftAIS-Decoder
+//
+//  Created by Connor Gibbons on 7/8/26.
+//
+
+import SignalTools
+
+public extension BitBuffer {
+    
+    /// Extracts the value of the bits in this range of the BitBuffer.
+    subscript (indexes: Range<Int>) -> UInt64 {
+        var value: UInt64 = 0
+        for index in indexes {
+            value <<= 1
+            value |= UInt64(self[index])
+        }
+        return value
+    }
+    
+}
