@@ -20,15 +20,15 @@ struct RateOfTurn {
     }
     
     var description: String {
-        let rot: Double? = self.rot
-        if (rot == 0) { return "Not turning" }
-        if (rot == 10) { return "Turning right at more than 10deg/min" }
-        if (rot == -10) { return "Turning left at more than 10deg/min" }
-        if (self.rot == nil) { return "No information available" }
-        else {
-            let rot = calcROT(val: self.rawValue)
-            let direction: String = self.rawValue > 0 ? "right" : "left"
-            return "Turning \(direction) at \(rot)deg/min"
+        switch rawValue {
+        case -128: return "No information available"
+        case 0:    return "Not turning"
+        case 127:  return "Turning right at more than 10°/min"
+        case -127: return "Turning left at more than 10°/min"
+        default:
+            let rate = calcROT(val: rawValue)
+            let direction = rawValue > 0 ? "right" : "left"
+            return "Turning \(direction) at \(String(format: "%.1f", abs(rate)))°/min"
         }
     }
     
@@ -37,6 +37,6 @@ struct RateOfTurn {
     private func calcROT(val: Int8) -> Double {
         let mult: Double = val < 0 ? -1 : 1
         let valAsDouble = Double(val)
-        return (valAsDouble * 4.733) * (valAsDouble * 4.733) * mult
+        return (valAsDouble / 4.733) * (valAsDouble / 4.733) * mult
     }
 }
