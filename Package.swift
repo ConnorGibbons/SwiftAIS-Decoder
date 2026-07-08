@@ -7,6 +7,8 @@ let package = Package(
     name: "SwiftAIS-Decoder",
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
+        .package(url: "https://github.com/ConnorGibbons/SignalTools", branch: "main"),
+        .package(url: "https://github.com/ConnorGibbons/Networking", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -15,9 +17,16 @@ let package = Package(
             name: "SwiftAIS_Decoder",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SignalTools", package: "SignalTools")
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
+            ],
+        ),
+        .testTarget(
+            name: "SwiftAIS_DecoderTests",
+            dependencies: [
+                "SwiftAIS_Decoder",
             ],
         ),
 
