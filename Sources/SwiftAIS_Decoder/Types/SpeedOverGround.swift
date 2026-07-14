@@ -19,7 +19,7 @@ struct SpeedOverGround {
     
     var description: String {
         switch rawValue {
-        case 1023: return "Not available"
+        case 1023: return "Not available (\(rawValue))"
         case 1022: return "Over 102.2 knots"
         default: return "\(speedOverGround ?? 0) knots"
         }

@@ -21,7 +21,7 @@ struct RateOfTurn {
     
     var description: String {
         switch rawValue {
-        case -128: return "No information available"
+        case -128: return "No information available (\(rawValue))"
         case 0:    return "Not turning"
         case 127:  return "Turning right at more than 10°/min"
         case -127: return "Turning left at more than 10°/min"
