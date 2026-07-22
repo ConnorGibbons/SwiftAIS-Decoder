@@ -6,7 +6,7 @@
 //
 
 // RAIM: Receiver Autonomous Integrity Monitoring
-enum RaimFlag: UInt8 {
+enum RAIMFlag: UInt8 {
     case notInUse = 0
     case inUse = 1
     

@@ -20,4 +20,10 @@ public extension BitBuffer {
         return value
     }
     
+    subscript (indexes: ClosedRange<Int>) -> UInt64? {
+        guard self.count >= indexes.upperBound && indexes.lowerBound >= 0 else { return nil }
+        let range: Range<Int> = indexes.lowerBound..<(indexes.upperBound + 1)
+        return self[range]
+    }
+    
 }

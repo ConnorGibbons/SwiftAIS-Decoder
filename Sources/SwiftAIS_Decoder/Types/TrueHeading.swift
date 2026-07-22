@@ -17,10 +17,10 @@ struct TrueHeading {
     
     var description: String {
         if let heading = value {
-            "\(heading) degrees"
+            return "\(heading) degrees"
         }
         else {
-            "Unavailable (\(rawValue))"
+            return "Unavailable (\(rawValue))"
         }
     }
 }

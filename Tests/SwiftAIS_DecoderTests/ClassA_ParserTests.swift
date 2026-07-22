@@ -8,12 +8,9 @@
 import Testing
 @testable import SwiftAIS_Decoder
 
-struct ParserTests {
+struct ClassA_ParserTests {
 
-    // The canonical Type 1 (Position Report Class A) example from the gpsd
-    // AIVDM/AIVDO protocol documentation. Its 168-bit payload decodes to a
-    // vessel (MMSI 477553000) moored in Puget Sound. The expected field values
-    // below were derived by decoding the Common Navigation Block bit-by-bit.
+    // vessel (MMSI 477553000) moored in Puget Sound.
     // Source: https://gpsd.gitlab.io/gpsd/AIVDM.html
     private static let classAPositionReport = "!AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C"
     private static let classAPositionReport_2 = "!AIVDM,1,1,,A,15MrVH0000KH<:V:NtBLoqFP2H9:,0*2F"
@@ -73,6 +70,8 @@ struct ParserTests {
 
         // Radio status
         #expect(report.radioStatus.rawValue == 149208)
+        
+        print(report.description())
     }
     
     @Test func decodesCommonNavigationBlock_2() throws {
@@ -131,5 +130,7 @@ struct ParserTests {
 
         // Radio status
         #expect(report.radioStatus.rawValue == 98890)
+        
+        print(report.description())
     }
 }
