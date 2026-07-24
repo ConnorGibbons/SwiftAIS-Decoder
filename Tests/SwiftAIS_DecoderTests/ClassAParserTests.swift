@@ -8,7 +8,7 @@
 import Testing
 @testable import SwiftAIS_Decoder
 
-struct ClassA_ParserTests {
+struct ClassAParserTests {
 
     // vessel (MMSI 477553000) moored in Puget Sound.
     // Source: https://gpsd.gitlab.io/gpsd/AIVDM.html
@@ -18,7 +18,7 @@ struct ClassA_ParserTests {
     @Test func decodesCommonNavigationBlock_1() throws {
         let sentence = try #require(AISNMEA0183Sentence(raw: Self.classAPositionReport),
                                     "The example sentence should parse as a valid AIS sentence")
-        let report = try #require(ClassA_PositionReport(nmea: sentence),
+        let report = try #require(ClassAPositionReport(nmea: sentence),
                                   "A Type 1 payload should initialize a ClassA_PositionReport")
 
         // MMSI
@@ -77,7 +77,7 @@ struct ClassA_ParserTests {
     @Test func decodesCommonNavigationBlock_2() throws {
         let sentence = try #require(AISNMEA0183Sentence(raw: Self.classAPositionReport_2),
                                     "The example sentence should parse as a valid AIS sentence")
-        let report = try #require(ClassA_PositionReport(nmea: sentence),
+        let report = try #require(ClassAPositionReport(nmea: sentence),
                                   "A Type 1 payload should initialize a ClassA_PositionReport")
 
 
