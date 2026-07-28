@@ -6,6 +6,8 @@
 //
 //  Structure described here: https://gpsd.gitlab.io/gpsd/AIVDM.html
 
+import SignalTools
+
 let bitsToCharacter: [UInt8: Character] = {
     var charMap: [UInt8: Character] = [:]
     for value: UInt8 in 0..<64 {
@@ -23,9 +25,21 @@ struct AISText {
     let raw: BitBuffer
     let text: String
 
-    /// Assumes left-to-right, and residual zeroes in the last UInt64 as being on the left hand side.
     init?(raw: BitBuffer) {
-        
+        guard raw.count % 6 == 0 else {
+            print("ERROR: AISText bit count (\(raw.count)) must be a multiple of 6.")
+            return nil
+        }
+        self.raw = raw
+        let charCount = raw.count / 6
+        var chars: [Character] = .init(repeating: " ", count: charCount)
+        for i in 0..<charCount {
+            let lowerBound = i * 6
+            let upperBound = lowerBound + 6
+            guard let sixBits: UInt8 = raw[lowerBound..<upperBound] else { return nil }
+            chars[i] = bitsToCharacter[sixBits] ?? "?"
+        }
+        self.text = String(chars)
     }
 
 }

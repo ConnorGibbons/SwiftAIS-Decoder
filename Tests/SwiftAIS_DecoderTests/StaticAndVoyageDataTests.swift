@@ -59,9 +59,8 @@ struct StaticAndVoyageDataTests {
         #expect(report.hour.hour == 12)
         #expect(report.minute.minute == 40)
 
-        // Max static draught — 3.8 m. Raw field is in 1/10 m units (38);
-        // the parser scales it by 10 on storage.
-        #expect(report.draught == 380)
+        // Max static draught — 3.8 m (raw 1/10 m field scaled to meters)
+        #expect(abs(report.draught - 3.8) < 0.0001)
 
         // Destination (6-bit ASCII, '@'-padded to 20 characters)
         #expect(report.destination.text.trimmingCharacters(in: ["@", " "]) == "FORUS")

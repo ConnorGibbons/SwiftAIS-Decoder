@@ -261,7 +261,7 @@ enum ShipType: UInt8 {
         case .otherTypeReserved95, .otherTypeReserved96, .otherTypeReserved97, .otherTypeReserved98:
             return "Other Type, Reserved for future use"
         case .otherTypeNoAdditionalInfo:
-            return "Other Type, no additional information"
+            return "Other Type, No additional information"
         }
     }
 }
