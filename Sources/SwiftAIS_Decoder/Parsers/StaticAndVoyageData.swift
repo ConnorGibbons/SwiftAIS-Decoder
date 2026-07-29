@@ -123,7 +123,7 @@ class StaticAndVoyageData: AISMessage {
     func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", mmsiNumber.description),
+            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("AIS Version:", "\(aisVersion)"),
             row("IMO Number:", "\(imoNumber)"),
             row("Call Sign:", callSign.text),

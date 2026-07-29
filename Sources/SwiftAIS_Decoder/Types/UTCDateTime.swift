@@ -90,7 +90,7 @@ struct UTCHour {
     
     init(rawValue: UInt8) {
         self.rawValue = rawValue
-        if(rawValue > 0 && rawValue <= 23) {
+        if(rawValue <= 23) {
             self.hour = rawValue
         }
         else {
@@ -115,7 +115,7 @@ struct UTCMinute {
     
     init(rawValue: UInt8) {
         self.rawValue = rawValue
-        if(rawValue > 0 && rawValue <= 59) {
+        if(rawValue <= 59) {
             self.minute = rawValue
         }
         else {

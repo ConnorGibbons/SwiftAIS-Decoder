@@ -84,7 +84,7 @@ class BaseStationReport: AISMessage {
     func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", mmsiNumber.description),
+            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("Time (UTC):", dateStringFromUTCElements(year: self.year, month: self.month, day: self.day, hour: self.hour, minute: self.minute, second: self.second)),
             row("Latitude:", latitude.description),
             row("Longitude:", longitude.description),

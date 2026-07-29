@@ -87,7 +87,7 @@ class ClassAPositionReport: AISMessage {
     func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", mmsiNumber.description),
+            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("Navigation Status:", navStatus.description),
             row("Rate of Turn:", rateOfTurn.description),
             row("Speed Over Ground:", speedOverGround.description),
