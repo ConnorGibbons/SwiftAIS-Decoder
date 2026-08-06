@@ -1,22 +1,20 @@
 //
-//  BinaryAddressedMessage.swift
+//  BinaryBroadcastMessage.swift
 //  SwiftAIS-Decoder
 //
-//  Created by Connor Gibbons on 7/28/26.
+//  Created by Connor Gibbons on 8/6/26.
 //
-//  Type 6
-//  Probably won't see many of these.
+//  Type 8
+//  Won't see many of these either
 
 import SignalTools
 
-class BinaryAddressedMessage: AISMessage {
+class BinaryBroadcastMessage: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
     
-    var destinationMMSI: MMSI
-    var retransmit: Bool // 0 = no retransmit, 1 = retransmitted
-    var spare: Bool // Pretty much nothing, just here because it's in the spec.
+    var spare: UInt8 // Pretty much nothing, just here because it's in the spec.
     var areaCode: AreaCode?
     var functionalID: UInt8
     var additionalSentences: [AISNMEA0183Sentence]?
@@ -38,33 +36,26 @@ class BinaryAddressedMessage: AISMessage {
             bits.append(contentsOf: sentence.payloadBits)
         }
         
-        guard bits.count >= 89 else { return nil } // Functional ID is bit 87, so this guard is to ensure there's at least 1 payload bit
-        
+        guard bits.count >= 57 else { return nil } // Functional ID ends at bit 55, so this guard ensures there's at least 1 payload bit
+
         guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard messageTypeBits == 6 else { return nil }
-        self.messageType = .binaryAddressedMessage
+        guard messageTypeBits == 8 else { return nil }
+        self.messageType = .binaryBroadcastMessage
         
         guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
         guard let mmsi: MMSI = .init(value: mmsiBits) else { return nil }
         self.mmsiNumber = mmsi
         
-        guard let destinationMMSIBits: UInt32 = bits[40...69] else { return nil }
-        guard let destinationMMSI: MMSI = .init(value: destinationMMSIBits) else { return nil }
-        self.destinationMMSI = destinationMMSI
+        guard let spareBits: UInt8 = bits[38...39] else { return nil }
+        self.spare = spareBits
         
-        let retransmitBits: Int = bits[70]
-        self.retransmit = retransmitBits == 1
-        
-        let spareBits: Int = bits[71]
-        self.spare = spareBits == 1
-        
-        guard let areaCodeBits: UInt16 = bits[72...81] else { return nil }
+        guard let areaCodeBits: UInt16 = bits[40...49] else { return nil }
         if let areaCode: AreaCode = .init(rawValue: areaCodeBits) { self.areaCode = areaCode } else { self.areaCode = nil }
         
-        guard let functionalIDBits: UInt8 = bits[82...87] else { return nil }
+        guard let functionalIDBits: UInt8 = bits[50...55] else { return nil }
         self.functionalID = functionalIDBits
         
-        guard let payloadBits: BitBuffer = bits[88..<bits.count] else { return nil }
+        guard let payloadBits: BitBuffer = bits[56..<bits.count] else { return nil }
         self.payload = payloadBits
         
         if let payloadText = AISText(raw: payloadBits) {
@@ -78,8 +69,6 @@ class BinaryAddressedMessage: AISMessage {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
-            row("Destination MMSI:", "\(destinationMMSI.country) - \(destinationMMSI.description)"),
-            row("Retransmit:", retransmit ? "Yes" : "No"),
             row("Area Code (DAC):", "\(areaCode?.description ?? "Unknown") (\(areaCode != nil ? String(areaCode!.rawValue) : "N/A"))"),
             row("Functional ID:", "\(functionalID)"),
             row("Payload:", payloadString?.text ?? "\(payload.count) bits")

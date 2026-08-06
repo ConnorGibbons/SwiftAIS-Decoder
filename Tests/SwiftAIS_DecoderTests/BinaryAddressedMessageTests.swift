@@ -41,5 +41,7 @@ struct BinaryAddressedMessageTests {
         #expect(report.functionalID == 3)
 
         print(report.description())
+        
+        // This test doesn't actually compare to a known good decode of the payload. I'll have to add that eventually
     }
 }
