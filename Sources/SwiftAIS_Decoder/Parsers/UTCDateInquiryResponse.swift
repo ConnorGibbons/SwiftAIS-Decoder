@@ -1,13 +1,12 @@
 //
-//  BaseStationReport.swift
+//  UTCDateInquiryResponse.swift
 //  SwiftAIS-Decoder
 //
-//  Created by Connor Gibbons on 7/14/26.
+//  Created by Connor Gibbons on 8/11/26.
 //
-//  Type 4: Base Station Report
+//  Type 11: UTC/Date Inquiry Response -- response message to type 10.
 
-
-class BaseStationReport: AISMessage {
+class UTCDateInquiryResponse: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
@@ -33,7 +32,7 @@ class BaseStationReport: AISMessage {
         
         guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
         guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 4 else { return nil }
+        guard messageType.rawValue == 11 else { return nil }
         self.messageType = messageType
         
         guard let mmsiBits: UInt32 = bits[8...37] else { return nil }

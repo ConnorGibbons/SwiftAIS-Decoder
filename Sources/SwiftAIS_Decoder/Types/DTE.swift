@@ -11,16 +11,16 @@ enum DTE: RawRepresentable {
     case ready
     case notReady
     
-    init?(rawValue: Bool) {
-        self = rawValue ? .ready : .notReady
+    init(rawValue: Bool) {
+        self = rawValue ? .notReady : .ready // 0 = ready, 1 = not ready
     }
     
     var rawValue: Bool {
         switch self {
         case .ready:
-            return true
-        case .notReady:
             return false
+        case .notReady:
+            return true
         }
     }
 

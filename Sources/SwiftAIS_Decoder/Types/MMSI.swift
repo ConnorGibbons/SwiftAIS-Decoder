@@ -17,7 +17,7 @@ struct MMSI {
         return String(format: "%09u", value)
     }
 
-    /// The country or territory allocated to this MMSI's Maritime Identification Digits (the first three digits).
+    /// The country or territory allocated to this MMSI's Maritime Identification Digits
     /// Sourced from `description` so leading zeroes are preserved. Returns "Unknown" if the MID is unallocated.
     var country: String {
         guard let mid = UInt16(description.prefix(3)),
@@ -26,10 +26,19 @@ struct MMSI {
         }
         return areaCode.description
     }
+    
+    
 }
 
-/// Maritime Identification Digits (MID) — the first three digits of an MMSI,
-/// identifying the country or territory of the vessel's registration.
+enum IdentityType: UInt8 {
+    case shipGroup = 0
+    case searchAndRescueAircraft = 1
+    case individualShip = 2
+    case individualShip2 = 3
+    
+}
+
+/// Maritime Identification Digits (MID) — Contained at a particular offset in the MMSI depending on the prefix length.
 ///
 /// Source: ITU Table of Maritime Identification Digits.
 enum AreaCode: UInt16 {
