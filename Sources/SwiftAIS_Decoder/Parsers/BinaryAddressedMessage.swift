@@ -15,7 +15,7 @@ class BinaryAddressedMessage: AISMessage {
     let mmsiNumber: MMSI
     
     var destinationMMSI: MMSI
-    var retransmit: Bool // 0 = no retransmit, 1 = retransmitted
+    var retransmit: RetransmitFlag // 0 = no retransmit, 1 = retransmitted
     var spare: Bool // Pretty much nothing, just here because it's in the spec.
     var areaCode: AreaCode?
     var functionalID: UInt8
@@ -53,7 +53,8 @@ class BinaryAddressedMessage: AISMessage {
         self.destinationMMSI = destinationMMSI
         
         let retransmitBits: Int = bits[70]
-        self.retransmit = retransmitBits == 1
+        guard let retransmitFlag = RetransmitFlag(rawValue: retransmitBits == 1) else { return nil }
+        self.retransmit = retransmitFlag
         
         let spareBits: Int = bits[71]
         self.spare = spareBits == 1
@@ -79,7 +80,7 @@ class BinaryAddressedMessage: AISMessage {
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("Destination MMSI:", "\(destinationMMSI.country) - \(destinationMMSI.description)"),
-            row("Retransmit:", retransmit ? "Yes" : "No"),
+            row("Retransmit:", retransmit.description),
             row("Area Code (DAC):", "\(areaCode?.description ?? "Unknown") (\(areaCode != nil ? String(areaCode!.rawValue) : "N/A"))"),
             row("Functional ID:", "\(functionalID)"),
             row("Payload:", payloadString?.text ?? "\(payload.count) bits")

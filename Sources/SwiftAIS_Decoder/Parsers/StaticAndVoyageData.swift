@@ -105,7 +105,7 @@ class StaticAndVoyageData: AISMessage {
         
         if(bits.count > 422) {
             let DTEBit = bits[422]
-            self.dte = DTE(rawValue: DTEBit == 0)
+            self.dte = DTE(rawValue: DTEBit == 1)
             if(bits.count > 423) {
                 let spareBit = bits[423]
                 self.spare = spareBit != 0

@@ -1,12 +1,13 @@
 //
-//  BinaryAcknowledge.swift
+//  SafetyRelatedAcknowledge.swift
 //  SwiftAIS-Decoder
 //
-//  Created by Connor Gibbons on 7/29/26.
+//  Created by Connor Gibbons on 8/18/26.
 //
-//  Type 7
+//  Type 13: Safety Related Acknowledgement. Sent as a response to type 12. Same format as type 7 (BinaryAcknowledge).
 
-class BinaryAcknowledge: AISMessage {
+
+class SafetyRelatedAcknowledge: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
@@ -20,7 +21,7 @@ class BinaryAcknowledge: AISMessage {
         
         guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
         guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 7 else { return nil }
+        guard messageType.rawValue == 13 else { return nil }
         self.messageType = messageType
         
         guard let mmsiBits: UInt32 = bits[8...37] else { return nil }

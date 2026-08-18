@@ -29,7 +29,7 @@ struct BinaryAddressedMessageTests {
         #expect(report.destinationMMSI.value == 563219000)
 
         // Re-transmit flag — 1: retransmitted
-        #expect(report.retransmit == true)
+        #expect(report.retransmit.rawValue == true)
 
         // Spare — 0
         #expect(report.spare == false)
