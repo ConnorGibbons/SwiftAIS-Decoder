@@ -20,10 +20,7 @@ struct AircraftPositionReportTests {
         let report = try #require(AircraftPositionReport(nmea: sentence),
                                   "A Type 9 payload should initialize an AircraftPositionReport")
 
-        // Message ID
         #expect(report.messageType.rawValue == 9)
-
-        // MMSI
         #expect(report.mmsiNumber.value == 111232506)
 
         // Altitude — meters
@@ -31,8 +28,6 @@ struct AircraftPositionReportTests {
 
         // Speed over ground — whole knots
         #expect(report.speedOverGround == 127)
-
-        // Position accuracy — low
         #expect(report.positionAccuracy == .lowAccuracy)
 
         // Longitude — 2°6.9082'W, signed, 1/10000 minutes
@@ -52,20 +47,14 @@ struct AircraftPositionReportTests {
 
         // Second of UTC timestamp
         #expect(report.timestamp.rawValue == 32)
-
-        // Reserved for regional use
         #expect(report.regionalReserved == 0)
 
         // DTE — the bit is set, which the spec defines as "DTE not available"
         #expect(report.dte.rawValue == true)
-
-        // Spare
         #expect(report.spare == 0)
 
         // Assigned mode flag — autonomous and continuous mode (default)
         #expect(report.assigned == .notAssignedMode)
-
-        // RAIM flag
         #expect(report.raimFlag == .notInUse)
 
         // Radio status — comm state selector 0 (SOTDMA), sync state 0, slot time-out 2, slot number 1245
@@ -90,10 +79,9 @@ struct AircraftPositionReportTests {
         let report = try #require(AircraftPositionReport(nmea: sentence),
                                   "A Type 9 payload should initialize an AircraftPositionReport")
 
-        // Message ID
         #expect(report.messageType.rawValue == 9)
 
-        // MMSI — same aircraft as the first example
+        // Same aircraft as the first example
         #expect(report.mmsiNumber.value == 111232506)
 
         // Altitude — meters; 4095 would mean "not available"
@@ -122,20 +110,14 @@ struct AircraftPositionReportTests {
 
         // Second of UTC timestamp
         #expect(report.timestamp.rawValue == 12)
-
-        // Reserved for regional use
         #expect(report.regionalReserved == 0)
 
         // DTE — the bit is set, which the spec defines as "DTE not available"
         #expect(report.dte.rawValue == true)
-
-        // Spare
         #expect(report.spare == 0)
 
         // Assigned mode flag — autonomous and continuous mode (default)
         #expect(report.assigned == .notAssignedMode)
-
-        // RAIM flag
         #expect(report.raimFlag == .notInUse)
 
         // Radio status — comm state selector 0 (SOTDMA), sync state 0, slot time-out 4, slot number 506

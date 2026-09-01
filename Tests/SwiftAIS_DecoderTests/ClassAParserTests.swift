@@ -21,10 +21,7 @@ struct ClassAParserTests {
         let report = try #require(ClassAPositionReport(nmea: sentence),
                                   "A Type 1 payload should initialize a ClassA_PositionReport")
 
-        // MMSI
         #expect(report.mmsiNumber.value == 477553000)
-
-        // Navigation status
         #expect(report.navStatus == .moored)
 
         // Rate of turn — 0 means "not turning"
@@ -58,17 +55,9 @@ struct ClassAParserTests {
 
         // Timestamp — second of UTC minute
         #expect(report.timestamp.rawValue == 15)
-
-        // Maneuver indicator
         #expect(report.maneuverIndicator == .notAvailable)
-
-        // Spare
         #expect(report.spare.rawValue == 0)
-
-        // RAIM flag
         #expect(report.raimFlag == .notInUse)
-
-        // Radio status
         #expect(report.radioStatus.rawValue == 149208)
         
         print(report.description())
@@ -80,11 +69,7 @@ struct ClassAParserTests {
         let report = try #require(ClassAPositionReport(nmea: sentence),
                                   "A Type 1 payload should initialize a ClassA_PositionReport")
 
-
-        // MMSI
         #expect(report.mmsiNumber.value == 366913120)
-
-        // Navigation status
         #expect(report.navStatus == .underWayUsingEngine)
 
         // Rate of turn — 0 means "not turning"
@@ -118,17 +103,9 @@ struct ClassAParserTests {
 
         // Timestamp — second of UTC minute
         #expect(report.timestamp.rawValue == 16)
-
-        // Maneuver indicator
         #expect(report.maneuverIndicator == .notAvailable)
-
-        // Spare (reserved for regional use)
         #expect(report.spare.rawValue == 0)
-
-        // RAIM flag — in use
         #expect(report.raimFlag == .inUse)
-
-        // Radio status
         #expect(report.radioStatus.rawValue == 98890)
         
         print(report.description())

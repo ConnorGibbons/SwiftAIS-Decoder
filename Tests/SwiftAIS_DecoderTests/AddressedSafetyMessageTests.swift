@@ -20,22 +20,11 @@ struct AddressedSafetyMessageTests {
         let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
                                   "A Type 12 payload should initialize an AddresedSafetyMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 12)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 2275200)
-
-        // Sequence number
         #expect(report.sequenceNumber == 0)
-
-        // Destination ID (MMSI)
         #expect(report.destinationMMSI.value == 215724000)
-
-        // Re-transmit flag — 0: not retransmitted
         #expect(report.retransmit == .notRetransmitted)
-
-        // Spare — 0
         #expect(report.spare == false)
 
         // Application data (6-bit ASCII, space-padded)
@@ -61,22 +50,11 @@ struct AddressedSafetyMessageTests {
         let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
                                   "A Type 12 payload should initialize an AddresedSafetyMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 12)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 351853000)
-
-        // Sequence number
         #expect(report.sequenceNumber == 1)
-
-        // Destination ID (MMSI)
         #expect(report.destinationMMSI.value == 351809000)
-
-        // Re-transmit flag — 0: not retransmitted
         #expect(report.retransmit == .notRetransmitted)
-
-        // Spare — 0
         #expect(report.spare == false)
 
         // Safety-related text — the fill bits leave a partial trailing character that shouldn't be decoded
@@ -99,22 +77,11 @@ struct AddressedSafetyMessageTests {
         let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
                                   "A Type 12 payload should initialize an AddresedSafetyMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 12)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 271002099)
-
-        // Sequence number
         #expect(report.sequenceNumber == 0)
-
-        // Destination ID (MMSI)
         #expect(report.destinationMMSI.value == 271002111)
-
-        // Re-transmit flag — 1: retransmitted
         #expect(report.retransmit == .retransmitted)
-
-        // Spare — 0
         #expect(report.spare == false)
 
         // Safety-related text — 112 payload bits, so the trailing 4 bits are not a whole character
@@ -137,22 +104,11 @@ struct AddressedSafetyMessageTests {
         let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence1, sentence2]),
                                   "A Type 12 payload should initialize an AddresedSafetyMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 12)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 211217560)
-
-        // Sequence number
         #expect(report.sequenceNumber == 2)
-
-        // Destination ID (MMSI)
         #expect(report.destinationMMSI.value == 211378120)
-
-        // Re-transmit flag — 0: not retransmitted
         #expect(report.retransmit == .notRetransmitted)
-
-        // Spare — 0
         #expect(report.spare == false)
 
         // The trailing fragment should be kept alongside the first

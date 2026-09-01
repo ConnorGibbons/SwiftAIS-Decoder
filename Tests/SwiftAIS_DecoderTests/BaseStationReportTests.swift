@@ -19,13 +19,8 @@ struct BaseStationReportTests {
         let report = try #require(BaseStationReport(nmea: sentence),
                                   "A Type 4 payload should initialize a BaseStationReport")
 
-        // Message ID
         #expect(report.messageType.rawValue == 4)
-
-        // MMSI
         #expect(report.mmsiNumber.value == 2112493)
-
-        // UTC date/time
         #expect(report.year.year == 2012)
         #expect(report.month.month == 3)
         #expect(report.day.day == 14)
@@ -45,14 +40,8 @@ struct BaseStationReportTests {
         #expect(report.latitude.rawValue == 32798768)
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 54.664613333) < 0.00001)
-
-        // EPFD type — surveyed
         #expect(report.fixType == .surveyed)
-
-        // Spare
         #expect(report.spareBits == 0)
-
-        // RAIM flag
         #expect(report.raimFlag == .notInUse)
 
         // Radio status — sync state 0, slot time-out 2, slot number 593

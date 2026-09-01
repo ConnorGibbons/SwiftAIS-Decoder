@@ -23,13 +23,8 @@ struct SafetyBroadcastMessageTests {
         let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence]),
                                   "A Type 14 payload should initialize a SafetyBroadcastMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 14)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 351809000)
-
-        // Spare — 0
         #expect(report.spare == 0)
 
         // Safety-related text — the fill bits leave a partial trailing character that shouldn't be decoded
@@ -55,19 +50,13 @@ struct SafetyBroadcastMessageTests {
         let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence]),
                                   "A Type 14 payload should initialize a SafetyBroadcastMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 14)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 237008900)
-
-        // Spare — 0
         #expect(report.spare == 0)
 
         // Safety-related text — 24 whole characters, including punctuation
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "EP228 IX48 FG3 DK7 PL56.")
-
         #expect(report.additionalSentences == nil)
 
         print(report.description())
@@ -87,10 +76,7 @@ struct SafetyBroadcastMessageTests {
         let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence1, sentence2]),
                                   "A Type 14 payload should initialize a SafetyBroadcastMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 14)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 899646391)
 
         // Spare — 1 for this message, unlike the single-fragment examples above

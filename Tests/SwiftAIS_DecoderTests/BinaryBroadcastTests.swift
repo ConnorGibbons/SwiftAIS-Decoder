@@ -12,13 +12,7 @@ import SignalTools
 struct BinaryBroadcastTests {
 
     // Type 8 binary broadcast message on channel A. Expected values cross-checked against a
-    // known-good decoder:
-    //   Packet Type        AIVDM
-    //   Radio channel      A
-    //   Message Type       8 (Binary Broadcast Message)
-    //   Repeat Indicator   0 (Default)
-    //   Source ID          2655619
-    //   Application ID     75  (DAC 1 << 6 | FI 11)
+    // known-good decoder.
     private static let binaryBroadcast = "!AIVDM,1,1,,A,802R5Ph0BkEachFWA2GaOwwwwwwwwwwwwkBwwwwwwwwwwwwwwwwwwwwwwwu,2*57"
 
     // Known-good "Binary Data", one hex byte per element. This is the application data (everything
@@ -36,23 +30,16 @@ struct BinaryBroadcastTests {
         let sentence = try #require(AISNMEA0183Sentence(raw: Self.binaryBroadcast),
                                     "The example sentence should parse as a valid AIS sentence")
 
-        // Radio channel — A
         #expect(sentence.channel == .A)
 
         let report = try #require(BinaryBroadcastMessage(nmeaSentences: [sentence]),
                                   "A Type 8 payload should initialize a BinaryBroadcastMessage")
 
-        // Message Type — 8
         #expect(report.messageType.rawValue == 8)
 
-        // Repeat Indicator — 0 (Default)
         let repeatIndicator: UInt8? = sentence.payloadBits[6...7]
         #expect(repeatIndicator == 0)
-
-        // Source ID (MMSI) — 2655619
         #expect(report.mmsiNumber.value == 2655619)
-
-        // Spare — 0
         #expect(report.spare == 0)
 
         // Application ID 75 = DAC (10 bits) << 6 | FI (6 bits): DAC 1, FI 11.

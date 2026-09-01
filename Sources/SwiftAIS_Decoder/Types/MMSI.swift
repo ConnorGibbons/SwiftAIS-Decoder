@@ -380,9 +380,9 @@ enum AreaCode: UInt16 {
         case .denmarkFaroeIslands:
             return "Denmark - Faroe Islands"
         case .unitedKingdom232, .unitedKingdom233, .unitedKingdom234, .unitedKingdom235:
-            return "United Kingdom of Great Britain and Northern Ireland"
+            return "United Kingdom"
         case .unitedKingdomGibraltar:
-            return "United Kingdom of Great Britain and Northern Ireland - Gibraltar"
+            return "United Kingdom - Gibraltar"
         case .greece237, .greece239, .greece240, .greece241:
             return "Greece"
         case .croatia:
@@ -446,19 +446,20 @@ enum AreaCode: UInt16 {
         case .serbia:
             return "Serbia (Republic of)"
         case .unitedKingdomAnguilla:
-            return "United Kingdom of Great Britain and Northern Ireland - Anguilla"
+            return "United Kingdom - Anguilla"
         case .unitedStatesAlaska:
-            return "United States of America - Alaska (State of)"
+            return "United States - Alaska"
         case .antiguaAndBarbuda304, .antiguaAndBarbuda305:
             return "Antigua and Barbuda"
         case .netherlandsBonaireSintEustatiusAndSabaCuracaoSintMaarten:
-            return "Netherlands (Kingdom of the) - Bonaire, Sint Eustatius and Saba / Curacao / Sint Maarten (Dutch part)"
+            // Shortened from the ITU wording, which lists Bonaire, Sint Eustatius and Saba, Curacao, and Sint Maarten individually.
+            return "Netherlands - Dutch Caribbean"
         case .netherlandsAruba:
-            return "Netherlands (Kingdom of the) - Aruba"
+            return "Netherlands - Aruba"
         case .bahamas308, .bahamas309, .bahamas311:
             return "Bahamas (Commonwealth of the)"
         case .unitedKingdomBermuda:
-            return "United Kingdom of Great Britain and Northern Ireland - Bermuda"
+            return "United Kingdom - Bermuda"
         case .belize:
             return "Belize"
         case .barbados:
@@ -466,7 +467,7 @@ enum AreaCode: UInt16 {
         case .canada:
             return "Canada"
         case .unitedKingdomCaymanIslands:
-            return "United Kingdom of Great Britain and Northern Ireland - Cayman Islands"
+            return "United Kingdom - Cayman Islands"
         case .costaRica:
             return "Costa Rica"
         case .cuba:
@@ -500,27 +501,27 @@ enum AreaCode: UInt16 {
         case .franceMartinique:
             return "France - Martinique (French Department of)"
         case .unitedKingdomMontserrat:
-            return "United Kingdom of Great Britain and Northern Ireland - Montserrat"
+            return "United Kingdom - Montserrat"
         case .nicaragua:
             return "Nicaragua"
         case .panama351, .panama352, .panama353, .panama354, .panama355, .panama356, .panama357, .panama370, .panama371, .panama372, .panama373, .panama374:
             return "Panama (Republic of)"
         case .unitedStatesPuertoRico:
-            return "United States of America - Puerto Rico"
+            return "United States - Puerto Rico"
         case .elSalvador:
             return "El Salvador (Republic of)"
         case .franceSaintPierreAndMiquelon:
-            return "France - Saint Pierre and Miquelon (Territorial Collectivity of)"
+            return "France - Saint Pierre and Miquelon"
         case .trinidadAndTobago:
             return "Trinidad and Tobago"
         case .unitedKingdomTurksAndCaicosIslands:
-            return "United Kingdom of Great Britain and Northern Ireland - Turks and Caicos Islands"
+            return "United Kingdom - Turks and Caicos Islands"
         case .saintVincentAndTheGrenadines375, .saintVincentAndTheGrenadines376, .saintVincentAndTheGrenadines377:
             return "Saint Vincent and the Grenadines"
         case .unitedKingdomBritishVirginIslands:
-            return "United Kingdom of Great Britain and Northern Ireland - British Virgin Islands"
+            return "United Kingdom - British Virgin Islands"
         case .unitedStatesUnitedStatesVirginIslands:
-            return "United States of America - United States Virgin Islands"
+            return "United States - Virgin Islands"
         case .afghanistan:
             return "Afghanistan"
         case .saudiArabia:
@@ -534,7 +535,7 @@ enum AreaCode: UInt16 {
         case .china412, .china413, .china414:
             return "China (People's Republic of)"
         case .chinaTaiwan:
-            return "China (People's Republic of) - Taiwan (Province of China)"
+            return "China - Taiwan (Province of China)"
         case .sriLanka:
             return "Sri Lanka (Democratic Socialist Republic of)"
         case .india:
@@ -560,7 +561,7 @@ enum AreaCode: UInt16 {
         case .korea440, .korea441:
             return "Korea (Republic of)"
         case .stateOfPalestine:
-            return "State of Palestine (In accordance with Resolution 99 Rev. Dubai, 2018)"
+            return "State of Palestine"
         case .democraticPeoplesRepublicOfKorea:
             return "Democratic People's Republic of Korea"
         case .kuwait:
@@ -570,7 +571,7 @@ enum AreaCode: UInt16 {
         case .kyrgyzRepublic:
             return "Kyrgyz Republic"
         case .chinaMacao:
-            return "China (People's Republic of) - Macao (Special Administrative Region of China)"
+            return "China - Macao SAR"
         case .maldives:
             return "Maldives (Republic of)"
         case .mongolia:
@@ -592,7 +593,7 @@ enum AreaCode: UInt16 {
         case .yemen473, .yemen475:
             return "Yemen (Republic of)"
         case .chinaHongKong:
-            return "China (People's Republic of) - Hong Kong (Special Administrative Region of China)"
+            return "China - Hong Kong SAR"
         case .bosniaAndHerzegovina:
             return "Bosnia and Herzegovina"
         case .franceAdelieLand:
@@ -628,7 +629,7 @@ enum AreaCode: UInt16 {
         case .malaysia:
             return "Malaysia"
         case .unitedStatesNorthernMarianaIslands:
-            return "United States of America - Northern Mariana Islands (Commonwealth of the)"
+            return "United States - Northern Mariana Islands"
         case .marshallIslands:
             return "Marshall Islands (Republic of the)"
         case .franceNewCaledonia:
@@ -646,11 +647,11 @@ enum AreaCode: UInt16 {
         case .papuaNewGuinea:
             return "Papua New Guinea"
         case .unitedKingdomPitcairnIsland:
-            return "United Kingdom of Great Britain and Northern Ireland - Pitcairn Island"
+            return "United Kingdom - Pitcairn Island"
         case .solomonIslands:
             return "Solomon Islands"
         case .unitedStatesAmericanSamoa:
-            return "United States of America - American Samoa"
+            return "United States - American Samoa"
         case .samoa:
             return "Samoa (Independent State of)"
         case .singapore563, .singapore564, .singapore565, .singapore566:
@@ -676,7 +677,7 @@ enum AreaCode: UInt16 {
         case .franceSaintPaulAndAmsterdamIslands:
             return "France - Saint Paul and Amsterdam Islands"
         case .unitedKingdomAscensionIsland:
-            return "United Kingdom of Great Britain and Northern Ireland - Ascension Island"
+            return "United Kingdom - Ascension Island"
         case .burundi:
             return "Burundi (Republic of)"
         case .benin:
@@ -760,13 +761,13 @@ enum AreaCode: UInt16 {
         case .seychelles:
             return "Seychelles (Republic of)"
         case .unitedKingdomSaintHelena:
-            return "United Kingdom of Great Britain and Northern Ireland - Saint Helena"
+            return "United Kingdom - Saint Helena"
         case .somalia:
             return "Somalia (Federal Republic of)"
         case .sierraLeone:
             return "Sierra Leone"
         case .saoTomeAndPrincipe:
-            return "Sao Tome and Principe (Democratic Republic of)"
+            return "Sao Tome and Principe"
         case .eswatini:
             return "Eswatini (Kingdom of)"
         case .chad:
@@ -798,7 +799,7 @@ enum AreaCode: UInt16 {
         case .ecuador:
             return "Ecuador"
         case .unitedKingdomFalklandIslands:
-            return "United Kingdom of Great Britain and Northern Ireland - Falkland Islands (Malvinas)"
+            return "United Kingdom - Falkland Islands (Malvinas)"
         case .franceGuiana:
             return "France - Guiana (French Department of)"
         case .guyana:

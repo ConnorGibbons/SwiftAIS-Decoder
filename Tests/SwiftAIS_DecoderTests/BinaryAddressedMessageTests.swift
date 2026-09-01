@@ -19,25 +19,14 @@ struct BinaryAddressedMessageTests {
         let report = try #require(BinaryAddressedMessage(nmeaSentences: [sentence]),
                                   "A Type 6 payload should initialize a BinaryAddressedMessage")
 
-        // Message ID
         #expect(report.messageType.rawValue == 6)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 2444000)
-
-        // Destination ID (MMSI)
         #expect(report.destinationMMSI.value == 563219000)
-
-        // Re-transmit flag — 1: retransmitted
         #expect(report.retransmit.rawValue == true)
-
-        // Spare — 0
         #expect(report.spare == false)
 
         // DAC — 1 (designates an international / ITU message)
         #expect(report.areaCode == .international)
-
-        // FI (functional ID) — 3
         #expect(report.functionalID == 3)
 
         print(report.description())

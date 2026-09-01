@@ -21,13 +21,8 @@ struct UTCDateInquiryResponseTests {
         let report = try #require(UTCDateInquiryResponse(nmea: sentence),
                                   "A Type 11 payload should initialize a UTCDateInquiryResponse")
 
-        // Message ID
         #expect(report.messageType.rawValue == 11)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 4133412)
-
-        // UTC date/time
         #expect(report.year.year == 2012)
         #expect(report.month.month == 3)
         #expect(report.day.day == 14)
@@ -47,14 +42,8 @@ struct UTCDateInquiryResponseTests {
         #expect(report.latitude.rawValue == 13867051)
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 23.111751667) < 0.00001)
-
-        // EPFD type — GPS
         #expect(report.fixType == .gps)
-
-        // Spare
         #expect(report.spareBits == 0)
-
-        // RAIM flag
         #expect(report.raimFlag == .notInUse)
 
         // Radio status — sync state 0, slot time-out 0, slot offset 0

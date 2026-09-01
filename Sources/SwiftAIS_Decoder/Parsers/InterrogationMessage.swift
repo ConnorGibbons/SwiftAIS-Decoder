@@ -18,15 +18,15 @@ class InterrogationMessage: AISMessage {
     let slotOffset_1: UInt16
     
     /// Anything beyond this point is optional because the message can end at 88 bits.
-    let spare_2: UInt8?
-    let requestedMessageType_2: AISMessageType?
-    let slotOffset_2: UInt16?
+    var spare_2: UInt8?
+    var requestedMessageType_2: AISMessageType?
+    var slotOffset_2: UInt16?
     
-    let spare_3: UInt8?
-    let interrogatedMMSI_2: MMSI?
-    let requestedMessageType_3: AISMessageType?
-    let slotOffset_3: UInt16?
-    let spare_4: UInt8?
+    var spare_3: UInt8?
+    var interrogatedMMSI_2: MMSI?
+    var requestedMessageType_3: AISMessageType?
+    var slotOffset_3: UInt16?
+    var spare_4: UInt8?
     
     
     init?(nmea: AISNMEA0183Sentence) {
@@ -98,7 +98,34 @@ class InterrogationMessage: AISMessage {
     }
     
     func description() -> String {
-        <#code#>
+        var rows: [String] = [
+            "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
+            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("Interrogated MMSI:", "\(interrogatedMMSI_1.country) - \(interrogatedMMSI_1.description)")
+        ]
+        
+        // The first station can be asked for up to two message types, so its requests are listed one per line.
+        var firstStationRequests: [String] = [requestDescription(requestedMessageType_1, slotOffset: slotOffset_1)]
+        if let requestedMessageType_2 = requestedMessageType_2 {
+            firstStationRequests.append(requestDescription(requestedMessageType_2, slotOffset: slotOffset_2))
+        }
+        rows.append(row("Requested:", firstStationRequests.joined(separator: "\n" + row("", ""))))
+        
+        if let interrogatedMMSI_2 = interrogatedMMSI_2 {
+            rows.append(row("Interrogated MMSI:", "\(interrogatedMMSI_2.country) - \(interrogatedMMSI_2.description)"))
+            if let requestedMessageType_3 = requestedMessageType_3 {
+                rows.append(row("Requested:", requestDescription(requestedMessageType_3, slotOffset: slotOffset_3)))
+            }
+        }
+        
+        return rows.joined(separator: "\n")
+    }
+    
+    /// A slot offset of 0 means the interrogated station should respond immediately, so it's only shown when set.
+    private func requestDescription(_ requestedType: AISMessageType, slotOffset: UInt16?) -> String {
+        let requested = "\(requestedType.description) (Type \(requestedType.rawValue))"
+        guard let slotOffset = slotOffset, slotOffset != 0 else { return requested }
+        return requested + ", Slot Offset \(slotOffset)"
     }
     
     

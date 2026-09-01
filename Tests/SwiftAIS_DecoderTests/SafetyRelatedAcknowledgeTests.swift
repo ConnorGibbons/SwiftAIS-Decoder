@@ -10,9 +10,7 @@ import Testing
 
 struct SafetyRelatedAcknowledgeTests {
 
-    // Type 13 safety related acknowledge. Expected values cross-checked against a known-good decoder:
-    //   Source ID        211378120
-    //   Destination #1   211217560 (sequence number 2)
+    // Type 13 safety related acknowledge. Expected values cross-checked against a known-good decoder.
     private static let safetyRelatedAcknowledge = "!AIVDM,1,1,,A,=39UOj0jFs9R,0*65"
 
     @Test func decodesSafetyRelatedAcknowledge() throws {
@@ -23,10 +21,7 @@ struct SafetyRelatedAcknowledgeTests {
         let report = try #require(SafetyRelatedAcknowledge(nmea: sentence),
                                   "A Type 13 payload should initialize a SafetyRelatedAcknowledge")
 
-        // Message ID
         #expect(report.messageType.rawValue == 13)
-
-        // Source ID (MMSI)
         #expect(report.mmsiNumber.value == 211378120)
 
         // Acknowledged destinations. The payload is exactly 72 bits (40-bit header + one 30-bit

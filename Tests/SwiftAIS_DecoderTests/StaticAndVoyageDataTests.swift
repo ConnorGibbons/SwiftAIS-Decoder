@@ -23,16 +23,11 @@ struct StaticAndVoyageDataTests {
         let report = try #require(StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2),
                                   "A Type 5 payload should initialize a StaticAndVoyageData")
 
-        // Message ID
         #expect(report.messageType.rawValue == 5)
-
-        // MMSI
         #expect(report.mmsiNumber.value == 258315000)
 
         // AIS version indicator — 0 (station compliant with ITU-R M.1371-1)
         #expect(report.aisVersion == .standard)
-
-        // IMO number
         #expect(report.imoNumber == 6514895)
 
         // Call sign (6-bit ASCII, space-padded to 7 characters)
@@ -43,17 +38,11 @@ struct StaticAndVoyageDataTests {
 
         // Type of ship & cargo — 79: Cargo, No additional information
         #expect(report.shipType == .cargoNoAdditionalInfo)
-
-        // Ship dimensions — A=40, B=10, C=4, D=5
         #expect(report.dimensionToBow == 40)
         #expect(report.dimensionToStern == 10)
         #expect(report.dimensionToPort == 4)
         #expect(report.dimensionToStarboard == 5)
-
-        // EPFD type — 1: GPS
         #expect(report.fixType == .gps)
-
-        // ETA — month 3, day 14, hour 12, minute 40
         #expect(report.month.month == 3)
         #expect(report.day.day == 14)
         #expect(report.hour.hour == 12)
@@ -84,16 +73,9 @@ struct StaticAndVoyageDataTests {
         let report = try #require(StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2),
                                   "A Type 5 payload should initialize a StaticAndVoyageData")
 
-        // Message ID
         #expect(report.messageType.rawValue == 5)
-
-        // MMSI
         #expect(report.mmsiNumber.value == 205365700)
-
-        // AIS version indicator — 1
         #expect(report.aisVersion == .future)
-
-        // IMO number
         #expect(report.imoNumber == 0)
 
         // Call sign (6-bit ASCII, space-padded to 7 characters)
@@ -104,17 +86,11 @@ struct StaticAndVoyageDataTests {
 
         // Type of ship & cargo — 99: Other Type, No additional information
         #expect(report.shipType == .otherTypeNoAdditionalInfo)
-
-        // Ship dimensions — A=72, B=11, C=4, D=8
         #expect(report.dimensionToBow == 72)
         #expect(report.dimensionToStern == 11)
         #expect(report.dimensionToPort == 4)
         #expect(report.dimensionToStarboard == 8)
-
-        // EPFD type — 1: GPS
         #expect(report.fixType == .gps)
-
-        // ETA — month 3, day 11, hour 9, minute 0
         #expect(report.month.month == 3)
         #expect(report.day.day == 11)
         #expect(report.hour.hour == 9)
@@ -147,16 +123,11 @@ struct StaticAndVoyageDataTests {
         let report = try #require(StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2),
                                   "A Type 5 payload should initialize a StaticAndVoyageData")
 
-        // Message ID
         #expect(report.messageType.rawValue == 5)
-
-        // MMSI
         #expect(report.mmsiNumber.value == 367006780)
 
         // AIS version indicator — 0 (station compliant with ITU-R M.1371-1)
         #expect(report.aisVersion == .standard)
-
-        // IMO number
         #expect(report.imoNumber == 0)
 
         // Call sign — 7 characters, no padding needed
@@ -168,17 +139,11 @@ struct StaticAndVoyageDataTests {
 
         // Type of ship & cargo — 32: Towing (length > 200m or breadth > 25m)
         #expect(report.shipType == .towingLarge)
-
-        // Ship dimensions — A=4, B=14, C=6, D=3
         #expect(report.dimensionToBow == 4)
         #expect(report.dimensionToStern == 14)
         #expect(report.dimensionToPort == 6)
         #expect(report.dimensionToStarboard == 3)
-
-        // EPFD type — 1: GPS
         #expect(report.fixType == .gps)
-
-        // ETA — month 0 (unavailable), day 24, hour 11, minute 15
         #expect(report.month.month == nil)
         #expect(report.day.day == 24)
         #expect(report.hour.hour == 11)
