@@ -110,23 +110,25 @@ class InterrogationMessage: AISMessage {
             firstStationRequests.append(requestDescription(requestedMessageType_2, slotOffset: slotOffset_2))
         }
         rows.append(row("Requested:", firstStationRequests.joined(separator: "\n" + row("", ""))))
-        
-        if let interrogatedMMSI_2 = interrogatedMMSI_2 {
+
+        // An interrogated MMSI of 0 addresses no station, so the second block is skipped here even though
+        // the parsed values are still kept on the message.
+        if let interrogatedMMSI_2 = interrogatedMMSI_2, interrogatedMMSI_2.value != 0 {
             rows.append(row("Interrogated MMSI:", "\(interrogatedMMSI_2.country) - \(interrogatedMMSI_2.description)"))
             if let requestedMessageType_3 = requestedMessageType_3 {
                 rows.append(row("Requested:", requestDescription(requestedMessageType_3, slotOffset: slotOffset_3)))
             }
         }
-        
+
         return rows.joined(separator: "\n")
     }
-    
+
     /// A slot offset of 0 means the interrogated station should respond immediately, so it's only shown when set.
     private func requestDescription(_ requestedType: AISMessageType, slotOffset: UInt16?) -> String {
         let requested = "\(requestedType.description) (Type \(requestedType.rawValue))"
         guard let slotOffset = slotOffset, slotOffset != 0 else { return requested }
         return requested + ", Slot Offset \(slotOffset)"
     }
-    
+
     
 }
