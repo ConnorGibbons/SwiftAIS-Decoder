@@ -21,7 +21,7 @@ class BinaryAddressedMessage: AISMessage {
     var functionalID: UInt8
     var additionalSentences: [AISNMEA0183Sentence]?
     var payload: BitBuffer
-    var payloadString: AISText? // Almost every message will not properly decode AISText here. Most payloads are a mixture of data types, far too many to write individual parsers for.
+    var text: AISText? // Almost every message will not properly decode AISText here. Most payloads are a mixture of data types, far too many to write individual parsers for.
     
     init?(nmeaSentences: [AISNMEA0183Sentence]) {
         guard nmeaSentences.count > 0 else { return nil }
@@ -68,10 +68,12 @@ class BinaryAddressedMessage: AISMessage {
         guard let payloadBits: BitBuffer = bits[88..<bits.count] else { return nil }
         self.payload = payloadBits
         
-        if let payloadText = AISText(raw: payloadBits) {
-            self.payloadString = payloadText
-        } else {
-            self.payloadString = nil
+        // Fill bits can leave a partial character at the end of the payload, so only whole characters are decoded.
+        if let textBits: BitBuffer = payloadBits[0..<((payloadBits.count / 6) * 6)] {
+            self.text = AISText(raw: textBits)
+        }
+        else {
+            self.text = nil
         }
     }
     
@@ -83,7 +85,7 @@ class BinaryAddressedMessage: AISMessage {
             row("Retransmit:", retransmit.description),
             row("Area Code (DAC):", "\(areaCode?.description ?? "Unknown") (\(areaCode != nil ? String(areaCode!.rawValue) : "N/A"))"),
             row("Functional ID:", "\(functionalID)"),
-            row("Payload:", payloadString?.text ?? "\(payload.count) bits")
+            row("Payload:", text?.text ?? "\(payload.count) bits")
         ] as [String]).joined(separator: "\n")
     }
     

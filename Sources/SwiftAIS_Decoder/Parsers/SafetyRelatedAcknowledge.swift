@@ -5,6 +5,7 @@
 //  Created by Connor Gibbons on 8/18/26.
 //
 //  Type 13: Safety Related Acknowledgement. Sent as a response to type 12. Same format as type 7 (BinaryAcknowledge).
+//  Payload character: =
 
 
 class SafetyRelatedAcknowledge: AISMessage {

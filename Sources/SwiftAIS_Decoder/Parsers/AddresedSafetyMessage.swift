@@ -5,6 +5,7 @@
 //  Created by Connor Gibbons on 8/14/26.
 //
 //  Type 12: Addressed Safety-Related Message
+//  Payload character: <
 
 import SignalTools
 
