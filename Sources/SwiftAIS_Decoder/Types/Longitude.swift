@@ -14,7 +14,7 @@ struct Longitude: Equatable {
         let rawValueSigned = Int32(signextend: rawValue, bits: bitCount) // This will properly interpret the 28 bits as a 28-bit signed int
         self.rawValue = rawValueSigned
         
-        let computedDegrees = Double(rawValueSigned) / (isTenths ? 600 : 60000) // Provided in 1/10000 minutes or 1/10 minutes
+        let computedDegrees = Double(rawValueSigned) / (isTenths ? 600 : 600000) // Provided in 1/10000 minutes or 1/10 minutes
         if(computedDegrees >= -180 && computedDegrees <= 180) { self.degrees = computedDegrees }
         else { self.degrees = nil }
     }

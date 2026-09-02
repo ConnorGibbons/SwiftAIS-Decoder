@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 8/6/26.
 //
 
-enum Assigned: RawRepresentable {
+enum AssignedFlag: RawRepresentable {
     typealias RawValue = Bool
     
     case assignedMode

@@ -23,7 +23,7 @@ class AircraftPositionReport: AISMessage {
     let regionalReserved: UInt8 // No idea what this is used for
     let dte: DTE
     let spare: UInt8
-    let assigned: Assigned
+    let assigned: AssignedFlag
     let raimFlag: RAIMFlag
     let radioStatus: RadioStatus
     
@@ -72,7 +72,7 @@ class AircraftPositionReport: AISMessage {
         self.spare = spareBits
         
         guard let assignedBit: UInt8 = bits[146...146] else { return nil }
-        self.assigned = Assigned(rawValue: assignedBit != 0)
+        self.assigned = AssignedFlag(rawValue: assignedBit != 0)
         
         guard let raimBit: UInt8 = bits[147...147] else { return nil }
         guard let raim = RAIMFlag(rawValue: raimBit) else { return nil }

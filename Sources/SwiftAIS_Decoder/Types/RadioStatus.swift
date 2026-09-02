@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 //  Decodes the 19-bit SOTDMA communication state carried by message types 1, 2,
-//  and 4. The field layout and sub-message interpretation are defined by
+//  and 4 (and sometimes 18). The field layout and sub-message interpretation are defined by
 //  Recommendation ITU-R M.1371-5 (02/2014), Annex 2:
 //    - § 3.3.7.2.2, Table 18 — communication state structure (sync state / slot
 //      time-out / sub message).
@@ -17,7 +17,7 @@
 //  different sub-message structure and is NOT modeled here.
 //
 //  Another Note! This was generated with Claude Agent, and I haven't had the chance to compare it with the spec yet.
-//  Should take these values with a grain of salt.
+//  Should take these values with a grain of salt, although output seems to match what other decoders produce.
 
 // Synchronization state — Table 18, "Sync state" (2 bits).
 enum SyncState: UInt8 {
@@ -61,11 +61,18 @@ enum SOTDMASubMessage {
     }
 }
 
+enum RadioStatusType: UInt8 {
+    case sotdma = 0
+    case itdma = 1
+}
+
 struct RadioStatus {
     let rawValue: UInt32
+    let statusType: RadioStatusType
 
-    init(rawValue: UInt32) {
+    init(rawValue: UInt32, statusType: RadioStatusType = .sotdma) {
         self.rawValue = rawValue
+        self.statusType = statusType
     }
 
     // Table 18: the 19-bit field is [sync state (2) | slot time-out (3) | sub message (14)],
@@ -100,6 +107,14 @@ struct RadioStatus {
     }
 
     var description: String {
+        // Class B "CS" units have no slot reservations to report, so they send this fixed ITDMA
+        // value (1100000000000000110). 393222 is also a legal SOTDMA state, hence the selector check.
+        if(statusType == .itdma && rawValue == 393222) {
+            return "Dummy Status: Radio uses CSTDMA"
+        }
+        guard statusType == .sotdma else {
+            return "ITDMA Radio Status: \(rawValue) (Fields currently unsupported)"
+        }
         return "\(syncState.description); slot time-out \(slotTimeout); \(subMessage.description)"
     }
 }
