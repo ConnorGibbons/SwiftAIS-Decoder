@@ -27,7 +27,6 @@ struct AddressedSafetyMessageTests {
         #expect(report.retransmit == .notRetransmitted)
         #expect(report.spare == false)
 
-        // Application data (6-bit ASCII, space-padded)
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text.trimmingCharacters(in: [" "]) == "PLEASE REPORT TO JOBOURG TRAFFIC CHANNEL 13")
 
@@ -114,7 +113,6 @@ struct AddressedSafetyMessageTests {
         // The trailing fragment should be kept alongside the first
         #expect(report.additionalSentences?.count == 1)
 
-        // Safety-related text — assembled from both fragments
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "GUD PM 2U N HAPI NEW YIR OL D BES FRM AL FUJAIRAH")
 

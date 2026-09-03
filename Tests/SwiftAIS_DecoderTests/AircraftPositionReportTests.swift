@@ -40,7 +40,6 @@ struct AircraftPositionReportTests {
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 50.683475) < 0.00001)
 
-        // Course over ground — 1/10 degree
         #expect(report.courseOverGround.rawValue == 895)
         let courseOverGround = try #require(report.courseOverGround.value)
         #expect(abs(courseOverGround - 89.5) < 0.00001)
@@ -103,7 +102,6 @@ struct AircraftPositionReportTests {
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 50.686545) < 0.00001)
 
-        // Course over ground — 1/10 degree
         #expect(report.courseOverGround.rawValue == 711)
         let courseOverGround = try #require(report.courseOverGround.value)
         #expect(abs(courseOverGround - 71.1) < 0.00001)

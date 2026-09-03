@@ -49,7 +49,6 @@ struct BinaryBroadcastTests {
         let applicationID = (Int(report.areaCode?.rawValue ?? 0) << 6) | Int(report.functionalID)
         #expect(applicationID == 75)
 
-        // Binary Data — convert the known-good hex to a bit sequence and compare.
         let expectedBits = Self.bits(fromHex: Self.expectedPayloadHex)
         #expect(expectedBits.count == 304)
 

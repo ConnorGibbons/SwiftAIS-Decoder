@@ -46,7 +46,6 @@ struct UTCDateInquiryResponseTests {
         #expect(report.spareBits == 0)
         #expect(report.raimFlag == .notInUse)
 
-        // Radio status — sync state 0, slot time-out 0, slot offset 0
         #expect(report.radioStatus.rawValue == 0)
 
         // Decoded SOTDMA communication state (ITU-R M.1371-5, Tables 18 & 19)

@@ -54,7 +54,6 @@ struct SafetyBroadcastMessageTests {
         #expect(report.mmsiNumber.value == 237008900)
         #expect(report.spare == 0)
 
-        // Safety-related text — 24 whole characters, including punctuation
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "EP228 IX48 FG3 DK7 PL56.")
         #expect(report.additionalSentences == nil)

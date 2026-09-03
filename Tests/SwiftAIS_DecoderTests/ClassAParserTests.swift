@@ -24,11 +24,9 @@ struct ClassAParserTests {
         #expect(report.mmsiNumber.value == 477553000)
         #expect(report.navStatus == .moored)
 
-        // Rate of turn — 0 means "not turning"
         #expect(report.rateOfTurn.rawValue == 0)
         #expect(report.rateOfTurn.rot == 0)
 
-        // Speed over ground — stationary
         #expect(report.speedOverGround.rawValue == 0)
         #expect(report.speedOverGround.speedOverGround == 0.0)
 
@@ -45,11 +43,9 @@ struct ClassAParserTests {
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 47.582833) < 0.00001)
 
-        // Course over ground — 0.1 degree units
         #expect(report.courseOverGround.rawValue == 510)
         #expect(report.courseOverGround.value == 51.0)
 
-        // True heading — whole degrees
         #expect(report.trueHeading.rawValue == 181)
         #expect(report.trueHeading.value == 181.0)
 
@@ -72,32 +68,28 @@ struct ClassAParserTests {
         #expect(report.mmsiNumber.value == 366913120)
         #expect(report.navStatus == .underWayUsingEngine)
 
-        // Rate of turn — 0 means "not turning"
         #expect(report.rateOfTurn.rawValue == 0)
         #expect(report.rateOfTurn.rot == 0)
 
-        // Speed over ground — stationary
         #expect(report.speedOverGround.rawValue == 0)
         #expect(report.speedOverGround.speedOverGround == 0.0)
 
         // Position accuracy — low (> 10m)
         #expect(report.positionAccuracy == .lowAccuracy)
 
-        // Longitude — signed, 1/10000 minutes (-64.62066° West)
+        // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == -38772397)
         let longitude = try #require(report.longitude.degrees)
         #expect(abs(longitude - -64.62066) < 0.00001)
 
-        // Latitude — signed, 1/10000 minutes (18.3211883° North)
+        // Latitude — signed, 1/10000 minutes
         #expect(report.latitude.rawValue == 10992713)
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 18.3211883333333) < 0.00001)
 
-        // Course over ground — 0.1 degree units
         #expect(report.courseOverGround.rawValue == 3295)
         #expect(report.courseOverGround.value == 329.5)
 
-        // True heading — whole degrees
         #expect(report.trueHeading.rawValue == 299)
         #expect(report.trueHeading.value == 299.0)
 

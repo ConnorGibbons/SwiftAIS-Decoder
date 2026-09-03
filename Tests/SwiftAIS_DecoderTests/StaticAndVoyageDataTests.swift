@@ -30,10 +30,8 @@ struct StaticAndVoyageDataTests {
         #expect(report.aisVersion == .standard)
         #expect(report.imoNumber == 6514895)
 
-        // Call sign (6-bit ASCII, space-padded to 7 characters)
         #expect(report.callSign.text.trimmingCharacters(in: [" "]) == "LFNA")
 
-        // Vessel name (6-bit ASCII, space-padded to 20 characters)
         #expect(report.vesselName.text.trimmingCharacters(in: [" "]) == "FALKVIK")
 
         // Type of ship & cargo — 79: Cargo, No additional information
@@ -48,10 +46,9 @@ struct StaticAndVoyageDataTests {
         #expect(report.hour.hour == 12)
         #expect(report.minute.minute == 40)
 
-        // Max static draught — 3.8 m (raw 1/10 m field scaled to meters)
+        // Max static draught — raw 1/10 m field scaled to meters
         #expect(abs(report.draught - 3.8) < 0.0001)
 
-        // Destination (6-bit ASCII, space-padded to 20 characters)
         #expect(report.destination.text.trimmingCharacters(in: [" "]) == "FORUS")
 
         // DTE (data terminal equipment) — 0: available
@@ -78,10 +75,8 @@ struct StaticAndVoyageDataTests {
         #expect(report.aisVersion == .future)
         #expect(report.imoNumber == 0)
 
-        // Call sign (6-bit ASCII, space-padded to 7 characters)
         #expect(report.callSign.text.trimmingCharacters(in: [" "]) == "OT3657")
 
-        // Vessel name (6-bit ASCII, space-padded to 20 characters)
         #expect(report.vesselName.text.trimmingCharacters(in: [" "]) == "PRESTO")
 
         // Type of ship & cargo — 99: Other Type, No additional information
@@ -96,10 +91,9 @@ struct StaticAndVoyageDataTests {
         #expect(report.hour.hour == 9)
         #expect(report.minute.minute == 0)
 
-        // Max static draught — 2.5 m (raw 1/10 m field scaled to meters)
+        // Max static draught — raw 1/10 m field scaled to meters
         #expect(abs(report.draught - 2.5) < 0.0001)
 
-        // Destination (6-bit ASCII, space-padded to 20 characters)
         #expect(report.destination.text.trimmingCharacters(in: [" "]) == "ANTWERPEN")
 
         // DTE (data terminal equipment) — 0: available
@@ -149,7 +143,7 @@ struct StaticAndVoyageDataTests {
         #expect(report.hour.hour == 11)
         #expect(report.minute.minute == 15)
 
-        // Max static draught — 3.3 m (raw 1/10 m field scaled to meters)
+        // Max static draught — raw 1/10 m field scaled to meters
         #expect(abs(report.draught - 3.3) < 0.0001)
 
         // Destination — "MEREAUX" '@'-padded to the full 20-character field.

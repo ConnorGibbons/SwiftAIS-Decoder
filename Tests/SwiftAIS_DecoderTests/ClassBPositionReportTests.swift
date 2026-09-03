@@ -24,28 +24,25 @@ struct ClassBPositionReportTests {
         #expect(report.mmsiNumber.value == 268)
         #expect(report.regionalReserved1 == 0)
 
-        // Speed over ground — 1/10 knot
         #expect(report.speedOverGround.rawValue == 80)
         #expect(report.speedOverGround.speedOverGround == 8.0)
 
         #expect(report.positonAccuracy == .highAccuracy)
 
-        // Longitude — signed, 1/10000 minutes (117.895373° East)
+        // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == 70737224)
         let longitude = try #require(report.longitude.degrees)
         #expect(abs(longitude - 117.895373333333) < 0.00001)
 
-        // Latitude — signed, 1/10000 minutes (38.95508° North)
+        // Latitude — signed, 1/10000 minutes
         #expect(report.latitude.rawValue == 23373048)
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 38.95508) < 0.00001)
 
-        // Course over ground — 1/10 degree
         #expect(report.courseOverGround.rawValue == 983)
         let courseOverGround = try #require(report.courseOverGround.value)
         #expect(abs(courseOverGround - 98.3) < 0.00001)
 
-        // True heading — 511 means "not available"
         #expect(report.heading.rawValue == 511)
         #expect(report.heading.value == nil)
 
@@ -84,28 +81,25 @@ struct ClassBPositionReportTests {
         #expect(report.mmsiNumber.value == 257357120)
         #expect(report.regionalReserved1 == 0)
 
-        // Speed over ground — 1/10 knot
         #expect(report.speedOverGround.rawValue == 57)
         #expect(report.speedOverGround.speedOverGround == 5.7)
 
         #expect(report.positonAccuracy == .lowAccuracy)
 
-        // Longitude — signed, 1/10000 minutes (12.046637° East)
+        // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == 7227982)
         let longitude = try #require(report.longitude.degrees)
         #expect(abs(longitude - 12.0466366666667) < 0.00001)
 
-        // Latitude — signed, 1/10000 minutes (66.434395° North)
+        // Latitude — signed, 1/10000 minutes
         #expect(report.latitude.rawValue == 39860637)
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 66.434395) < 0.00001)
 
-        // Course over ground — 1/10 degree
         #expect(report.courseOverGround.rawValue == 379)
         let courseOverGround = try #require(report.courseOverGround.value)
         #expect(abs(courseOverGround - 37.9) < 0.00001)
 
-        // True heading — 511 means "not available"
         #expect(report.heading.rawValue == 511)
         #expect(report.heading.value == nil)
 
@@ -137,18 +131,17 @@ struct ClassBPositionReportTests {
         #expect(report.mmsiNumber.value == 244060919)
         #expect(report.regionalReserved1 == 0)
 
-        // Speed over ground — stationary
         #expect(report.speedOverGround.rawValue == 0)
         #expect(report.speedOverGround.speedOverGround == 0.0)
 
         #expect(report.positonAccuracy == .lowAccuracy)
 
-        // Longitude — signed, 1/10000 minutes (4.406585° East)
+        // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == 2643951)
         let longitude = try #require(report.longitude.degrees)
         #expect(abs(longitude - 4.406585) < 0.00001)
 
-        // Latitude — signed, 1/10000 minutes (51.228432° North)
+        // Latitude — signed, 1/10000 minutes
         #expect(report.latitude.rawValue == 30737059)
         let latitude = try #require(report.latitude.degrees)
         #expect(abs(latitude - 51.2284316666667) < 0.00001)
@@ -156,7 +149,6 @@ struct ClassBPositionReportTests {
         #expect(report.courseOverGround.rawValue == 0)
         #expect(report.courseOverGround.value == 0.0)
 
-        // True heading — 511 means "not available"
         #expect(report.heading.rawValue == 511)
         #expect(report.heading.value == nil)
 
