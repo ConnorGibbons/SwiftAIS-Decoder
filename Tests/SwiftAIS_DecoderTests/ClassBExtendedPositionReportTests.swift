@@ -123,4 +123,61 @@ struct ClassBExtendedPositionReportTests {
 
         print(report.description())
     }
+
+    private static let classBExtendedPositionReportThree = "!AIVDM,1,1,,B,C5N3SRgPEnJGEBT>NhWAwwo862PaLELTBJ:V00000000S0D:R220,0*0B"
+
+    @Test func decodesThirdClassBExtendedPositionReport() throws {
+        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportThree),
+                                    "The example sentence should parse as a valid AIS sentence")
+        let report = try #require(ClassBExtendedPositionReport(nmea: sentence),
+                                  "A Type 19 payload should initialize a ClassBExtendedPositionReport")
+
+        #expect(report.messageType.rawValue == 19)
+        #expect(report.mmsiNumber.value == 367059850)
+        #expect(report.regionalReserved1 == 248)
+
+        #expect(report.speedOverGround.rawValue == 87)
+        #expect(report.speedOverGround.speedOverGround == 8.7)
+
+        #expect(report.positionAccuracy == .lowAccuracy)
+
+        // Longitude — signed, 1/10000 minutes
+        #expect(report.longitude.rawValue == -53286235)
+        let longitude = try #require(report.longitude.degrees)
+        #expect(abs(longitude - (-88.81039)) < 0.00001)
+
+        // Latitude — signed, 1/10000 minutes
+        #expect(report.latitude.rawValue == 17726217)
+        let latitude = try #require(report.latitude.degrees)
+        #expect(abs(latitude - 29.543695) < 0.00001)
+
+        #expect(report.courseOverGround.rawValue == 3359)
+        let courseOverGround = try #require(report.courseOverGround.value)
+        #expect(abs(courseOverGround - 335.9) < 0.00001)
+
+        #expect(report.trueHeading.rawValue == 511)
+        #expect(report.trueHeading.value == nil)
+
+        #expect(report.timeStamp.rawValue == 46)
+        #expect(report.regionalReserved2 == 4)
+
+        #expect(report.name.text == "CAPT.J.RIMES@@@@@@@@")
+
+        // Type of ship & cargo — 70: Cargo, all ships of this type
+        #expect(report.shipType == .cargo)
+        #expect(report.dimensionToBow == 5)
+        #expect(report.dimensionToStern == 21)
+        #expect(report.dimensionToPort == 4)
+        #expect(report.dimensionToStarboard == 4)
+
+        #expect(report.fixType == .gps)
+        #expect(report.raimFlag == .notInUse)
+
+        // DTE — 0: available
+        #expect(report.dte == .ready)
+        #expect(report.assignedFlag == .notAssignedMode)
+        #expect(report.spare == 0)
+
+        print(report.description())
+    }
 }
