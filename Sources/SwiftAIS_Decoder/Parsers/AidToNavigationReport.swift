@@ -120,7 +120,7 @@ class AidToNavigationReport: AISMessage {
         
         if let spareBit: UInt8 = bits[271...271] {
             self.spare = spareBit
-            if let nameExtensionBits: BitBuffer = bits[272...bits.count] {
+            if let nameExtensionBits: BitBuffer = bits[272...(bits.count - 1)] {
                 if let nameExtension = AISText(raw: nameExtensionBits) {
                     self.nameExtension = nameExtension
                 } else {

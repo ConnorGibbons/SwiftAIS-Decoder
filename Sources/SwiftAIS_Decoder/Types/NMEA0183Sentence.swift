@@ -111,6 +111,7 @@ class AISNMEA0183Sentence: NMEA0183Sentence {
         let payload = fields[5]
         
         let lastFields = fields.last!.split(separator: "*").map(String.init)
+        guard lastFields.count > 1 else { AISNMEA0183Sentence.printFailureReason("NMEA sentence missing checksum"); return nil }
         guard let fillBits = UInt8(lastFields[0]) else { AISNMEA0183Sentence.printFailureReason("invalid fill bits: \(lastFields[0])"); return nil }
         guard fillBits < 6 else { AISNMEA0183Sentence.printFailureReason("fill bits out of range: \(fillBits)"); return nil }
         guard let checksum = UInt8(lastFields[1], radix: 16) else { AISNMEA0183Sentence.printFailureReason("invalid checksum: \(lastFields.count > 1 ? lastFields[1] : "<missing>")"); return nil }
