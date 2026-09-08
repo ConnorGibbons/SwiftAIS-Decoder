@@ -7,7 +7,7 @@
 //  Type 20: Data Link Management Message
 //  Payload Character: D
 
-class DataLinkManagement: AISMessage {
+struct DataLinkManagement: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

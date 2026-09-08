@@ -8,7 +8,7 @@
 //  SAR: "Search and Rescue"
 
 
-class AircraftPositionReport: AISMessage {
+struct AircraftPositionReport: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
-class ClassAPositionReport: AISMessage {
+struct ClassAPositionReport: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
@@ -79,7 +79,11 @@ class ClassAPositionReport: AISMessage {
         self.raimFlag = raimFlag
 
         guard let radioBits: UInt32 = bits[149...167] else { return nil }
-        self.radioStatus = RadioStatus(rawValue: radioBits)
+        if(self.messageType.rawValue == 3) {
+            self.radioStatus = RadioStatus(rawValue: radioBits, statusType: .itdma)
+        } else {
+            self.radioStatus = RadioStatus(rawValue: radioBits, statusType: .sotdma)
+        }
     }
     
     

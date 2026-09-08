@@ -6,7 +6,7 @@
 //
 //  Type 10: UTC/Date Inquiry
 
-class UTCDateInquiry: AISMessage {
+struct UTCDateInquiry: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

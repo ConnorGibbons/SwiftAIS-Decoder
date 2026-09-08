@@ -9,7 +9,7 @@
 
 import SignalTools
 
-class AidToNavigationReport: AISMessage {
+struct AidToNavigationReport: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
@@ -120,9 +120,13 @@ class AidToNavigationReport: AISMessage {
         
         if let spareBit: UInt8 = bits[271...271] {
             self.spare = spareBit
-            if let nameExtensionBits: BitBuffer = bits[272...(bits.count - 1)] {
-                if let nameExtension = AISText(raw: nameExtensionBits) {
-                    self.nameExtension = nameExtension
+            if(bits.count > 272) {
+                if let nameExtensionBits: BitBuffer = bits[272...(bits.count - 1)] {
+                    if let nameExtension = AISText(raw: nameExtensionBits) {
+                        self.nameExtension = nameExtension
+                    } else {
+                        self.nameExtension = nil
+                    }
                 } else {
                     self.nameExtension = nil
                 }

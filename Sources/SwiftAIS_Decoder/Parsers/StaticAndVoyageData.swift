@@ -8,7 +8,7 @@
 
 import SignalTools
 
-class StaticAndVoyageData: AISMessage {
+struct StaticAndVoyageData: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

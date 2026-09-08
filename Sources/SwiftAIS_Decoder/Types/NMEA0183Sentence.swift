@@ -79,6 +79,7 @@ enum AISChannel: String {
     case B = "B"
 }
 
+
 class AISNMEA0183Sentence: NMEA0183Sentence {
     
     let talker: AISTalker

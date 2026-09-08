@@ -8,7 +8,7 @@
 //  Payload character: =
 
 
-class SafetyRelatedAcknowledge: AISMessage {
+struct SafetyRelatedAcknowledge: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

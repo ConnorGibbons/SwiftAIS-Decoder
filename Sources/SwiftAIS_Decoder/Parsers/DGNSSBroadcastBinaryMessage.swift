@@ -9,7 +9,7 @@
 
 import SignalTools
 
-class DGNSSBroadcastBinaryMessage: AISMessage {
+struct DGNSSBroadcastBinaryMessage: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

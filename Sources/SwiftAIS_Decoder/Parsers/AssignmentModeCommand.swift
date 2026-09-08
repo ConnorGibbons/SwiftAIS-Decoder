@@ -8,7 +8,7 @@
 //  Used by base stations to control the operation of other base stations.
 //  Payload character: @
 
-class AssignmentModeCommand: AISMessage {
+struct AssignmentModeCommand: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

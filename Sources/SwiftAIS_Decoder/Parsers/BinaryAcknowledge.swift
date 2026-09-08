@@ -6,7 +6,7 @@
 //
 //  Type 7
 
-class BinaryAcknowledge: AISMessage {
+struct BinaryAcknowledge: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

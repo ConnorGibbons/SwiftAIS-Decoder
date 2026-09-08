@@ -9,7 +9,7 @@
 
 import SignalTools
 
-class BinaryBroadcastMessage: AISMessage {
+struct BinaryBroadcastMessage: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

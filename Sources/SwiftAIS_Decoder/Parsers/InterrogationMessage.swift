@@ -7,7 +7,7 @@
 //  Type 15: Interrogation message. Used to request 1 or 2 AIS stations send a particular message type.
 //  Payload character: ?
 
-class InterrogationMessage: AISMessage {
+struct InterrogationMessage: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
@@ -75,16 +75,16 @@ class InterrogationMessage: AISMessage {
         }
         
         guard let slotOffset2Bits: UInt16 = bits[96...107] else { return }
-        if(slotOffset2Bits != 0) {
-            self.slotOffset_2 = slotOffset2Bits
-        }
+        self.slotOffset_2 = slotOffset2Bits
         
         guard let spare3Bits: UInt8 = bits[108...109] else { return }
         self.spare_3 = spare3Bits
         
         guard let interrogatedMMSI2Bits: UInt32 = bits[110...139] else { return }
-        guard let interrogatedMMSI_2 = MMSI(value: interrogatedMMSI2Bits) else { return } // If there's this many bits in the message, the second MMSI is non-optional.
-        self.interrogatedMMSI_2 = interrogatedMMSI_2
+        if(interrogatedMMSI2Bits != 0) { // If it's zero, it's just sender zero filling empty fields.
+            guard let interrogatedMMSI_2 = MMSI(value: interrogatedMMSI2Bits) else { return } // If there's this many bits in the message, the second MMSI is non-optional.
+            self.interrogatedMMSI_2 = interrogatedMMSI_2
+        }
         
         guard let requestedMessageType3Bits: UInt8 = bits[140...145] else { return }
         guard let requestedMessageType_3 = AISMessageType(rawValue: Int(requestedMessageType3Bits)) else { return }
@@ -123,7 +123,6 @@ class InterrogationMessage: AISMessage {
         return rows.joined(separator: "\n")
     }
 
-    /// A slot offset of 0 means the interrogated station should respond immediately, so it's only shown when set.
     private func requestDescription(_ requestedType: AISMessageType, slotOffset: UInt16?) -> String {
         let requested = "\(requestedType.description) (Type \(requestedType.rawValue))"
         guard let slotOffset = slotOffset, slotOffset != 0 else { return requested }

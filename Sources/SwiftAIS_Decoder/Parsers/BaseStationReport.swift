@@ -7,7 +7,7 @@
 //  Type 4: Base Station Report
 
 
-class BaseStationReport: AISMessage {
+struct BaseStationReport: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

@@ -7,7 +7,7 @@
 //  Type 18: Standard Class B Position Report
 //  Payload character: "B"
 
-class ClassBPositionReport: AISMessage {
+struct ClassBPositionReport: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI

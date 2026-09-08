@@ -9,7 +9,7 @@
 
 import SignalTools
 
-class SafetyBroadcastMessage: AISMessage {
+struct SafetyBroadcastMessage: AISMessage {
     let nmeaSentence: AISNMEA0183Sentence
     let messageType: AISMessageType
     let mmsiNumber: MMSI
