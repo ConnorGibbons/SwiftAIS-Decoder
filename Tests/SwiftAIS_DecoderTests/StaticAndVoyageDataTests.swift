@@ -2,8 +2,6 @@
 //  StaticAndVoyageDataTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the StaticAndVoyageData parser (message type 5).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -124,7 +122,6 @@ struct StaticAndVoyageDataTests {
         #expect(report.aisVersion == .standard)
         #expect(report.imoNumber == 0)
 
-        // Call sign — 7 characters, no padding needed
         #expect(report.callSign.text == "WDC3366")
 
         // Vessel name — "CORKY" '@'-padded to the full 20-character field.

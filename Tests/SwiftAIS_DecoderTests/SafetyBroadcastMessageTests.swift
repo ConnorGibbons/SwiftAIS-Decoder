@@ -2,8 +2,6 @@
 //  SafetyBroadcastMessageTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the SafetyBroadcastMessage parser (message type 14).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -31,7 +29,6 @@ struct SafetyBroadcastMessageTests {
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "RCVD YR TEST MSG")
 
-        // Only one fragment, so there shouldn't be any additional sentences
         #expect(report.additionalSentences == nil)
 
         print(report.description())
@@ -81,7 +78,6 @@ struct SafetyBroadcastMessageTests {
         // Spare — 1 for this message, unlike the single-fragment examples above
         #expect(report.spare == 1)
 
-        // The trailing fragment should be kept alongside the first
         #expect(report.additionalSentences?.count == 1)
 
         // Safety-related text — assembled from both fragments. 264 payload bits total, so 224 bits

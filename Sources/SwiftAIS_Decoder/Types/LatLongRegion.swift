@@ -21,7 +21,7 @@ struct LatLongRegion {
     }
     
     var description: String {
-        "\(longitudeNE.description), \(latitudeNE.description), \(longitudeSW.description), \(latitudeSW.description)"
+        "NE Corner: (Lat: \(latitudeNE.description), Long: \(longitudeNE.description)) SW Corner: (Lat: \(latitudeSW.description), Long: \(longitudeSW.description))"
     }
 }
 

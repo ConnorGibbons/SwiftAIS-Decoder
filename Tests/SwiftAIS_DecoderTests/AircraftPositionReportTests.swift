@@ -2,8 +2,6 @@
 //  AircraftPositionReportTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the AircraftPositionReport parser (message type 9).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

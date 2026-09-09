@@ -2,8 +2,6 @@
 //  BinaryBroadcastTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the BinaryBroadcastMessage parser (message type 8).
-//
 
 import Testing
 import SignalTools

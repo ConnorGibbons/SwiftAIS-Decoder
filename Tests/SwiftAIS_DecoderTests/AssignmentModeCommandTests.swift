@@ -2,8 +2,6 @@
 //  AssignmentModeCommandTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the AssignmentModeCommand parser (message type 16).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -34,7 +32,6 @@ struct AssignmentModeCommandTests {
         #expect(report.offset1 == 200)
         #expect(report.increment1 == 0)
 
-        // Only one station is assigned, so the second block is absent
         #expect(report.destination2 == nil)
         #expect(report.offset2 == nil)
         #expect(report.incrememt2 == nil)

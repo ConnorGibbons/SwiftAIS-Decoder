@@ -2,8 +2,6 @@
 //  UTCDateInquiryResponseTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the UTCDateInquiryResponse parser (message type 11).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

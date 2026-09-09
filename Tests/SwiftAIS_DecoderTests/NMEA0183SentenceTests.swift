@@ -2,8 +2,6 @@
 //  NMEA0183SentenceTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for NMEA0183Sentence and AISNMEA0183Sentence.
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -40,19 +38,16 @@ struct NMEA0183SentenceTests {
     }
 
     @Test func missingDelimiterFails() {
-        // Does not start with "!" or "$".
         let sentence = NMEA0183Sentence(raw: "AIVDM,1,1,,B,15M67FC000G?ufbE`FepT@000000,0*33")
         #expect(sentence == nil, "A sentence without a leading !/$ delimiter should fail")
     }
 
     @Test func missingChecksumFails() {
-        // No "*" separator at all.
         let sentence = NMEA0183Sentence(raw: "!AIVDM,1,1,,B,15M67FC000G?ufbE`FepT@000000,0")
         #expect(sentence == nil, "A sentence without a checksum should fail")
     }
 
     @Test func wrongChecksumLengthFails() {
-        // A single hex digit is not a valid two-character checksum.
         let sentence = NMEA0183Sentence(raw: "!AIVDM,1,1,,B,15M67FC000G?ufbE`FepT@000000,0*3")
         #expect(sentence == nil, "A checksum that is not exactly two characters should fail")
     }
@@ -100,13 +95,11 @@ struct NMEA0183SentenceTests {
     }
 
     @Test func unknownTalkerFails() {
-        // "ZZ" is not a recognized talker.
         let sentence = AISNMEA0183Sentence(raw: "!ZZVDM,1,1,,B,15M67FC000G?ufbE`FepT@000000,0*2B")
         #expect(sentence == nil, "An unrecognized talker code should fail")
     }
 
     @Test func unknownDataSourceFails() {
-        // "XXX" is not a recognized data source.
         let sentence = AISNMEA0183Sentence(raw: "!AIXXX,1,1,,B,15M67FC000G?ufbE`FepT@000000,0*68")
         #expect(sentence == nil, "An unrecognized data source should fail")
     }

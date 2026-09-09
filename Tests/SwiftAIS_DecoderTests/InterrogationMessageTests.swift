@@ -2,8 +2,6 @@
 //  InterrogationMessageTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the InterrogationMessage parser (message type 15).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -92,7 +90,6 @@ struct InterrogationMessageTests {
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 3669720)
 
-        // Both requests are addressed to the one interrogated station
         #expect(report.interrogatedMMSI_1.value == 367014320)
         #expect(report.requestedMessageType_1 == .positionReportClassAResponseToInterrogation)
         #expect(report.slotOffset_1 == 516)

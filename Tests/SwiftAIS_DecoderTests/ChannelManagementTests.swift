@@ -2,8 +2,6 @@
 //  ChannelManagementTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the ChannelManagement parser (message type 22).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

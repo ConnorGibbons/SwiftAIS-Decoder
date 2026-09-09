@@ -2,8 +2,6 @@
 //  SafetyRelatedAcknowledgeTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the SafetyRelatedAcknowledge parser (message type 13).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

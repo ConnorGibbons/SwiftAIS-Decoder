@@ -2,8 +2,6 @@
 //  AidToNavigationReportTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the AidToNavigationReport parser (message type 21).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -134,7 +132,6 @@ struct AidToNavigationReportTests {
         print(report.description())
     }
 
-    // Two-part Type 21 message for a special mark buoy with non-zero dimensions.
     private static let secondMultipartAidToNavigationReport1 = "!AIVDM,2,1,8,B,E03l90w4Q1h3h1:WdPOwwwwwwwwlQdn`:e55020@@@gP0000000000000000,0*47"
     private static let secondMultipartAidToNavigationReport2 = "!AIVDM,2,2,8,B,00,4*19"
 

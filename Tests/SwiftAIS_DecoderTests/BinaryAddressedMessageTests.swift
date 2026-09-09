@@ -2,8 +2,6 @@
 //  BinaryAddressedMessageTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the BinaryAddressedMessage parser (message type 6).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

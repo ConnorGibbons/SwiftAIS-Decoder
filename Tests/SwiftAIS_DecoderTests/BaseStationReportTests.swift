@@ -2,8 +2,6 @@
 //  BaseStationReportTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the BaseStationReport parser (message type 4).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

@@ -2,8 +2,6 @@
 //  ClassBPositionReportTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the ClassBPositionReport parser (message type 18).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

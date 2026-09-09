@@ -2,8 +2,6 @@
 //  UTCDateInquiryTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the UTCDateInquiry parser (message type 10).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -46,7 +44,6 @@ struct UTCDateInquiryTests {
         print(report.description())
     }
 
-    // UTC/date inquiry on channel B.
     private static let channelBUTCDateInquiry = "!AIVDM,1,1,,B,:8152F@q@7r0,0*53"
 
     @Test func decodesChannelBUTCDateInquiry() throws {

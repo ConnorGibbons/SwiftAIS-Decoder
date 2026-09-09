@@ -2,8 +2,6 @@
 //  ClassBExtendedPositionReportTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the ClassBExtendedPositionReport parser (message type 19).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

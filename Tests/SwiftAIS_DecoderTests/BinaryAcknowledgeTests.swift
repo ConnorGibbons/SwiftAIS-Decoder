@@ -2,8 +2,6 @@
 //  BinaryAcknowledgeTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the BinaryAcknowledge parser (message type 7).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -27,7 +25,6 @@ struct BinaryAcknowledgeTests {
         print(report.description())
     }
 
-    // Single-destination acknowledge (channel A).
     private static let singleDestination = "!AIVDM,1,1,,A,702R5`hwCjq8,0*6B"
 
     @Test func decodesSingleDestination() throws {

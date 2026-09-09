@@ -2,8 +2,6 @@
 //  GroupAssignmentCommandTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the GroupAssignmentCommand parser (message type 23).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder

@@ -2,8 +2,6 @@
 //  AddressedSafetyMessageTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the AddresedSafetyMessage parser (message type 12).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
@@ -30,7 +28,6 @@ struct AddressedSafetyMessageTests {
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text.trimmingCharacters(in: [" "]) == "PLEASE REPORT TO JOBOURG TRAFFIC CHANNEL 13")
 
-        // Only one fragment, so there shouldn't be any additional sentences
         #expect(report.additionalSentences == nil)
 
         print(report.description())
@@ -110,7 +107,6 @@ struct AddressedSafetyMessageTests {
         #expect(report.retransmit == .notRetransmitted)
         #expect(report.spare == false)
 
-        // The trailing fragment should be kept alongside the first
         #expect(report.additionalSentences?.count == 1)
 
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")

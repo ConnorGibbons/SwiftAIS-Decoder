@@ -2,15 +2,12 @@
 //  DataLinkManagementTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the DataLinkManagement parser (message type 20).
-//
 
 import Testing
 @testable import SwiftAIS_Decoder
 
 struct DataLinkManagementTests {
 
-    // A 72-bit type 20 carrying only the first reservation block. 
     private static let singleBlock = "!AIVDM,1,1,,B,Dh3OvjP7qN>4,0*3B"
 
     @Test func decodesSingleReservationBlock() throws {

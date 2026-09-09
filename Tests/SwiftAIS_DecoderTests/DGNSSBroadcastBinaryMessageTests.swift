@@ -2,8 +2,6 @@
 //  DGNSSBroadcastBinaryMessageTests.swift
 //  SwiftAIS-Decoder
 //
-//  Tests for the DGNSSBroadcastBinaryMessage parser (message type 17).
-//
 
 import Testing
 import SignalTools
@@ -116,7 +114,6 @@ struct DGNSSBroadcastBinaryMessageTests {
         #expect(report.spare1 == 0)
         #expect(report.spare2 == 0)
 
-        // The trailing fragment should be kept alongside the first
         #expect(report.additionalSentences?.count == 1)
 
         // Longitude — 29°7.8'E, signed, 1/10 minutes

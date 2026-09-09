@@ -1,8 +1,6 @@
 //
-//  ParserTests.swift
+//  ClassAParserTests.swift
 //  SwiftAIS-Decoder
-//
-//  Tests for the message parsers (ClassA_PositionReport, etc.).
 //
 
 import Testing
