@@ -42,9 +42,9 @@ struct BinaryBroadcastTests {
 
         // Application ID 75 = DAC (10 bits) << 6 | FI (6 bits): DAC 1, FI 11.
         #expect(report.areaCode == .international)
-        #expect(report.areaCode?.rawValue == 1)
+        #expect(report.areaCode.rawValue == 1)
         #expect(report.functionalID == 11)
-        let applicationID = (Int(report.areaCode?.rawValue ?? 0) << 6) | Int(report.functionalID)
+        let applicationID = (Int(report.areaCode.rawValue) << 6) | Int(report.functionalID)
         #expect(applicationID == 75)
 
         let expectedBits = Self.bits(fromHex: Self.expectedPayloadHex)

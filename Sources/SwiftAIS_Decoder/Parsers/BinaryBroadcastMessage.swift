@@ -15,7 +15,7 @@ struct BinaryBroadcastMessage: AISMessage {
     let mmsiNumber: MMSI
     
     var spare: UInt8 // Pretty much nothing, just here because it's in the spec.
-    var areaCode: AreaCode?
+    var areaCode: DesignatedAreaCode
     var functionalID: UInt8
     var additionalSentences: [AISNMEA0183Sentence]?
     var payload: BitBuffer
@@ -50,7 +50,7 @@ struct BinaryBroadcastMessage: AISMessage {
         self.spare = spareBits
         
         guard let areaCodeBits: UInt16 = bits[40...49] else { return nil }
-        if let areaCode: AreaCode = .init(rawValue: areaCodeBits) { self.areaCode = areaCode } else { self.areaCode = nil }
+        self.areaCode = DesignatedAreaCode(rawValue: areaCodeBits)
         
         guard let functionalIDBits: UInt8 = bits[50...55] else { return nil }
         self.functionalID = functionalIDBits
@@ -71,7 +71,7 @@ struct BinaryBroadcastMessage: AISMessage {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
-            row("Area Code (DAC):", "\(areaCode?.description ?? "Unknown") (\(areaCode != nil ? String(areaCode!.rawValue) : "N/A"))"),
+            row("Area Code (DAC):", "\(areaCode.description) (\(areaCode.rawValue))"),
             row("Functional ID:", "\(functionalID)"),
             row("Payload:", text?.text ?? "\(payload.count) bits")
         ] as [String]).joined(separator: "\n")

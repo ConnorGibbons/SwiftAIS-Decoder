@@ -39,6 +39,28 @@ enum NavaidType: UInt8 {
     case specialMark = 30
     case lightVesselOrLANBYOrRigs = 31 // LANBY: Large Automatic Navigational Buoy
 
+    // Codes 32+ are the mobile AtoN types added in Rec. ITU-R M.1371-6 (Table 85), and seemingly can only occur in message type 28
+    // since message type 28 has an AtoN type field wide enough to accomodate values of this size
+    case oceanDataAcquisitionSystem = 32 // ODAS
+    case waterSamplingOrMonitoringEquipment = 33
+    case researchEquipment = 34
+    case towedCablePipeOrSemiSubmergedObjectMarker = 35
+    case towedVesselOrObject = 36
+    case flotsamMarkerLarge = 37 // Flotsam: floating wreckage or cargo. "Large" is >5m
+    case flotsamMarkerSmall = 38 // <5m
+    case navigationHazard = 39
+    case syntheticTargetMarker = 40
+    case protectedSpeciesMarker = 41
+    case militaryOperationTargetMarker = 42
+    case dangerousObject = 43
+    case pollutionSpillMarker = 44
+    case searchAndRescueDatumMark = 45
+    case datumMark = 46
+    case operatingUnderwater = 47
+    case underwaterOperationsMarker = 48
+    case militaryOperationOrRestrictedArea = 49
+    case dynamicArea = 50
+
     var description: String {
         switch self {
         case .unspecified:
@@ -105,6 +127,44 @@ enum NavaidType: UInt8 {
             return "Special Mark"
         case .lightVesselOrLANBYOrRigs:
             return "Light Vessel / LANBY (Large Automatic Navigational Buoy) / Rigs"
+        case .oceanDataAcquisitionSystem:
+            return "Ocean Data Acquisition System (ODAS)"
+        case .waterSamplingOrMonitoringEquipment:
+            return "Water Sampling and/or Monitoring equipment"
+        case .researchEquipment:
+            return "Research equipment"
+        case .towedCablePipeOrSemiSubmergedObjectMarker:
+            return "Towed Cable, Pipe or Semi-submerged Object Marker"
+        case .towedVesselOrObject:
+            return "Towed Vessel or Object"
+        case .flotsamMarkerLarge:
+            return "Flotsam Marker, Large (greater than 5 metres)"
+        case .flotsamMarkerSmall:
+            return "Flotsam Marker, Small (less than 5 metres)"
+        case .navigationHazard:
+            return "Navigation hazard"
+        case .syntheticTargetMarker:
+            return "Synthetic Target Marker"
+        case .protectedSpeciesMarker:
+            return "Protected Species Marker"
+        case .militaryOperationTargetMarker:
+            return "Military Operation Target Marker"
+        case .dangerousObject:
+            return "Dangerous Object"
+        case .pollutionSpillMarker:
+            return "Pollution Spill Marker"
+        case .searchAndRescueDatumMark:
+            return "Search and Rescue Datum Mark"
+        case .datumMark:
+            return "Datum Mark"
+        case .operatingUnderwater:
+            return "Operating Underwater (at times)"
+        case .underwaterOperationsMarker:
+            return "Underwater Operations Marker"
+        case .militaryOperationOrRestrictedArea:
+            return "Military Operation or Restricted Area"
+        case .dynamicArea:
+            return "Dynamic Area"
         }
     }
 }

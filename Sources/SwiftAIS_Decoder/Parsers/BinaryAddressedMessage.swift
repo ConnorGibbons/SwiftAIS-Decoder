@@ -17,7 +17,7 @@ struct BinaryAddressedMessage: AISMessage {
     var destinationMMSI: MMSI
     var retransmit: RetransmitFlag // 0 = no retransmit, 1 = retransmitted
     var spare: Bool // Pretty much nothing, just here because it's in the spec.
-    var areaCode: AreaCode?
+    var areaCode: DesignatedAreaCode
     var functionalID: UInt8
     var additionalSentences: [AISNMEA0183Sentence]?
     var payload: BitBuffer
@@ -60,7 +60,7 @@ struct BinaryAddressedMessage: AISMessage {
         self.spare = spareBits == 1
         
         guard let areaCodeBits: UInt16 = bits[72...81] else { return nil }
-        if let areaCode: AreaCode = .init(rawValue: areaCodeBits) { self.areaCode = areaCode } else { self.areaCode = nil }
+        self.areaCode = DesignatedAreaCode(rawValue: areaCodeBits)
         
         guard let functionalIDBits: UInt8 = bits[82...87] else { return nil }
         self.functionalID = functionalIDBits
@@ -83,7 +83,7 @@ struct BinaryAddressedMessage: AISMessage {
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("Destination MMSI:", "\(destinationMMSI.country) - \(destinationMMSI.description)"),
             row("Retransmit:", retransmit.description),
-            row("Area Code (DAC):", "\(areaCode?.description ?? "Unknown") (\(areaCode != nil ? String(areaCode!.rawValue) : "N/A"))"),
+            row("Area Code (DAC):", "\(areaCode.description) (\(areaCode.rawValue))"),
             row("Functional ID:", "\(functionalID)"),
             row("Payload:", text?.text ?? "\(payload.count) bits")
         ] as [String]).joined(separator: "\n")
