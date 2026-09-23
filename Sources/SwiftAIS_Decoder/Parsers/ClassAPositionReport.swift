@@ -59,7 +59,8 @@ struct ClassAPositionReport: AISMessage {
         self.latitude = Latitude(rawValue: latBits) // 27-bit signed, sign-extended in init
 
         guard let courseBits: UInt16 = bits[116...127] else { return nil }
-        self.courseOverGround = CourseOverGround(rawValue: courseBits)
+        guard let courseOverGround = CourseOverGround(rawValue: courseBits) else { return nil }
+        self.courseOverGround = courseOverGround
 
         guard let headingBits: UInt16 = bits[128...136] else { return nil }
         self.trueHeading = TrueHeading(rawValue: headingBits)

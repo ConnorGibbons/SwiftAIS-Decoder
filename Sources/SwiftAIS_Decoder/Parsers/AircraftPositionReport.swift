@@ -57,7 +57,8 @@ struct AircraftPositionReport: AISMessage {
         self.latitude = Latitude(rawValue: latitudeBits)
         
         guard let cogBits: UInt16 = bits[116...127] else { return nil }
-        self.courseOverGround = CourseOverGround(rawValue: cogBits)
+        guard let courseOverGround = CourseOverGround(rawValue: cogBits) else { return nil }
+        self.courseOverGround = courseOverGround
         
         guard let timestampBits: UInt8 = bits[128...133] else { return nil }
         self.timestamp = TimeStamp(rawValue: timestampBits)

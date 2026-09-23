@@ -68,7 +68,7 @@ struct ClassBExtendedPositionReport: AISMessage {
         self.latitude = latitude
         
         guard let courseOverGroundBits: UInt16 = bits[112...123] else { return nil }
-        let courseOverGround = CourseOverGround(rawValue: courseOverGroundBits)
+        guard let courseOverGround = CourseOverGround(rawValue: courseOverGroundBits) else { return nil }
         self.courseOverGround = courseOverGround
         
         guard let trueHeadingBits: UInt16 = bits[124...132] else { return nil }

@@ -75,8 +75,14 @@ enum AISDataSource: String {
 }
 
 enum AISChannel: String {
-    case A = "A"
-    case B = "B"
+    case A = "A" // AIS A: VHF Channel 87B, 161.975MHz. "AIS 1"
+    case _1 = "1" // Alias for A
+    case B = "B" // AIS B: VHF Channel 88B, 162.025MHz  "AIS 2"
+    case _2 = "2" // Alias for B
+    case C = "C" // AIS C: VHF Channel 75, 165.775MHz   "AIS 3", used for long-range
+    case _3 = "3" // Alias for C
+    case D = "D" // AIS D: VHF Channel 76, 156.825MHz   "AIS 4", used for long-range
+    case _4 = "4" // Alias for D
 }
 
 
