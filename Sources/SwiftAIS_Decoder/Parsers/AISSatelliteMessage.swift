@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 9/18/26.
 //
 //  Type 27: AIS Satellite Message
-//  Payload Character: J
+//  Payload Character: K
 //
 //  Short message that occupies less than a full slot, intended to be compact for long range reception.
 

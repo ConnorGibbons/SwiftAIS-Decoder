@@ -14,7 +14,7 @@ struct AidToNavigationReport: AISMessage {
     let messageType: AISMessageType
     let mmsiNumber: MMSI
     
-    let aidType: NavaidType
+    let aidType: AtoNType
     let name: AISText
     let positionAccuracy: PositionAccuracy
     let longitude: Longitude
@@ -60,7 +60,7 @@ struct AidToNavigationReport: AISMessage {
         self.mmsiNumber = mmsi
         
         guard let aidTypeBits: UInt8 = bits[38...42] else { return nil }
-        guard let aidType = NavaidType(rawValue: aidTypeBits) else { return nil }
+        guard let aidType = AtoNType(rawValue: aidTypeBits) else { return nil }
         self.aidType = aidType
         
         guard let nameBits: BitBuffer = bits[43...162] else { return nil }

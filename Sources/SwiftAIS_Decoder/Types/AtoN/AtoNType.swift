@@ -1,11 +1,11 @@
 //
-//  NavaidType.swift
+//  AtoNType.swift
 //  SwiftAIS-Decoder
 //
 //  Created by Connor Gibbons on 9/3/26.
 //
 
-enum NavaidType: UInt8 {
+enum AtoNType: UInt8 {
     case unspecified = 0
     case referencePoint = 1
     case racon = 2 // Short for "Radar Beacon", radar transponder marking hazard

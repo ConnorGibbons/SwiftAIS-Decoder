@@ -33,6 +33,7 @@ enum AISMessageType: Int {
     case singleSlotBinaryMessage = 25
     case multipleSlotBinaryMessageWithCommunicationsState = 26
     case positionReportForLongRangeApplications = 27
+    case singleSlotAidToNavigationReport = 28
 
     var description: String {
         switch self {
@@ -90,6 +91,8 @@ enum AISMessageType: Int {
             return "Multiple Slot Binary Message With Communications State"
         case .positionReportForLongRangeApplications:
             return "Position Report For Long-Range Applications"
+        case .singleSlotAidToNavigationReport:
+            return "Single Slot Aid-to-Navigation Report"
         }
     }
 }

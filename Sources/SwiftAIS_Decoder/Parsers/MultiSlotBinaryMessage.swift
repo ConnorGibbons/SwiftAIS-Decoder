@@ -1,12 +1,12 @@
 //
-//  SingleSlotBinaryMessage.swift
+//  MultiSlotBinaryMessage.swift
 //  SwiftAIS-Decoder
 //
 //  Created by Connor Gibbons on 9/10/26.
 //
-//  Type 25: Single Slot Binary Message
+//  Type 26: Multi Slot Binary Message
 //  Listed as "extremely rare" https://gpsd.gitlab.io/gpsd/AIVDM.html
-//  Payload character: I
+//  Payload character: J
 
 import SignalTools
 
