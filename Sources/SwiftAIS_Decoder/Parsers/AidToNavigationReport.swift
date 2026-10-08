@@ -35,8 +35,8 @@ public struct AidToNavigationReport: AISMessage {
     
     public let additionalSentences: [AISNMEA0183Sentence]?
     
-    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
-        guard nmeaSentences.count > 0 else { return nil }
+    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
+        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
         self.nmeaSentence = nmeaSentences[0]
         
         var bits: BitBuffer = .init()
@@ -50,73 +50,34 @@ public struct AidToNavigationReport: AISMessage {
             bits.append(contentsOf: sentence.payloadBits)
         }
         
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 21 else { return nil }
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 21 else { throw .unexpectedMessageType(messageType.rawValue, expected: [21]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let aidTypeBits: UInt8 = bits[38...42] else { return nil }
-        guard let aidType = AtoNType(rawValue: aidTypeBits) else { return nil }
-        self.aidType = aidType
-        
-        guard let nameBits: BitBuffer = bits[43...162] else { return nil }
-        guard let name: AISText = .init(raw: nameBits) else { return nil }
+
+        self.aidType = try bits.read(38...42, "aidType")
+
+        let nameBits: BitBuffer = try bits.read(43...162, "name")
+        guard let name = AISText(raw: nameBits) else { throw .invalidText(field: "name") }
         self.name = name
-        
-        guard let positionAccuracyBit: UInt8 = bits[163...163] else { return nil }
-        guard let positionAccuracy = PositionAccuracy(rawValue: positionAccuracyBit) else { return nil }
-        self.positionAccuracy = positionAccuracy
-        
-        guard let longitudeBits: UInt32 = bits[164...191] else { return nil }
-        let longitude = Longitude(rawValue: longitudeBits)
-        self.longitude = longitude
-        
-        guard let latitudeBits: UInt32 = bits[192...218] else { return nil }
-        let latitude = Latitude(rawValue: latitudeBits)
-        self.latitude = latitude
-        
-        guard let dimensionToBowBits: UInt16 = bits[219...227] else { return nil }
-        self.dimensionToBow = dimensionToBowBits
-        
-        guard let dimensionToSternBits: UInt16 = bits[228...236] else { return nil }
-        self.dimensionToStern = dimensionToSternBits
-        
-        guard let dimensionToPortBits: UInt8 = bits[237...242] else { return nil }
-        self.dimensionToPort = dimensionToPortBits
-        
-        guard let dimensionToStarboardBits: UInt8 = bits[243...248] else { return nil }
-        self.dimensionToStarboard = dimensionToStarboardBits
-        
-        guard let fixTypeBits: UInt8 = bits[249...252] else { return nil }
-        guard let fixType = EPFDFixType(rawValue: fixTypeBits) else { return nil }
-        self.fixType = fixType
-        
-        guard let timeStampBits: UInt8 = bits[253...258] else { return nil }
-        let timeStamp = TimeStamp(rawValue: timeStampBits)
-        self.timestamp = timeStamp
-        
-        guard let offPositionFlagBit: UInt8 = bits[259...259] else { return nil }
-        let offPositionFlag = OffPositionFlag(rawValue: offPositionFlagBit == 1)
-        self.offPositionFlag = offPositionFlag
-        
-        guard let regionalReservedBits: UInt8 = bits[260...267] else { return nil }
-        self.regionalReserved = regionalReservedBits
-        
-        guard let raimFlagBit: UInt8 = bits[268...268] else { return nil }
-        guard let raimFlag = RAIMFlag(rawValue: raimFlagBit) else { return nil }
-        self.raimFlag = raimFlag
-        
-        guard let virtualAidFlagBit: UInt8 = bits[269...269] else { return nil }
-        let virtualAidFlag = VirtualAidFlag(rawValue: virtualAidFlagBit == 1)
-        self.virtualAidFlag = virtualAidFlag
-        
-        guard let assignedFlagBit: UInt8 = bits[270...270] else { return nil }
-        let assignedFlag = AssignedFlag(rawValue: assignedFlagBit == 1)
-        self.assignedFlag = assignedFlag
+
+        self.positionAccuracy = try bits.read(163...163, "positionAccuracy")
+        self.longitude = Longitude(rawValue: try bits.read(164...191, "longitude"))
+        self.latitude = Latitude(rawValue: try bits.read(192...218, "latitude"))
+        self.dimensionToBow = try bits.read(219...227, "dimensionToBow")
+        self.dimensionToStern = try bits.read(228...236, "dimensionToStern")
+        self.dimensionToPort = try bits.read(237...242, "dimensionToPort")
+        self.dimensionToStarboard = try bits.read(243...248, "dimensionToStarboard")
+        self.fixType = try bits.read(249...252, "fixType")
+        self.timestamp = TimeStamp(rawValue: try bits.read(253...258, "timestamp"))
+        self.offPositionFlag = OffPositionFlag(rawValue: try bits.read(259, "offPositionFlag"))
+        self.regionalReserved = try bits.read(260...267, "regionalReserved")
+        self.raimFlag = try bits.read(268...268, "raimFlag")
+        self.virtualAidFlag = VirtualAidFlag(rawValue: try bits.read(269, "virtualAidFlag"))
+        self.assignedFlag = AssignedFlag(rawValue: try bits.read(270, "assignedFlag"))
         
         if let spareBit: UInt8 = bits[271...271] {
             self.spare = spareBit

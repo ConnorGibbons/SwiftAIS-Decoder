@@ -20,8 +20,7 @@ struct AssignmentModeCommandTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 96)
 
-        let report = try #require(AssignmentModeCommand(nmea: sentence),
-                                  "A Type 16 payload should initialize an AssignmentModeCommand")
+        let report = try AssignmentModeCommand(nmea: sentence)
 
         #expect(report.messageType.rawValue == 16)
         #expect(report.mmsiNumber.value == 2053501)
@@ -33,7 +32,7 @@ struct AssignmentModeCommandTests {
 
         #expect(report.destination2 == nil)
         #expect(report.offset2 == nil)
-        #expect(report.incrememt2 == nil)
+        #expect(report.increment2 == nil)
 
         print(report.description())
     }
@@ -48,8 +47,7 @@ struct AssignmentModeCommandTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 144)
 
-        let report = try #require(AssignmentModeCommand(nmea: sentence),
-                                  "A Type 16 payload should initialize an AssignmentModeCommand")
+        let report = try AssignmentModeCommand(nmea: sentence)
 
         #expect(report.messageType.rawValue == 16)
         #expect(report.mmsiNumber.value == 3669955)
@@ -66,7 +64,7 @@ struct AssignmentModeCommandTests {
         // Second block: an all-zero MMSI, which is a valid MMSI value even though no station owns it
         #expect(report.destination2?.value == 0)
         #expect(report.offset2 == 20)
-        #expect(report.incrememt2 == 0)
+        #expect(report.increment2 == 0)
 
         print(report.description())
     }

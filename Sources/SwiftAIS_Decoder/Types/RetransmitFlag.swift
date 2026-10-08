@@ -11,7 +11,7 @@ public enum RetransmitFlag: RawRepresentable {
     case notRetransmitted
     case retransmitted
     
-    public init?(rawValue: Bool) {
+    public init(rawValue: Bool) {
         if rawValue {
             self = .retransmitted
         } else {

@@ -14,8 +14,7 @@ struct AddressedSafetyMessageTests {
 
     @Test func decodesAddressedSafetyMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.addressedSafetyMessage)
-        let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
-                                  "A Type 12 payload should initialize an AddresedSafetyMessage")
+        let report = try AddresedSafetyMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 2275200)
@@ -41,8 +40,7 @@ struct AddressedSafetyMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 4)
 
-        let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
-                                  "A Type 12 payload should initialize an AddresedSafetyMessage")
+        let report = try AddresedSafetyMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 351853000)
@@ -67,8 +65,7 @@ struct AddressedSafetyMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
-        let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
-                                  "A Type 12 payload should initialize an AddresedSafetyMessage")
+        let report = try AddresedSafetyMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 271002099)
@@ -92,8 +89,7 @@ struct AddressedSafetyMessageTests {
     @Test func decodesMultipartAddressedSafetyMessage() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage2)
-        let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence1, sentence2]),
-                                  "A Type 12 payload should initialize an AddresedSafetyMessage")
+        let report = try AddresedSafetyMessage(nmeaSentences: [sentence1, sentence2])
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 211217560)

@@ -7,7 +7,7 @@
 
 import SignalTools
 
-public extension BitBuffer {
+extension BitBuffer {
     
     /// Extracts the value of the bits in this range of the BitBuffer.
     /// Any residual will be on the left-hand side.
@@ -86,6 +86,11 @@ public extension BitBuffer {
             throw .invalidValue(field: field, rawValue: UInt64(truncatingIfNeeded: raw))
         }
         return value
+    }
+
+    func read(_ index: Int, _ field: String) throws(AISDecodingError) -> Bool {
+        let bit: UInt8 = try read(index..<(index + 1), field)
+        return bit == 1
     }
 
     func read(_ range: Range<Int>, _ field: String) throws(AISDecodingError) -> BitBuffer {

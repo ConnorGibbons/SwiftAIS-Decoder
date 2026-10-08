@@ -13,8 +13,7 @@ struct BinaryAddressedMessageTests {
 
     @Test func decodesBinaryAddressedMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.binaryAddressedMessage)
-        let report = try #require(BinaryAddressedMessage(nmeaSentences: [sentence]),
-                                  "A Type 6 payload should initialize a BinaryAddressedMessage")
+        let report = try BinaryAddressedMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 6)
         #expect(report.mmsiNumber.value == 2444000)

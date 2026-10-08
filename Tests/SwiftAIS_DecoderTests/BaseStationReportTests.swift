@@ -13,8 +13,7 @@ struct BaseStationReportTests {
 
     @Test func decodesBaseStationReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.baseStationReport)
-        let report = try #require(BaseStationReport(nmea: sentence),
-                                  "A Type 4 payload should initialize a BaseStationReport")
+        let report = try BaseStationReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 4)
         #expect(report.mmsiNumber.value == 2112493)

@@ -14,8 +14,7 @@ struct AISSatelliteMessageTests {
 
     @Test func decodesAISSatelliteMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.satelliteMessage)
-        let report = try #require(AISSatelliteMessage(nmea: sentence),
-                                  "A Type 27 payload should initialize an AISSatelliteMessage")
+        let report = try AISSatelliteMessage(nmea: sentence)
 
         #expect(sentence.channel == .B)
         #expect(report.messageType.rawValue == 27)
@@ -48,8 +47,7 @@ struct AISSatelliteMessageTests {
 
     @Test func decodesSecondAISSatelliteMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.satelliteMessageTwo)
-        let report = try #require(AISSatelliteMessage(nmea: sentence),
-                                  "A Type 27 payload should initialize an AISSatelliteMessage")
+        let report = try AISSatelliteMessage(nmea: sentence)
 
         #expect(sentence.channel == .A)
         #expect(report.messageType.rawValue == 27)

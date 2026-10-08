@@ -23,8 +23,8 @@ public struct BinaryAddressedMessage: AISMessage {
     public var payload: BitBuffer
     public var text: AISText? // Almost every message will not properly decode AISText here. Most payloads are a mixture of data types, far too many to write individual parsers for.
     
-    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
-        guard nmeaSentences.count > 0 else { return nil }
+    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
+        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
         self.nmeaSentence = nmeaSentences[0]
         
         var bits: BitBuffer = .init()
@@ -38,34 +38,26 @@ public struct BinaryAddressedMessage: AISMessage {
             bits.append(contentsOf: sentence.payloadBits)
         }
         
-        guard bits.count >= 89 else { return nil } // Functional ID is bit 87, so this guard is to ensure there's at least 1 payload bit
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard messageTypeBits == 6 else { return nil }
-        self.messageType = .binaryAddressedMessage
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi: MMSI = .init(value: mmsiBits) else { return nil }
+        guard bits.count >= 89 else { throw .payloadTooShort(field: "payload", bits: 88..<89, available: bits.count) } // Functional ID is bit 87, so this guard is to ensure there's at least 1 payload bit
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 6 else { throw .unexpectedMessageType(messageType.rawValue, expected: [6]) }
+        self.messageType = messageType
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi: MMSI = .init(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let destinationMMSIBits: UInt32 = bits[40...69] else { return nil }
-        guard let destinationMMSI: MMSI = .init(value: destinationMMSIBits) else { return nil }
+
+        let destinationMMSIBits: UInt32 = try bits.read(40...69, "destinationMMSI")
+        guard let destinationMMSI: MMSI = .init(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
         self.destinationMMSI = destinationMMSI
-        
-        let retransmitBits: Int = bits[70]
-        guard let retransmitFlag = RetransmitFlag(rawValue: retransmitBits == 1) else { return nil }
-        self.retransmit = retransmitFlag
-        
-        let spareBits: Int = bits[71]
-        self.spare = spareBits == 1
-        
-        guard let areaCodeBits: UInt16 = bits[72...81] else { return nil }
-        self.areaCode = DesignatedAreaCode(rawValue: areaCodeBits)
-        
-        guard let functionalIDBits: UInt8 = bits[82...87] else { return nil }
-        self.functionalID = functionalIDBits
-        
-        guard let payloadBits: BitBuffer = bits[88..<bits.count] else { return nil }
+
+        self.retransmit = RetransmitFlag(rawValue: try bits.read(70, "retransmit"))
+        self.spare = try bits.read(71, "spare")
+        self.areaCode = DesignatedAreaCode(rawValue: try bits.read(72...81, "areaCode"))
+        self.functionalID = try bits.read(82...87, "functionalID")
+
+        let payloadBits: BitBuffer = try bits.read(88..<bits.count, "payload")
         self.payload = payloadBits
         
         // Fill bits can leave a partial character at the end of the payload, so only whole characters are decoded.

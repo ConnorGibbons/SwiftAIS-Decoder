@@ -12,8 +12,7 @@ struct AidToNavigationReportTests {
 
     @Test func decodesAidToNavigationReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.aidToNavigationReport)
-        let report = try #require(AidToNavigationReport(nmeaSentences: [sentence]),
-                                  "A Type 21 payload should initialize an AidToNavigationReport")
+        let report = try AidToNavigationReport(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 79)
@@ -52,8 +51,7 @@ struct AidToNavigationReportTests {
 
     @Test func decodesSecondAidToNavigationReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.aidToNavigationReportTwo)
-        let report = try #require(AidToNavigationReport(nmeaSentences: [sentence]),
-                                  "A Type 21 payload should initialize an AidToNavigationReport")
+        let report = try AidToNavigationReport(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 992111811)
@@ -95,8 +93,7 @@ struct AidToNavigationReportTests {
     @Test func decodesMultipartAidToNavigationReport() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport2)
-        let report = try #require(AidToNavigationReport(nmeaSentences: [sentence1, sentence2]),
-                                  "A Type 21 payload should initialize an AidToNavigationReport")
+        let report = try AidToNavigationReport(nmeaSentences: [sentence1, sentence2])
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 316021442)
@@ -134,8 +131,7 @@ struct AidToNavigationReportTests {
     @Test func decodesSecondMultipartAidToNavigationReport() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport2)
-        let report = try #require(AidToNavigationReport(nmeaSentences: [sentence1, sentence2]),
-                                  "A Type 21 payload should initialize an AidToNavigationReport")
+        let report = try AidToNavigationReport(nmeaSentences: [sentence1, sentence2])
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 4000003)

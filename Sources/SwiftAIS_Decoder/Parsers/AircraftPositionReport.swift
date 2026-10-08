@@ -27,60 +27,35 @@ public struct AircraftPositionReport: AISMessage {
     public let raimFlag: RAIMFlag
     public let radioStatus: RadioStatus
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 9 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 9 else { throw .unexpectedMessageType(messageType.rawValue, expected: [9]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let altitudeBits: UInt16 = bits[38...49] else { return nil }
-        self.altitude = altitudeBits
-        
-        guard let sogBits: UInt16 = bits[50...59] else { return nil }
-        self.speedOverGround = sogBits // Unlike in position report, it's given in knots, so can use value directly
-        
-        guard let accuracyBit: UInt8 = bits[60...60] else { return nil }
-        guard let positionAccuracy = PositionAccuracy(rawValue: accuracyBit) else { return nil }
-        self.positionAccuracy = positionAccuracy
-        
-        guard let longitudeBits: UInt32 = bits[61...88] else { return nil }
-        self.longitude = Longitude(rawValue: longitudeBits)
-        
-        guard let latitudeBits: UInt32 = bits[89...115] else { return nil }
-        self.latitude = Latitude(rawValue: latitudeBits)
-        
-        guard let cogBits: UInt16 = bits[116...127] else { return nil }
-        guard let courseOverGround = CourseOverGround(rawValue: cogBits) else { return nil }
+
+        self.altitude = try bits.read(38...49, "altitude")
+        self.speedOverGround = try bits.read(50...59, "speedOverGround") // Unlike in position report, it's given in knots, so can use value directly
+        self.positionAccuracy = try bits.read(60...60, "positionAccuracy")
+        self.longitude = Longitude(rawValue: try bits.read(61...88, "longitude"))
+        self.latitude = Latitude(rawValue: try bits.read(89...115, "latitude"))
+
+        let cogBits: UInt16 = try bits.read(116...127, "courseOverGround")
+        guard let courseOverGround = CourseOverGround(rawValue: cogBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(cogBits)) }
         self.courseOverGround = courseOverGround
-        
-        guard let timestampBits: UInt8 = bits[128...133] else { return nil }
-        self.timestamp = TimeStamp(rawValue: timestampBits)
-        
-        guard let regionalReservedBits: UInt8 = bits[134...141] else { return nil }
-        self.regionalReserved = regionalReservedBits
-        
-        guard let dteBit: UInt8 = bits[142...142] else { return nil }
-        self.dte = DTE(rawValue: dteBit != 0)
-        
-        guard let spareBits: UInt8 = bits[143...145] else { return nil }
-        self.spare = spareBits
-        
-        guard let assignedBit: UInt8 = bits[146...146] else { return nil }
-        self.assigned = AssignedFlag(rawValue: assignedBit != 0)
-        
-        guard let raimBit: UInt8 = bits[147...147] else { return nil }
-        guard let raim = RAIMFlag(rawValue: raimBit) else { return nil }
-        self.raimFlag = raim
-        
-        guard let radioStatusBits: UInt32 = bits[148...167] else { return nil }
-        self.radioStatus = RadioStatus(rawValue: radioStatusBits)
+
+        self.timestamp = TimeStamp(rawValue: try bits.read(128...133, "timestamp"))
+        self.regionalReserved = try bits.read(134...141, "regionalReserved")
+        self.dte = DTE(rawValue: try bits.read(142, "dte"))
+        self.spare = try bits.read(143...145, "spare")
+        self.assigned = AssignedFlag(rawValue: try bits.read(146, "assigned"))
+        self.raimFlag = try bits.read(147...147, "raimFlag")
+        self.radioStatus = RadioStatus(rawValue: try bits.read(148...167, "radioStatus"))
     }
     
     

@@ -24,62 +24,42 @@ public struct ClassAPositionReport: AISMessage {
     public let raimFlag: RAIMFlag
     public let radioStatus: RadioStatus
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard [1,2,3].contains(messageType.rawValue) else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard [1,2,3].contains(messageType.rawValue) else {
+            throw .unexpectedMessageType(messageType.rawValue, expected: [1,2,3])
+        }
         self.messageType = messageType
 
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
 
-        guard let navStatusBits: UInt8 = bits[38...41] else { return nil }
-        guard let navStatus = NavigationStatus(rawValue: navStatusBits) else { return nil }
-        self.navStatus = navStatus
+        self.navStatus = try bits.read(38...41, "navStatus")
+        self.rateOfTurn = RateOfTurn(value: Int8(bitPattern: try bits.read(42...49, "rateOfTurn"))) // 8-bit signed field (I3)
 
-        guard let rotBits: UInt8 = bits[42...49] else { return nil }
-        self.rateOfTurn = RateOfTurn(value: Int8(bitPattern: rotBits)) // 8-bit signed field (I3)
-
-        guard let sogBits: UInt16 = bits[50...59] else { return nil }
-        guard let speedOverGround = SpeedOverGround(rawValue: sogBits) else { return nil }
+        let sogBits: UInt16 = try bits.read(50...59, "speedOverGround")
+        guard let speedOverGround = SpeedOverGround(rawValue: sogBits) else { throw .invalidValue(field: "speedOverGround", rawValue: UInt64(sogBits)) }
         self.speedOverGround = speedOverGround
 
-        guard let accuracyBits: UInt8 = bits[60...60] else { return nil }
-        guard let positionAccuracy = PositionAccuracy(rawValue: accuracyBits) else { return nil }
-        self.positionAccuracy = positionAccuracy
+        self.positionAccuracy = try bits.read(60...60, "positionAccuracy")
+        self.longitude = Longitude(rawValue: try bits.read(61...88, "longitude")) // 28-bit signed, sign-extended in init
+        self.latitude = Latitude(rawValue: try bits.read(89...115, "latitude")) // 27-bit signed, sign-extended in init
 
-        guard let lonBits: UInt32 = bits[61...88] else { return nil }
-        self.longitude = Longitude(rawValue: lonBits) // 28-bit signed, sign-extended in init
-
-        guard let latBits: UInt32 = bits[89...115] else { return nil }
-        self.latitude = Latitude(rawValue: latBits) // 27-bit signed, sign-extended in init
-
-        guard let courseBits: UInt16 = bits[116...127] else { return nil }
-        guard let courseOverGround = CourseOverGround(rawValue: courseBits) else { return nil }
+        let courseBits: UInt16 = try bits.read(116...127, "courseOverGround")
+        guard let courseOverGround = CourseOverGround(rawValue: courseBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(courseBits)) }
         self.courseOverGround = courseOverGround
 
-        guard let headingBits: UInt16 = bits[128...136] else { return nil }
-        self.trueHeading = TrueHeading(rawValue: headingBits)
+        self.trueHeading = TrueHeading(rawValue: try bits.read(128...136, "trueHeading"))
+        self.timestamp = TimeStamp(rawValue: try bits.read(137...142, "timestamp"))
+        self.maneuverIndicator = try bits.read(143...144, "maneuverIndicator")
+        self.spare = SpareData(rawValue: try bits.read(145...147, "spare"))
+        self.raimFlag = try bits.read(148...148, "raimFlag")
 
-        guard let secondBits: UInt8 = bits[137...142] else { return nil }
-        self.timestamp = TimeStamp(rawValue: secondBits)
-
-        guard let maneuverBits: UInt8 = bits[143...144] else { return nil }
-        guard let maneuverIndicator = ManeuverIndicator(rawValue: maneuverBits) else { return nil }
-        self.maneuverIndicator = maneuverIndicator
-
-        guard let spareBits: UInt64 = bits[145...147] else { return nil }
-        self.spare = SpareData(rawValue: spareBits)
-
-        guard let raimBits: UInt8 = bits[148...148] else { return nil }
-        guard let raimFlag = RAIMFlag(rawValue: raimBits) else { return nil }
-        self.raimFlag = raimFlag
-
-        guard let radioBits: UInt32 = bits[149...167] else { return nil }
+        let radioBits: UInt32 = try bits.read(149...167, "radioStatus")
         if(self.messageType.rawValue == 3) {
             self.radioStatus = RadioStatus(rawValue: radioBits, statusType: .itdma)
         } else {

@@ -24,51 +24,34 @@ public struct AISSatelliteMessage: AISMessage {
     public let positionLatency: PositionLatency
     public let spare: UInt8?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 27 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 27 else { throw .unexpectedMessageType(messageType.rawValue, expected: [27]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let positionAccuracyBit: UInt8 = bits[38...38] else { return nil }
-        guard let positionAccuracy = PositionAccuracy(rawValue: positionAccuracyBit) else { return nil }
-        self.positionAccuracy = positionAccuracy
-        
-        guard let raimFlagBit: UInt8 = bits[39...39] else { return nil }
-        guard let raimFlag = RAIMFlag(rawValue: raimFlagBit) else { return nil }
-        self.raimFlag = raimFlag
-        
-        guard let navigationStatusBits: UInt8 = bits[40...43] else { return nil }
-        guard let navigationStatus = NavigationStatus(rawValue: navigationStatusBits) else { return nil }
-        self.navigationStatus = navigationStatus
-        
-        guard let longitudeBits: UInt32 = bits[44...61] else { return nil }
-        let longitude = Longitude(rawValue: longitudeBits, isTenths: true)
-        self.longitude = longitude
-        
-        guard let latitudeBits: UInt32 = bits[62...78] else { return nil }
-        let latitude = Latitude(rawValue: latitudeBits, isTenths: true)
-        self.latitude = latitude
-        
-        guard let speedOverGroundBits: UInt8 = bits[79...84] else { return nil }
-        guard let speedOverGround = SpeedOverGroundCompact(rawValue: speedOverGroundBits) else { return nil }
+
+        self.positionAccuracy = try bits.read(38...38, "positionAccuracy")
+        self.raimFlag = try bits.read(39...39, "raimFlag")
+        self.navigationStatus = try bits.read(40...43, "navigationStatus")
+        self.longitude = Longitude(rawValue: try bits.read(44...61, "longitude"), isTenths: true)
+        self.latitude = Latitude(rawValue: try bits.read(62...78, "latitude"), isTenths: true)
+
+        let speedOverGroundBits: UInt8 = try bits.read(79...84, "speedOverGround")
+        guard let speedOverGround = SpeedOverGroundCompact(rawValue: speedOverGroundBits) else { throw .invalidValue(field: "speedOverGround", rawValue: UInt64(speedOverGroundBits)) }
         self.speedOverGround = speedOverGround
-        
-        guard let courseOverGroundBits: UInt16 = bits[85...93] else { return nil }
-        guard let courseOverGround = CourseOverGroundCompact(rawValue: courseOverGroundBits) else { return nil }
+
+        let courseOverGroundBits: UInt16 = try bits.read(85...93, "courseOverGround")
+        guard let courseOverGround = CourseOverGroundCompact(rawValue: courseOverGroundBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(courseOverGroundBits)) }
         self.courseOverGround = courseOverGround
-        
-        guard let positionLatencyBit: UInt8 = bits[94...94] else { return nil }
-        guard let positionLatency = PositionLatency(rawValue: positionLatencyBit) else { return nil }
-        self.positionLatency = positionLatency
-        
+
+        self.positionLatency = try bits.read(94...94, "positionLatency")
+
         if let spareBit: UInt8 = bits[95...95] {
             self.spare = spareBit
         } else {

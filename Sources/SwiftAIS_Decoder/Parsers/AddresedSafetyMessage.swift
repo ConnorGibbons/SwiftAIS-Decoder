@@ -22,8 +22,8 @@ public struct AddresedSafetyMessage: AISMessage {
     public let payload: BitBuffer
     public let text: AISText? // The payload is described as not always containing normally encoded text, and I don't want that to make this init fail.
     
-    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
-        guard nmeaSentences.count > 0 else { return nil }
+    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
+        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
         let nmea = nmeaSentences[0]
         self.nmeaSentence = nmea
         
@@ -38,30 +38,24 @@ public struct AddresedSafetyMessage: AISMessage {
             bits.append(contentsOf: sentence.payloadBits)
         }
         
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 12 else { return nil }
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 12 else { throw .unexpectedMessageType(messageType.rawValue, expected: [12]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil  }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let seqNumberBits: UInt8 = bits[38...39] else { return nil }
-        self.sequenceNumber = seqNumberBits
-        
-        guard let destinationMMSIBits: UInt32 = bits[40...69] else { return nil }
-        guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { return nil  }
+
+        self.sequenceNumber = try bits.read(38...39, "sequenceNumber")
+
+        let destinationMMSIBits: UInt32 = try bits.read(40...69, "destinationMMSI")
+        guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
         self.destinationMMSI = destinationMMSI
-        
-        guard let retransmitBits: UInt8 = bits[70...70] else { return nil }
-        guard let retransmit = RetransmitFlag(rawValue: retransmitBits == 1) else { return nil }
-        self.retransmit = retransmit
-        
-        guard let spareBit: UInt8 = bits[71...71] else { return nil }
-        self.spare = spareBit == 1
-        
-        guard let payloadBits: BitBuffer = bits[72..<bits.count] else { return nil }
+
+        self.retransmit = RetransmitFlag(rawValue: try bits.read(70, "retransmit"))
+        self.spare = try bits.read(71, "spare")
+
+        let payloadBits: BitBuffer = try bits.read(72..<bits.count, "payload")
         self.payload = payloadBits
 
         // Fill bits can leave a partial character at the end of the payload, so only whole characters are decoded.
