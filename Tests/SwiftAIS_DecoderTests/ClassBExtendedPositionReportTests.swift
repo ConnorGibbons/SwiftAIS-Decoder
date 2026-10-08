@@ -11,8 +11,7 @@ struct ClassBExtendedPositionReportTests {
     private static let classBExtendedPositionReport = "!AIVDM,1,1,,A,C6:Vo:00@R;51>TORgH2owc6@b30jb2M111111111110S0hS440P,0*0F"
 
     @Test func decodesClassBExtendedPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBExtendedPositionReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classBExtendedPositionReport)
         let report = try #require(ClassBExtendedPositionReport(nmea: sentence),
                                   "A Type 19 payload should initialize a ClassBExtendedPositionReport")
 
@@ -68,8 +67,7 @@ struct ClassBExtendedPositionReportTests {
     private static let classBExtendedPositionReportTwo = "!AIVDM,1,1,,A,C69@gi@00:8eJK4v0`fwcwh6Vb>2LjcQaUge11111110?1@51QP7,0*2C"
 
     @Test func decodesSecondClassBExtendedPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportTwo),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportTwo)
         let report = try #require(ClassBExtendedPositionReport(nmea: sentence),
                                   "A Type 19 payload should initialize a ClassBExtendedPositionReport")
 
@@ -125,8 +123,7 @@ struct ClassBExtendedPositionReportTests {
     private static let classBExtendedPositionReportThree = "!AIVDM,1,1,,B,C5N3SRgPEnJGEBT>NhWAwwo862PaLELTBJ:V00000000S0D:R220,0*0B"
 
     @Test func decodesThirdClassBExtendedPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportThree),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportThree)
         let report = try #require(ClassBExtendedPositionReport(nmea: sentence),
                                   "A Type 19 payload should initialize a ClassBExtendedPositionReport")
 

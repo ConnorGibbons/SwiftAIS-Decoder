@@ -8,27 +8,27 @@
 //  Broadcast by a control base station to set radio Tx/Rx parameters for a particular region.
 //  Payload Character: F
 
-struct ChannelManagement: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct ChannelManagement: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare1: UInt8
-    let channelA: VHFChannel
-    let channelB: VHFChannel
-    let txrx: TxRxModes
-    let power: TransmitPower
-    let region: LatLongRegion? // Whether or not this is used or MMSI1/2 depends on the "Addressed" bit
-    let dest1: MMSI?
-    let dest2: MMSI?
-    let addressed: Addressed
-    let channelABandwidth: Bandwidth
-    let channelBBandwidth: Bandwidth
-    let zoneSize: UInt8 // "The Transitional Zone Size in nautical miles should be calcu-lated by adding 1 to this parameter value. The default parameter value should be 4, which translates to 5
+    public let spare1: UInt8
+    public let channelA: VHFChannel
+    public let channelB: VHFChannel
+    public let txrx: TxRxModes
+    public let power: TransmitPower
+    public let region: LatLongRegion? // Whether or not this is used or MMSI1/2 depends on the "Addressed" bit
+    public let dest1: MMSI?
+    public let dest2: MMSI?
+    public let addressed: Addressed
+    public let channelABandwidth: Bandwidth
+    public let channelBBandwidth: Bandwidth
+    public let zoneSize: UInt8 // "The Transitional Zone Size in nautical miles should be calcu-lated by adding 1 to this parameter value. The default parameter value should be 4, which translates to 5
     // nautical miles" - https://web.archive.org/web/20111110211252/https://www.ialathree.org/iala/pages/AIS/IALATech1.5.pdf
-    let spare2: UInt32?
+    public let spare2: UInt32?
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -105,7 +105,7 @@ struct ChannelManagement: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

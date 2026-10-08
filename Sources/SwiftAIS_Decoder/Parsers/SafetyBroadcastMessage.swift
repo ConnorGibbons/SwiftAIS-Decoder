@@ -9,17 +9,17 @@
 
 import SignalTools
 
-struct SafetyBroadcastMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct SafetyBroadcastMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare: UInt8
-    let additionalSentences: [AISNMEA0183Sentence]?
-    let payload: BitBuffer
-    let text: AISText?
+    public let spare: UInt8
+    public let additionalSentences: [AISNMEA0183Sentence]?
+    public let payload: BitBuffer
+    public let text: AISText?
     
-    init?(nmeaSentences: [AISNMEA0183Sentence]) {
+    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
         guard nmeaSentences.count > 0 else { return nil }
         self.nmeaSentence = nmeaSentences[0]
         
@@ -60,7 +60,7 @@ struct SafetyBroadcastMessage: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

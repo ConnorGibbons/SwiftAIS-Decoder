@@ -6,17 +6,17 @@
 //
 //  Not entirely sure what this really means, seems to have to do with ability to change frequency at the request of a base station
 
-enum BandFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum BandFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case canChangeFreq
     case cantChangeFreq
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .canChangeFreq : .cantChangeFreq
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .canChangeFreq:
             return true
@@ -25,7 +25,7 @@ enum BandFlag: RawRepresentable {
         }
     }
 
-    var description: String {
+    public var description: String {
         if self.rawValue { return "Can Change Frequency" }
         else { return "Can't Change Frequency" }
     }

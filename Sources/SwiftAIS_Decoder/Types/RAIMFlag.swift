@@ -6,11 +6,11 @@
 //
 
 // RAIM: Receiver Autonomous Integrity Monitoring
-enum RAIMFlag: UInt8 {
+public enum RAIMFlag: UInt8 {
     case notInUse = 0
     case inUse = 1
     
-    var description: String {
+    public var description: String {
         switch self {
             case .notInUse:
             return "Not in use"

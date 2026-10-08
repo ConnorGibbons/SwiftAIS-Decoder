@@ -12,8 +12,7 @@ struct SafetyRelatedAcknowledgeTests {
     private static let safetyRelatedAcknowledge = "!AIVDM,1,1,,A,=39UOj0jFs9R,0*65"
 
     @Test func decodesSafetyRelatedAcknowledge() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.safetyRelatedAcknowledge),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.safetyRelatedAcknowledge)
         #expect(sentence.channel == .A)
 
         let report = try #require(SafetyRelatedAcknowledge(nmea: sentence),
@@ -35,8 +34,7 @@ struct SafetyRelatedAcknowledgeTests {
     private static let binaryAcknowledge = "!AIVDM,1,1,,A,7022QP00V206,0*42"
 
     @Test func rejectsNonSafetyRelatedAcknowledge() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.binaryAcknowledge),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.binaryAcknowledge)
         #expect(SafetyRelatedAcknowledge(nmea: sentence) == nil)
     }
 }

@@ -5,11 +5,11 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
-struct Latitude: Equatable {
-    let rawValue: Int32
-    let degrees: Double?
+public struct Latitude: Equatable {
+    public let rawValue: Int32
+    public let degrees: Double?
 
-    init(rawValue: UInt32, isTenths: Bool = false) {
+    public init(rawValue: UInt32, isTenths: Bool = false) {
         let bitCount = isTenths ? 17 : 27
         let rawValueSigned = Int32(signextend: rawValue, bits: bitCount) // This will properly interpret the 17/27 bits as a signed int
         self.rawValue = rawValueSigned
@@ -19,7 +19,7 @@ struct Latitude: Equatable {
         else { self.degrees = nil }
     }
 
-    var description: String {
+    public var description: String {
         if let degrees = degrees {
             return "\(degrees.rounded(toPlaces: 6)) degrees"
         }

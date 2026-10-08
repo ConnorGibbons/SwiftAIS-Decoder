@@ -13,8 +13,7 @@ struct SafetyBroadcastMessageTests {
     private static let safetyBroadcastMessage = "!AIVDM,1,1,,A,>5?Per18=HB1U:1@E=B0m<L,2*51"
 
     @Test func decodesSafetyBroadcastMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.safetyBroadcastMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.safetyBroadcastMessage)
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
@@ -39,8 +38,7 @@ struct SafetyBroadcastMessageTests {
     private static let longSafetyBroadcastMessage = "!AIVDM,1,1,,A,>3R1p10E3;;R0USCR0HO>0@gN10kGJp,2*7F"
 
     @Test func decodesLongSafetyBroadcastMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.longSafetyBroadcastMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.longSafetyBroadcastMessage)
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
@@ -65,10 +63,8 @@ struct SafetyBroadcastMessageTests {
     private static let multipartSafetyBroadcastMessage2 = "!AIVDM,2,2,0,A,T,0*42"
 
     @Test func decodesMultipartSafetyBroadcastMessage() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage1),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage2),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage1)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage2)
         let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence1, sentence2]),
                                   "A Type 14 payload should initialize a SafetyBroadcastMessage")
 
@@ -92,8 +88,7 @@ struct SafetyBroadcastMessageTests {
     private static let addressedSafetyMessage = "!AIVDM,1,1,,A,<5?SIj5Cp;NPD81>H0,4*4C"
 
     @Test func rejectsNonSafetyBroadcastMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.addressedSafetyMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.addressedSafetyMessage)
         #expect(SafetyBroadcastMessage(nmeaSentences: [sentence]) == nil)
     }
 

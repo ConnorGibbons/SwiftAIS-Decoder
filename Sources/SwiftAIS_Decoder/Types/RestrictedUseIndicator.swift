@@ -5,13 +5,13 @@
 //  Created by Connor Gibbons on 9/23/26.
 //
 
-enum RestrictedUseIndicator: UInt8 {
+public enum RestrictedUseIndicator: UInt8 {
     case notRestricted = 0
     case restrictedTerritorially = 1
     case restrictedToExclusiveEconomicZone = 2
     case restrictionByFlagState = 3
     
-    var description: String {
+    public var description: String {
         switch self {
         case .notRestricted:
             "Not restricted"

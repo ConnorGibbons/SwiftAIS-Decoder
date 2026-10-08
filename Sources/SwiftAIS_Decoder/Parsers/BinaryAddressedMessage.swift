@@ -9,21 +9,21 @@
 
 import SignalTools
 
-struct BinaryAddressedMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct BinaryAddressedMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    var destinationMMSI: MMSI
-    var retransmit: RetransmitFlag // 0 = no retransmit, 1 = retransmitted
-    var spare: Bool // Pretty much nothing, just here because it's in the spec.
-    var areaCode: DesignatedAreaCode
-    var functionalID: UInt8
-    var additionalSentences: [AISNMEA0183Sentence]?
-    var payload: BitBuffer
-    var text: AISText? // Almost every message will not properly decode AISText here. Most payloads are a mixture of data types, far too many to write individual parsers for.
+    public var destinationMMSI: MMSI
+    public var retransmit: RetransmitFlag // 0 = no retransmit, 1 = retransmitted
+    public var spare: Bool // Pretty much nothing, just here because it's in the spec.
+    public var areaCode: DesignatedAreaCode
+    public var functionalID: UInt8
+    public var additionalSentences: [AISNMEA0183Sentence]?
+    public var payload: BitBuffer
+    public var text: AISText? // Almost every message will not properly decode AISText here. Most payloads are a mixture of data types, far too many to write individual parsers for.
     
-    init?(nmeaSentences: [AISNMEA0183Sentence]) {
+    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
         guard nmeaSentences.count > 0 else { return nil }
         self.nmeaSentence = nmeaSentences[0]
         
@@ -77,7 +77,7 @@ struct BinaryAddressedMessage: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

@@ -6,7 +6,7 @@
 //
 // EPFD -- Electronic Position Fix Device
 
-enum EPFDFixType: UInt8 {
+public enum EPFDFixType: UInt8 {
     case undefined = 0
     case gps = 1
     case glonass = 2
@@ -24,7 +24,7 @@ enum EPFDFixType: UInt8 {
     case reserved14 = 14
     case internalGNSS = 15
 
-    var description: String {
+    public var description: String {
         switch self {
         case .undefined:
             return "Undefined (default)"

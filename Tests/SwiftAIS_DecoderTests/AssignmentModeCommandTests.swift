@@ -15,8 +15,7 @@ struct AssignmentModeCommandTests {
     private static let assignmentModeCommand = "!AIVDM,1,1,,A,@01uEO@mMk7P<P00,0*18"
 
     @Test func decodesAssignmentModeCommand() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.assignmentModeCommand),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.assignmentModeCommand)
 
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 96)
@@ -44,8 +43,7 @@ struct AssignmentModeCommandTests {
     private static let twoAssignmentBlocks = "!AIVDM,1,1,,B,@h3OwhiGOl583h0000000500,0*30"
 
     @Test func decodesTwoAssignmentBlocks() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.twoAssignmentBlocks),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.twoAssignmentBlocks)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 144)

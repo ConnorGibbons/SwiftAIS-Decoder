@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 9/3/26.
 //
 
-enum AtoNType: UInt8 {
+public enum AtoNType: UInt8 {
     case unspecified = 0
     case referencePoint = 1
     case racon = 2 // Short for "Radar Beacon", radar transponder marking hazard
@@ -61,7 +61,7 @@ enum AtoNType: UInt8 {
     case militaryOperationOrRestrictedArea = 49
     case dynamicArea = 50
 
-    var description: String {
+    public var description: String {
         switch self {
         case .unspecified:
             return "Default, Type of Aid to Navigation not specified"

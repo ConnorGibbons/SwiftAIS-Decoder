@@ -21,11 +21,11 @@ let bitsToCharacter: [UInt8: Character] = {
     return charMap
 }()
 
-struct AISText {
-    let raw: BitBuffer
-    let text: String
+public struct AISText {
+    public let raw: BitBuffer
+    public let text: String
 
-    init?(raw: BitBuffer) {
+    public init?(raw: BitBuffer) {
         guard raw.count % 6 == 0 else {
             print("ERROR: AISText bit count (\(raw.count)) must be a multiple of 6.")
             return nil

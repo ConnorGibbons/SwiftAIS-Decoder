@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 7/24/26.
 //
 
-enum ShipType: UInt8 {
+public enum ShipType: UInt8 {
     case notAvailable = 0
 
     // 1-19: Reserved for future use
@@ -125,7 +125,7 @@ enum ShipType: UInt8 {
     case otherTypeReserved98 = 98
     case otherTypeNoAdditionalInfo = 99
 
-    var description: String {
+    public var description: String {
         switch self {
         case .notAvailable:
             return "Not available (default)"

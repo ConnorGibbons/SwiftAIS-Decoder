@@ -5,14 +5,14 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
-struct TimeStamp {
-    let rawValue: UInt8
+public struct TimeStamp {
+    public let rawValue: UInt8
     
-    init(rawValue: UInt8) {
+    public init(rawValue: UInt8) {
         self.rawValue = rawValue
     }
     
-    var description: String {
+    public var description: String {
         switch rawValue {
         case 60:
             return "Not available"

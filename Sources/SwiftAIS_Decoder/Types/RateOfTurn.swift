@@ -5,9 +5,9 @@
 //  Created by Connor Gibbons on 7/8/26.
 //
 
-struct RateOfTurn {
-    var rawValue: Int8
-    var rot: Double? {
+public struct RateOfTurn {
+    public var rawValue: Int8
+    public var rot: Double? {
         if(rawValue == -128) { return nil }
         if(rawValue == 127) { return 10 }
         if(rawValue == -127) { return -10 }
@@ -15,11 +15,11 @@ struct RateOfTurn {
         else { return calcROT(val: self.rawValue) }
     }
     
-    init(value: Int8) {
+    public init(value: Int8) {
         self.rawValue = value
     }
     
-    var description: String {
+    public var description: String {
         switch rawValue {
         case -128: return "No information available (\(rawValue))"
         case 0:    return "Not turning"

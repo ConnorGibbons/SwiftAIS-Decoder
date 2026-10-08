@@ -8,11 +8,11 @@
 // "Indicates whether the AtoN is charted or not."
 //  I'm assuming this means present on standard charts, but the spec doesn't give an actual definition.
 
-enum AtoNChartedStatus: UInt8 {
+public enum AtoNChartedStatus: UInt8 {
     case uncharted = 0
     case charted = 1
     
-    var description: String {
+    public var description: String {
         switch self {
         case .uncharted:
             "Uncharted"

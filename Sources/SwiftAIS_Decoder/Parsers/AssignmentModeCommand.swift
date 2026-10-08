@@ -8,22 +8,22 @@
 //  Used by base stations to control the operation of other base stations.
 //  Payload character: @
 
-struct AssignmentModeCommand: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct AssignmentModeCommand: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare1: UInt8
-    let destination1: MMSI
-    let offset1: UInt16
-    let increment1: UInt16
+    public let spare1: UInt8
+    public let destination1: MMSI
+    public let offset1: UInt16
+    public let increment1: UInt16
     
-    var destination2: MMSI?
-    var offset2: UInt16?
-    var incrememt2: UInt16?
+    public var destination2: MMSI?
+    public var offset2: UInt16?
+    public var incrememt2: UInt16?
     
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -65,7 +65,7 @@ struct AssignmentModeCommand: AISMessage {
     
     
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

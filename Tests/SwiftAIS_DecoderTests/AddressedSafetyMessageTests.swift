@@ -13,8 +13,7 @@ struct AddressedSafetyMessageTests {
     private static let addressedSafetyMessage = "!AIVDM,1,1,,A,<02:oP0kKcv0@<51C5PB5@?BDPD?P:?2?EB7PDB16693P381>>5<PikP,0*37"
 
     @Test func decodesAddressedSafetyMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.addressedSafetyMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.addressedSafetyMessage)
         let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence]),
                                   "A Type 12 payload should initialize an AddresedSafetyMessage")
 
@@ -38,8 +37,7 @@ struct AddressedSafetyMessageTests {
     private static let shortAddressedSafetyMessage = "!AIVDM,1,1,,A,<5?SIj5Cp;NPD81>H0,4*4C"
 
     @Test func decodesShortAddressedSafetyMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.shortAddressedSafetyMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.shortAddressedSafetyMessage)
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 4)
 
@@ -65,8 +63,7 @@ struct AddressedSafetyMessageTests {
     private static let retransmittedAddressedSafetyMessage = "!AIVDM,1,1,,A,<42Lati0W:Ov=C7P6B?=Pjoihhjhqq0,2*2B"
 
     @Test func decodesRetransmittedAddressedSafetyMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.retransmittedAddressedSafetyMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.retransmittedAddressedSafetyMessage)
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
@@ -93,10 +90,8 @@ struct AddressedSafetyMessageTests {
     private static let multipartAddressedSafetyMessage2 = "!AIVDM,2,2,1,A,80,4*1B"
 
     @Test func decodesMultipartAddressedSafetyMessage() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage1),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage2),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage1)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage2)
         let report = try #require(AddresedSafetyMessage(nmeaSentences: [sentence1, sentence2]),
                                   "A Type 12 payload should initialize an AddresedSafetyMessage")
 

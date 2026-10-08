@@ -11,8 +11,7 @@ struct StaticDataReportTests {
     private static let staticDataReportPartA = "!AIVDM,1,1,,B,H0HN<8QLTdTpN22222222222223,2*1B"
 
     @Test func decodesPartAStaticDataReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.staticDataReportPartA),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.staticDataReportPartA)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 160)
@@ -46,8 +45,7 @@ struct StaticDataReportTests {
     private static let staticDataReportPartB = "!AIVDM,1,1,,B,H>DQ@04N6DeihhlPPPPPPP000000,0*0E"
 
     @Test func decodesPartBStaticDataReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.staticDataReportPartB),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.staticDataReportPartB)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 168)
@@ -86,10 +84,8 @@ struct StaticDataReportTests {
     private static let staticDataReportPairPartB = "!AIVDM,1,1,,A,H42O55lti4hhhilD3nink000?050,0*40"
 
     @Test func decodesStaticDataReportPair() throws {
-        let sentenceA = try #require(AISNMEA0183Sentence(raw: Self.staticDataReportPairPartA),
-                                     "The Part A sentence should parse as a valid AIS sentence")
-        let sentenceB = try #require(AISNMEA0183Sentence(raw: Self.staticDataReportPairPartB),
-                                     "The Part B sentence should parse as a valid AIS sentence")
+        let sentenceA = try AISNMEA0183Sentence(raw: Self.staticDataReportPairPartA)
+        let sentenceB = try AISNMEA0183Sentence(raw: Self.staticDataReportPairPartB)
 
         #expect(sentenceA.channel == .A)
         #expect(sentenceB.channel == .A)
@@ -144,8 +140,7 @@ struct StaticDataReportTests {
     private static let staticDataReportMothership = "!AIVDO,1,1,,A,H>W@vFTe6??406t2??21J0Wg8Jb0,0*6F"
     // Note: This is a synthetic message designed to trigger the mothership's MMSI path. I couldn't find a real one
     @Test func decodesMothershipStaticDataReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.staticDataReportMothership),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.staticDataReportMothership)
 
         #expect(sentence.dataSource == .ownShip)
         #expect(sentence.channel == .A)

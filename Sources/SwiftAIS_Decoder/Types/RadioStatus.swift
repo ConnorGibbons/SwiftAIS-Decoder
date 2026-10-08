@@ -20,13 +20,13 @@
 //  Should take these values with a grain of salt, although output seems to match what other decoders produce.
 
 // Synchronization state — Table 18, "Sync state" (2 bits).
-enum SyncState: UInt8 {
+public enum SyncState: UInt8 {
     case utcDirect = 0            // § 3.1.1.1
     case utcIndirect = 1          // § 3.1.1.2
     case baseStationDirect = 2    // § 3.1.1.3 — synchronized to a base station
     case otherStation = 3         // § 3.1.1.3 / § 3.1.1.4 — synchronized to another station
 
-    var description: String {
+    public var description: String {
         switch self {
         case .utcDirect:
             return "UTC direct"
@@ -41,13 +41,13 @@ enum SyncState: UInt8 {
 }
 
 // Sub message — Table 19. Which case applies is determined by the slot time-out value.
-enum SOTDMASubMessage {
+public enum SOTDMASubMessage {
     case receivedStations(UInt16)                    // slot time-out 3, 5, 7 (0...16383)
     case slotNumber(UInt16)                          // slot time-out 2, 4, 6 (0...2249)
     case utcHourAndMinute(hour: UInt8, minute: UInt8) // slot time-out 1
     case slotOffset(UInt16)                          // slot time-out 0
 
-    var description: String {
+    public var description: String {
         switch self {
         case .receivedStations(let count):
             return "Received stations: \(count)"
@@ -61,34 +61,34 @@ enum SOTDMASubMessage {
     }
 }
 
-enum RadioStatusType: UInt8 {
+public enum RadioStatusType: UInt8 {
     case sotdma = 0
     case itdma = 1
 }
 
-struct RadioStatus {
-    let rawValue: UInt32
-    let statusType: RadioStatusType
+public struct RadioStatus {
+    public let rawValue: UInt32
+    public let statusType: RadioStatusType
 
-    init(rawValue: UInt32, statusType: RadioStatusType = .sotdma) {
+    public init(rawValue: UInt32, statusType: RadioStatusType = .sotdma) {
         self.rawValue = rawValue
         self.statusType = statusType
     }
 
     // Table 18: the 19-bit field is [sync state (2) | slot time-out (3) | sub message (14)],
     // most-significant bit first.
-    var syncState: SyncState {
+    public var syncState: SyncState {
         // Bits 18-17. A 2-bit field always maps onto a SyncState case, so this is safe.
         SyncState(rawValue: UInt8((rawValue >> 17) & 0b11))!
     }
 
     // Bits 16-14. "Specifies frames remaining until a new slot is selected."
-    var slotTimeout: UInt8 {
+    public var slotTimeout: UInt8 {
         UInt8((rawValue >> 14) & 0b111)
     }
 
     // Bits 13-0, interpreted per Table 19 according to the slot time-out.
-    var subMessage: SOTDMASubMessage {
+    public var subMessage: SOTDMASubMessage {
         let sub = UInt16(rawValue & 0x3FFF)
         switch slotTimeout {
         case 3, 5, 7:
@@ -106,7 +106,7 @@ struct RadioStatus {
         }
     }
 
-    var description: String {
+    public var description: String {
         // Class B "CS" units have no slot reservations to report, so they send this fixed ITDMA
         // value (1100000000000000110). 393222 is also a legal SOTDMA state, hence the selector check.
         if(statusType == .itdma && rawValue == 393222) {

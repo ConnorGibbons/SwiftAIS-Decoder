@@ -12,8 +12,7 @@ struct BaseStationReportTests {
     private static let baseStationReport = "!AIVDM,1,1,,B,4020ssAuho;N?PeNwjOAp<70089A,0*09"
 
     @Test func decodesBaseStationReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.baseStationReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.baseStationReport)
         let report = try #require(BaseStationReport(nmea: sentence),
                                   "A Type 4 payload should initialize a BaseStationReport")
 

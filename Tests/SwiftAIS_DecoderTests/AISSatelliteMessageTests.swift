@@ -13,8 +13,7 @@ struct AISSatelliteMessageTests {
     private static let satelliteMessageTwo = "!AIVDM,1,1,,A,KrJN9vb@0?wl20RH,0*7A"
 
     @Test func decodesAISSatelliteMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.satelliteMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.satelliteMessage)
         let report = try #require(AISSatelliteMessage(nmea: sentence),
                                   "A Type 27 payload should initialize an AISSatelliteMessage")
 
@@ -48,8 +47,7 @@ struct AISSatelliteMessageTests {
     }
 
     @Test func decodesSecondAISSatelliteMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.satelliteMessageTwo),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.satelliteMessageTwo)
         let report = try #require(AISSatelliteMessage(nmea: sentence),
                                   "A Type 27 payload should initialize an AISSatelliteMessage")
 

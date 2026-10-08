@@ -5,11 +5,11 @@
 //  Created by Connor Gibbons on 9/8/26.
 //
 
-enum Addressed: UInt8 {
+public enum Addressed: UInt8 {
     case addressed = 1
     case broadcast = 0
 
-    var description: String {
+    public var description: String {
         switch self {
         case .addressed:
             return "Addressed"

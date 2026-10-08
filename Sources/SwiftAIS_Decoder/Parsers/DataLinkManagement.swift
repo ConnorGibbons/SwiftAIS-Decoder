@@ -7,30 +7,30 @@
 //  Type 20: Data Link Management Message
 //  Payload Character: D
 
-struct DataLinkManagement: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct DataLinkManagement: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare: UInt8
-    let offset1: UInt16
-    let reservedSlots1: UInt8
-    let timeout1: UInt8
-    let increment1: UInt16
-    let offset2: UInt16?
-    let reservedSlots2: UInt8?
-    let timeout2: UInt8?
-    let increment2: UInt16?
-    let offset3: UInt16?
-    let reservedSlots3: UInt8?
-    let timeout3: UInt8?
-    let increment3: UInt16?
-    let offset4: UInt16?
-    let reservedSlots4: UInt8?
-    let timeout4: UInt8?
-    let increment4: UInt16?
+    public let spare: UInt8
+    public let offset1: UInt16
+    public let reservedSlots1: UInt8
+    public let timeout1: UInt8
+    public let increment1: UInt16
+    public let offset2: UInt16?
+    public let reservedSlots2: UInt8?
+    public let timeout2: UInt8?
+    public let increment2: UInt16?
+    public let offset3: UInt16?
+    public let reservedSlots3: UInt8?
+    public let timeout3: UInt8?
+    public let increment3: UInt16?
+    public let offset4: UInt16?
+    public let reservedSlots4: UInt8?
+    public let timeout4: UInt8?
+    public let increment4: UInt16?
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -132,7 +132,7 @@ struct DataLinkManagement: AISMessage {
         
     }
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

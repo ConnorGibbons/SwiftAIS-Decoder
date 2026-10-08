@@ -5,10 +5,10 @@
 //  Created by Connor Gibbons on 9/8/26.
 //
 
-struct VHFChannel {
-    let channel: Int
+public struct VHFChannel {
+    public let channel: Int
     
-    var description: String {
+    public var description: String {
         switch channel {
         case 2087:
             return "AIS 1: 87B, 161.975 MHz"

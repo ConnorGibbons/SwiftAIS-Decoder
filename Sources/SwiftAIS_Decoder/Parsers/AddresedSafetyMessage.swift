@@ -9,20 +9,20 @@
 
 import SignalTools
 
-struct AddresedSafetyMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct AddresedSafetyMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let additionalSentences: [AISNMEA0183Sentence]?
-    let sequenceNumber: UInt8
-    let destinationMMSI: MMSI
-    let retransmit: RetransmitFlag
-    let spare: Bool
-    let payload: BitBuffer
-    let text: AISText? // The payload is described as not always containing normally encoded text, and I don't want that to make this init fail.
+    public let additionalSentences: [AISNMEA0183Sentence]?
+    public let sequenceNumber: UInt8
+    public let destinationMMSI: MMSI
+    public let retransmit: RetransmitFlag
+    public let spare: Bool
+    public let payload: BitBuffer
+    public let text: AISText? // The payload is described as not always containing normally encoded text, and I don't want that to make this init fail.
     
-    init?(nmeaSentences: [AISNMEA0183Sentence]) {
+    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
         guard nmeaSentences.count > 0 else { return nil }
         let nmea = nmeaSentences[0]
         self.nmeaSentence = nmea
@@ -73,7 +73,7 @@ struct AddresedSafetyMessage: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

@@ -8,22 +8,22 @@
 //  Broadcast by a control station to set operational parameters for AIS stations in a particular region
 //  Payload character: G
 
-struct GroupAssignmentCommand: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct GroupAssignmentCommand: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare1: UInt8
-    let region: LatLongRegion
-    let stationType: StationType
-    let shipType: ShipType
-    let spare2: UInt32
-    let txrx: TxRxModes
-    let reportInterval: ReportInterval
-    let quietTime: UInt8 // Minutes affected stations should remain silent
-    let spare3: UInt8?
+    public let spare1: UInt8
+    public let region: LatLongRegion
+    public let stationType: StationType
+    public let shipType: ShipType
+    public let spare2: UInt32
+    public let txrx: TxRxModes
+    public let reportInterval: ReportInterval
+    public let quietTime: UInt8 // Minutes affected stations should remain silent
+    public let spare3: UInt8?
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -75,7 +75,7 @@ struct GroupAssignmentCommand: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

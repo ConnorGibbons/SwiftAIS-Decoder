@@ -5,17 +5,17 @@
 //  Created by Connor Gibbons on 9/3/26.
 //
 
-enum VirtualAidFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum VirtualAidFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case isVirtualAid
     case notVirtualAid
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .isVirtualAid : .notVirtualAid
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .isVirtualAid:
             return true
@@ -24,7 +24,7 @@ enum VirtualAidFlag: RawRepresentable {
         }
     }
     
-    var description: String {
+    public var description: String {
         if self.rawValue { return "Is a virtual AtoN" }
         else { return "Not a virtual AtoN" }
     }

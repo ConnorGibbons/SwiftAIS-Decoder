@@ -12,8 +12,7 @@ struct UTCDateInquiryResponseTests {
     private static let utcDateInquiryResponse = "!AIVDM,1,1,,B,;03tB91uho;NQ89:VJ=>H:i00000,0*7A"
 
     @Test func decodesUTCDateInquiryResponse() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.utcDateInquiryResponse),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.utcDateInquiryResponse)
         #expect(sentence.channel == .B)
 
         let report = try #require(UTCDateInquiryResponse(nmea: sentence),

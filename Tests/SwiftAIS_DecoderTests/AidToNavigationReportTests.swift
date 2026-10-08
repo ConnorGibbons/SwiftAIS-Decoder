@@ -11,8 +11,7 @@ struct AidToNavigationReportTests {
     private static let aidToNavigationReport = "!AIVDM,1,1,,A,E0000ChcFstP000000000000000?iM91:RGuH00003RP10,4*3F"
 
     @Test func decodesAidToNavigationReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.aidToNavigationReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.aidToNavigationReport)
         let report = try #require(AidToNavigationReport(nmeaSentences: [sentence]),
                                   "A Type 21 payload should initialize an AidToNavigationReport")
 
@@ -52,8 +51,7 @@ struct AidToNavigationReportTests {
     private static let aidToNavigationReportTwo = "!AIVDM,1,1,,A,E>j9dhiQ0a2Hh;TW230a6h72P00@=igf?TQA000003vP10,4*54"
 
     @Test func decodesSecondAidToNavigationReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.aidToNavigationReportTwo),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.aidToNavigationReportTwo)
         let report = try #require(AidToNavigationReport(nmeaSentences: [sentence]),
                                   "A Type 21 payload should initialize an AidToNavigationReport")
 
@@ -95,10 +93,8 @@ struct AidToNavigationReportTests {
     private static let multipartAidToNavigationReport2 = "!AIVDM,2,2,7,B,@20,4*54"
 
     @Test func decodesMultipartAidToNavigationReport() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport1),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport2),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport1)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport2)
         let report = try #require(AidToNavigationReport(nmeaSentences: [sentence1, sentence2]),
                                   "A Type 21 payload should initialize an AidToNavigationReport")
 
@@ -136,10 +132,8 @@ struct AidToNavigationReportTests {
     private static let secondMultipartAidToNavigationReport2 = "!AIVDM,2,2,8,B,00,4*19"
 
     @Test func decodesSecondMultipartAidToNavigationReport() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport1),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport2),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport1)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport2)
         let report = try #require(AidToNavigationReport(nmeaSentences: [sentence1, sentence2]),
                                   "A Type 21 payload should initialize an AidToNavigationReport")
 

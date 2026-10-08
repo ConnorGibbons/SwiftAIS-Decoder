@@ -5,17 +5,17 @@
 //  Created by Connor Gibbons on 8/6/26.
 //
 
-enum AssignedFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum AssignedFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case assignedMode
     case notAssignedMode
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .assignedMode : .notAssignedMode
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .assignedMode:
             return true
@@ -24,7 +24,7 @@ enum AssignedFlag: RawRepresentable {
         }
     }
 
-    var description: String {
+    public var description: String {
         if(self == .assignedMode) { return "Assigned mode" }
         return "Not in assigned mode"
     }

@@ -5,13 +5,13 @@
 //  Created by Connor Gibbons on 8/14/26.
 //
 
-enum RetransmitFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum RetransmitFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case notRetransmitted
     case retransmitted
     
-    init?(rawValue: Bool) {
+    public init?(rawValue: Bool) {
         if rawValue {
             self = .retransmitted
         } else {
@@ -21,7 +21,7 @@ enum RetransmitFlag: RawRepresentable {
     
     // Must switch rather than compare: RawRepresentable's == is defined in terms of rawValue, so
     // comparing against a case here would recurse infinitely.
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .retransmitted:
             return true
@@ -30,7 +30,7 @@ enum RetransmitFlag: RawRepresentable {
         }
     }
 
-    var description: String {
+    public var description: String {
         if(self.rawValue) {
             return "Retransmitted"
         }

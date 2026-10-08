@@ -8,26 +8,26 @@
 //  SAR: "Search and Rescue"
 
 
-struct AircraftPositionReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct AircraftPositionReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let altitude: UInt16 // given in meters
-    let speedOverGround: UInt16
-    let positionAccuracy: PositionAccuracy
-    let longitude: Longitude
-    let latitude: Latitude
-    let courseOverGround: CourseOverGround
-    let timestamp: TimeStamp
-    let regionalReserved: UInt8 // No idea what this is used for
-    let dte: DTE
-    let spare: UInt8
-    let assigned: AssignedFlag
-    let raimFlag: RAIMFlag
-    let radioStatus: RadioStatus
+    public let altitude: UInt16 // given in meters
+    public let speedOverGround: UInt16
+    public let positionAccuracy: PositionAccuracy
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let courseOverGround: CourseOverGround
+    public let timestamp: TimeStamp
+    public let regionalReserved: UInt8 // No idea what this is used for
+    public let dte: DTE
+    public let spare: UInt8
+    public let assigned: AssignedFlag
+    public let raimFlag: RAIMFlag
+    public let radioStatus: RadioStatus
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -84,7 +84,7 @@ struct AircraftPositionReport: AISMessage {
     }
     
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

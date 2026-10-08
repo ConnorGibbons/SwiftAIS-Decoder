@@ -6,17 +6,17 @@
 //
 //  Only used on message type 28, describes whether the message is authenticated per IALA G1192
 
-enum AuthenticationFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum AuthenticationFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case authenticated
     case notAuthenticated
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .authenticated : .notAuthenticated
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .authenticated:
             return true
@@ -25,7 +25,7 @@ enum AuthenticationFlag: RawRepresentable {
         }
     }
 
-    var description: String {
+    public var description: String {
         if self.rawValue { return "Message authenticated per IALA G1192" }
         else { return "Message not authenticated (default)" }
     }

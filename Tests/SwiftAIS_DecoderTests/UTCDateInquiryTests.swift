@@ -12,8 +12,7 @@ struct UTCDateInquiryTests {
     private static let utcDateInquiry = "!AIVDM,1,1,,A,:81:Jf1D02J0,0*0E"
 
     @Test func decodesUTCDateInquiry() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.utcDateInquiry),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.utcDateInquiry)
         let report = try #require(UTCDateInquiry(nmea: sentence),
                                   "A Type 10 payload should initialize a UTCDateInquiry")
 
@@ -30,8 +29,7 @@ struct UTCDateInquiryTests {
     private static let secondUTCDateInquiry = "!AIVDM,1,1,,A,:81:Jf0qKjvP,0*45"
 
     @Test func decodesSecondUTCDateInquiry() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.secondUTCDateInquiry),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.secondUTCDateInquiry)
         let report = try #require(UTCDateInquiry(nmea: sentence),
                                   "A Type 10 payload should initialize a UTCDateInquiry")
 
@@ -47,8 +45,7 @@ struct UTCDateInquiryTests {
     private static let channelBUTCDateInquiry = "!AIVDM,1,1,,B,:8152F@q@7r0,0*53"
 
     @Test func decodesChannelBUTCDateInquiry() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.channelBUTCDateInquiry),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.channelBUTCDateInquiry)
         #expect(sentence.channel == .B)
 
         let report = try #require(UTCDateInquiry(nmea: sentence),

@@ -8,32 +8,32 @@
 
 import SignalTools
 
-struct StaticAndVoyageData: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct StaticAndVoyageData: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let nmeaSentence2: AISNMEA0183Sentence
-    let aisVersion: AISVersion
-    let imoNumber: UInt32
-    let callSign: AISText
-    let vesselName: AISText
-    let shipType: ShipType
-    let dimensionToBow: UInt16
-    let dimensionToStern: UInt16
-    let dimensionToPort: UInt8
-    let dimensionToStarboard: UInt8
-    let fixType: EPFDFixType
-    let month: UTCMonth
-    let day: UTCDay
-    let hour: UTCHour
-    let minute: UTCMinute
-    let draught: Double
-    let destination: AISText
-    let dte: DTE?
-    let spare: Bool? // Just 1 bit
+    public let nmeaSentence2: AISNMEA0183Sentence
+    public let aisVersion: AISVersion
+    public let imoNumber: UInt32
+    public let callSign: AISText
+    public let vesselName: AISText
+    public let shipType: ShipType
+    public let dimensionToBow: UInt16
+    public let dimensionToStern: UInt16
+    public let dimensionToPort: UInt8
+    public let dimensionToStarboard: UInt8
+    public let fixType: EPFDFixType
+    public let month: UTCMonth
+    public let day: UTCDay
+    public let hour: UTCHour
+    public let minute: UTCMinute
+    public let draught: Double
+    public let destination: AISText
+    public let dte: DTE?
+    public let spare: Bool? // Just 1 bit
     
-    init?(nmea1: AISNMEA0183Sentence, nmea2: AISNMEA0183Sentence) {
+    public init?(nmea1: AISNMEA0183Sentence, nmea2: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea1
         self.nmeaSentence2 = nmea2
         
@@ -120,7 +120,7 @@ struct StaticAndVoyageData: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

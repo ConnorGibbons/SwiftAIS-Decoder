@@ -9,33 +9,33 @@
 
 import SignalTools
 
-struct ClassBExtendedPositionReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct ClassBExtendedPositionReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let regionalReserved1: UInt8 // As with non-extended (type 18), not sure what this is used for
-    let speedOverGround: SpeedOverGround
-    let positionAccuracy: PositionAccuracy
-    let longitude: Longitude
-    let latitude: Latitude
-    let courseOverGround: CourseOverGround
-    let trueHeading: TrueHeading
-    let timeStamp: TimeStamp
-    let regionalReserved2: UInt8
-    let name: AISText
-    let shipType: ShipType
-    let dimensionToBow: UInt16
-    let dimensionToStern: UInt16
-    let dimensionToPort: UInt8
-    let dimensionToStarboard: UInt8
-    let fixType: EPFDFixType
-    let raimFlag: RAIMFlag
-    let dte: DTE
-    let assignedFlag: AssignedFlag
-    let spare: UInt8
+    public let regionalReserved1: UInt8 // As with non-extended (type 18), not sure what this is used for
+    public let speedOverGround: SpeedOverGround
+    public let positionAccuracy: PositionAccuracy
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let courseOverGround: CourseOverGround
+    public let trueHeading: TrueHeading
+    public let timeStamp: TimeStamp
+    public let regionalReserved2: UInt8
+    public let name: AISText
+    public let shipType: ShipType
+    public let dimensionToBow: UInt16
+    public let dimensionToStern: UInt16
+    public let dimensionToPort: UInt8
+    public let dimensionToStarboard: UInt8
+    public let fixType: EPFDFixType
+    public let raimFlag: RAIMFlag
+    public let dte: DTE
+    public let assignedFlag: AssignedFlag
+    public let spare: UInt8
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -122,7 +122,7 @@ struct ClassBExtendedPositionReport: AISMessage {
         self.spare = spareBits
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

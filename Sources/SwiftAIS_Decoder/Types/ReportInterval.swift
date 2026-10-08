@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 9/8/26.
 //
 
-enum ReportInterval: UInt8 {
+public enum ReportInterval: UInt8 {
     case autonomous = 0
     case tenMinutes = 1
     case sixMinutes = 2
@@ -23,7 +23,7 @@ enum ReportInterval: UInt8 {
     case reserved14 = 14
     case reserved15 = 15
     
-    var description: String {
+    public var description: String {
         switch self {
         case .autonomous:
             return "As given by the autonomous mode"

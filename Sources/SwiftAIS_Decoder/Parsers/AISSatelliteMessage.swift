@@ -9,22 +9,22 @@
 //
 //  Short message that occupies less than a full slot, intended to be compact for long range reception.
 
-struct AISSatelliteMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct AISSatelliteMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let positionAccuracy: PositionAccuracy
-    let raimFlag: RAIMFlag
-    let navigationStatus: NavigationStatus
-    let longitude: Longitude
-    let latitude: Latitude
-    let speedOverGround: SpeedOverGroundCompact
-    let courseOverGround: CourseOverGroundCompact
-    let positionLatency: PositionLatency
-    let spare: UInt8?
+    public let positionAccuracy: PositionAccuracy
+    public let raimFlag: RAIMFlag
+    public let navigationStatus: NavigationStatus
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let speedOverGround: SpeedOverGroundCompact
+    public let courseOverGround: CourseOverGroundCompact
+    public let positionLatency: PositionLatency
+    public let spare: UInt8?
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -76,7 +76,7 @@ struct AISSatelliteMessage: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

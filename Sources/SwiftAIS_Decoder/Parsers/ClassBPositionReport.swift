@@ -7,30 +7,30 @@
 //  Type 18: Standard Class B Position Report
 //  Payload character: "B"
 
-struct ClassBPositionReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct ClassBPositionReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let regionalReserved1: UInt8 // I'm not sure what this field is actually used for but it's here
-    let speedOverGround: SpeedOverGround
-    let positonAccuracy: PositionAccuracy
-    let longitude: Longitude
-    let latitude: Latitude
-    let courseOverGround: CourseOverGround
-    let heading: TrueHeading
-    let timestamp: TimeStamp
-    let regionalReserved2: UInt8
-    let csUnit: CSUnit
-    let visualDisplay: VisualDisplay
-    let dscFlag: DSCFlag
-    let bandFlag: BandFlag
-    let type22Flag: Type22Flag
-    let assignedFlag: AssignedFlag
-    let raimFlag: RAIMFlag
-    let radioStatus: RadioStatus
+    public let regionalReserved1: UInt8 // I'm not sure what this field is actually used for but it's here
+    public let speedOverGround: SpeedOverGround
+    public let positonAccuracy: PositionAccuracy
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let courseOverGround: CourseOverGround
+    public let heading: TrueHeading
+    public let timestamp: TimeStamp
+    public let regionalReserved2: UInt8
+    public let csUnit: CSUnit
+    public let visualDisplay: VisualDisplay
+    public let dscFlag: DSCFlag
+    public let bandFlag: BandFlag
+    public let type22Flag: Type22Flag
+    public let assignedFlag: AssignedFlag
+    public let raimFlag: RAIMFlag
+    public let radioStatus: RadioStatus
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -114,7 +114,7 @@ struct ClassBPositionReport: AISMessage {
         self.radioStatus = radioStatus
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

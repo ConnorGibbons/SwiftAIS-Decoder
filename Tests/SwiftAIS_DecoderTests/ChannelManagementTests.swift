@@ -11,8 +11,7 @@ struct ChannelManagementTests {
     private static let broadcast = "!AIVDM,1,1,,A,F030owj2N2P6Ubib@=4q35b10000,0*58"
 
     @Test func decodesBroadcastChannelManagement() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.broadcast),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.broadcast)
 
         #expect(sentence.channel == .A)
 
@@ -50,8 +49,7 @@ struct ChannelManagementTests {
     private static let broadcast2 = "!AIVDM,1,1,,B,F030pC22N2P73FiiNesU3FR10000,0*16"
 
     @Test func decodesSecondBroadcastChannelManagement() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.broadcast2),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.broadcast2)
 
         #expect(sentence.channel == .B)
 

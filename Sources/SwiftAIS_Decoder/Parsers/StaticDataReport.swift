@@ -10,31 +10,31 @@
 
 import SignalTools
 
-struct StaticDataReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct StaticDataReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let part: StaticDataReportPart
+    public let part: StaticDataReportPart
     
     // Part A Contents
-    let vesselName: AISText?
-    let spare: UInt8?
+    public let vesselName: AISText?
+    public let spare: UInt8?
     
     // Part B Contents
-    let shipType: ShipType?
-    let vendorID: AISText?
-    let unitModelCode: UInt8?
-    let serialNumber: UInt32?
-    let callSign: AISText?
-    let dimensionToBow: UInt16?
-    let dimensionToStern: UInt16?
-    let dimensionToPort: UInt8?
-    let dimensionToStarboard: UInt8?
-    let mothershipMMSI: MMSI?
-    let spare2: UInt8?
+    public let shipType: ShipType?
+    public let vendorID: AISText?
+    public let unitModelCode: UInt8?
+    public let serialNumber: UInt32?
+    public let callSign: AISText?
+    public let dimensionToBow: UInt16?
+    public let dimensionToStern: UInt16?
+    public let dimensionToPort: UInt8?
+    public let dimensionToStarboard: UInt8?
+    public let mothershipMMSI: MMSI?
+    public let spare2: UInt8?
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -143,7 +143,7 @@ struct StaticDataReport: AISMessage {
     }
     
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

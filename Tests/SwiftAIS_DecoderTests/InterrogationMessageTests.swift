@@ -12,8 +12,7 @@ struct InterrogationMessageTests {
     private static let interrogation = "!AIVDM,1,1,,A,?5OP=l00052HD00,2*5B"
 
     @Test func decodesInterrogation() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.interrogation),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.interrogation)
 
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 88)
@@ -45,8 +44,7 @@ struct InterrogationMessageTests {
     private static let secondInterrogation = "!AIVDM,1,1,,A,?5N29b18w<3PD00,2*6C"
 
     @Test func decodesSecondInterrogation() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.secondInterrogation),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.secondInterrogation)
 
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 88)
@@ -78,8 +76,7 @@ struct InterrogationMessageTests {
     private static let twoRequestsOneStation = "!AIVDM,1,1,,B,?h3Ovn1GP<K0<P@59a0,2*04"
 
     @Test func decodesTwoRequestsFromOneStation() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.twoRequestsOneStation),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.twoRequestsOneStation)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 112)
@@ -111,8 +108,7 @@ struct InterrogationMessageTests {
     private static let zeroRequestedMessageType = "!AIVDM,1,1,,A,?h3Owpi;Etq0000,2*1A"
 
     @Test func rejectsZeroRequestedMessageType() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.zeroRequestedMessageType),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.zeroRequestedMessageType)
 
         // The sentence itself is a well-formed type 15; only the requested type field is bad.
         let messageTypeBits: UInt8 = try #require(sentence.payloadBits[0...5])

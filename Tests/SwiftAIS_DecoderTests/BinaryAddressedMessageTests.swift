@@ -12,8 +12,7 @@ struct BinaryAddressedMessageTests {
     private static let binaryAddressedMessage = "!AIVDM,1,1,,A,6h2E:p66B2SR04<0@00000000000,0*4C"
 
     @Test func decodesBinaryAddressedMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.binaryAddressedMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.binaryAddressedMessage)
         let report = try #require(BinaryAddressedMessage(nmeaSentences: [sentence]),
                                   "A Type 6 payload should initialize a BinaryAddressedMessage")
 

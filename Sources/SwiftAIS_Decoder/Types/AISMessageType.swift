@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 7/8/26.
 //
 
-enum AISMessageType: Int {
+public enum AISMessageType: Int {
     case positionReportClassA = 1
     case positionReportClassAAssignedSchedule = 2
     case positionReportClassAResponseToInterrogation = 3
@@ -35,7 +35,7 @@ enum AISMessageType: Int {
     case positionReportForLongRangeApplications = 27
     case singleSlotAidToNavigationReport = 28
 
-    var description: String {
+    public var description: String {
         switch self {
         case .positionReportClassA:
             return "Position Report Class A"

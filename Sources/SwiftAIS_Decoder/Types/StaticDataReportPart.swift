@@ -6,11 +6,11 @@
 //
 //  Static Data Report Part
 
-enum StaticDataReportPart: UInt8 {
+public enum StaticDataReportPart: UInt8 {
     case a = 0
     case b = 1
 
-    var description: String {
+    public var description: String {
         switch self {
         case .a:
             return "A"

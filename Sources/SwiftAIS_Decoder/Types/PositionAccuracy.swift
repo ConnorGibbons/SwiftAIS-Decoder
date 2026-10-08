@@ -5,11 +5,11 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
-enum PositionAccuracy: UInt8 {
+public enum PositionAccuracy: UInt8 {
     case lowAccuracy = 0
     case highAccuracy = 1
     
-    var description: String {
+    public var description: String {
         switch self {
         case .lowAccuracy:
             return "Low Accuracy (> 10m)"

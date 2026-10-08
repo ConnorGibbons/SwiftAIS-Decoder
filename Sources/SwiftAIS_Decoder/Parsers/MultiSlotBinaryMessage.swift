@@ -10,26 +10,26 @@
 
 import SignalTools
 
-struct MultiSlotBinaryMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct MultiSlotBinaryMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let addressed: Addressed
-    let structuredFlag: StructuredFlag
-    let payload: BitBuffer
-    let text: AISText?
-    let radioStatus: RadioStatus
+    public let addressed: Addressed
+    public let structuredFlag: StructuredFlag
+    public let payload: BitBuffer
+    public let text: AISText?
+    public let radioStatus: RadioStatus
     
     // Only present if addressed
-    let destinationMMSI: MMSI?
+    public let destinationMMSI: MMSI?
     
     // Only present if structuredFlag is true
-    let appID: UInt16? // The following two values are derived from this
-    let dac: DesignatedAreaCode?
-    let fid: UInt8?
+    public let appID: UInt16? // The following two values are derived from this
+    public let dac: DesignatedAreaCode?
+    public let fid: UInt8?
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -95,7 +95,7 @@ struct MultiSlotBinaryMessage: AISMessage {
         
     }
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

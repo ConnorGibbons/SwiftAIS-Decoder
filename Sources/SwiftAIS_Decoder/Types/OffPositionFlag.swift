@@ -5,17 +5,17 @@
 //  Created by Connor Gibbons on 9/3/26.
 //
 
-enum OffPositionFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum OffPositionFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case onPosition
     case offPosition
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .offPosition : .onPosition
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .offPosition:
             return true
@@ -24,7 +24,7 @@ enum OffPositionFlag: RawRepresentable {
         }
     }
     
-    var description: String {
+    public var description: String {
         if self.rawValue { return "Is Off Position" }
         else { return "Not Off Position" }
     }

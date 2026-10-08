@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 7/8/26.
 //
 
-enum NavigationStatus: UInt8 {
+public enum NavigationStatus: UInt8 {
     case underWayUsingEngine = 0
     case atAnchor = 1
     case notUnderCommand = 2
@@ -23,7 +23,7 @@ enum NavigationStatus: UInt8 {
     case aisSARTIsActive = 14
     case undefined = 15
 
-    var description: String {
+    public var description: String {
         switch self {
         case .underWayUsingEngine:
             return "Under way using engine"

@@ -7,7 +7,7 @@
 
 /// Defines what Dimensions A and B represent.
 /// Strictly for message type 28
-enum AtoNDimensionType: UInt8 {
+public enum AtoNDimensionType: UInt8 {
     case standard = 0
     /// Position is the midpoint of the AtoN's structural area.
     /// A = radius (1 m steps, 0-511), B = height above sea level (0.1 m steps, 0-204.7).
@@ -51,7 +51,7 @@ enum AtoNDimensionType: UInt8 {
     case reserved = 14
     case reserved2 = 15
 
-    var description: String {
+    public var description: String {
         switch self {
         case .standard:
             "Default AtoN Dimensions"

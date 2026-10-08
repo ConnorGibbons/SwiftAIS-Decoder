@@ -7,29 +7,29 @@
 //  Type 15: Interrogation message. Used to request 1 or 2 AIS stations send a particular message type.
 //  Payload character: ?
 
-struct InterrogationMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct InterrogationMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare_1: UInt8
-    let interrogatedMMSI_1: MMSI
-    let requestedMessageType_1: AISMessageType
-    let slotOffset_1: UInt16
+    public let spare_1: UInt8
+    public let interrogatedMMSI_1: MMSI
+    public let requestedMessageType_1: AISMessageType
+    public let slotOffset_1: UInt16
     
     /// Anything beyond this point is optional because the message can end at 88 bits.
-    var spare_2: UInt8?
-    var requestedMessageType_2: AISMessageType?
-    var slotOffset_2: UInt16?
+    public var spare_2: UInt8?
+    public var requestedMessageType_2: AISMessageType?
+    public var slotOffset_2: UInt16?
     
-    var spare_3: UInt8?
-    var interrogatedMMSI_2: MMSI?
-    var requestedMessageType_3: AISMessageType?
-    var slotOffset_3: UInt16?
-    var spare_4: UInt8?
+    public var spare_3: UInt8?
+    public var interrogatedMMSI_2: MMSI?
+    public var requestedMessageType_3: AISMessageType?
+    public var slotOffset_3: UInt16?
+    public var spare_4: UInt8?
     
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -97,7 +97,7 @@ struct InterrogationMessage: AISMessage {
         self.spare_4 = spare4Bits
     }
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

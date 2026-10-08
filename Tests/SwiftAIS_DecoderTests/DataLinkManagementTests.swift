@@ -11,8 +11,7 @@ struct DataLinkManagementTests {
     private static let singleBlock = "!AIVDM,1,1,,B,Dh3OvjP7qN>4,0*3B"
 
     @Test func decodesSingleReservationBlock() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.singleBlock),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.singleBlock)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 72)
@@ -54,8 +53,7 @@ struct DataLinkManagementTests {
     private static let twoBlocks = "!AIVDM,1,1,,B,D02u=ThfmNfpMaN9H0,0*67"
 
     @Test func decodesTwoReservationBlocks() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.twoBlocks),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.twoBlocks)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 108)
@@ -95,8 +93,7 @@ struct DataLinkManagementTests {
     private static let threeBlocks = "!AIVDM,1,1,,A,D030p81OpN?b<`O6EqAO6D0,2*5B"
 
     @Test func decodesThreeReservationBlocks() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.threeBlocks),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.threeBlocks)
 
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 136)
@@ -136,8 +133,7 @@ struct DataLinkManagementTests {
     private static let dataLinkManagement = "!AIVDM,1,1,,A,D028rqP7mNfp000000000000000,2*3B"
 
     @Test func decodesDataLinkManagement() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.dataLinkManagement),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.dataLinkManagement)
 
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 160)
@@ -175,8 +171,7 @@ struct DataLinkManagementTests {
     private static let fourBlocks = "!AIVDM,1,1,,A,D02VqLPjlJfq6DK6DrMJ>4sIK6E,2*34"
 
     @Test func decodesFourReservationBlocks() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.fourBlocks),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.fourBlocks)
 
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 160)

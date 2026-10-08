@@ -6,17 +6,17 @@
 //
 //  Type 10: UTC/Date Inquiry
 
-struct UTCDateInquiry: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct UTCDateInquiry: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let spare1: UInt8
-    let destinationMMSI: MMSI
-    let spare2: UInt8
+    public let spare1: UInt8
+    public let destinationMMSI: MMSI
+    public let spare2: UInt8
 
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -40,7 +40,7 @@ struct UTCDateInquiry: AISMessage {
         self.spare2 = spareBits2
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

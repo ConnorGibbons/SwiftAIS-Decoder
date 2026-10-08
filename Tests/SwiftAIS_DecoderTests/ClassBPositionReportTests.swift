@@ -13,8 +13,7 @@ struct ClassBPositionReportTests {
     private static let classBPositionReportThree = "!AIVDM,1,1,,A,B3`hBuh00052goWE0b<03wcUkP06,0*3C"
 
     @Test func decodesClassBPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBPositionReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReport)
         let report = try #require(ClassBPositionReport(nmea: sentence),
                                   "A Type 18 payload should initialize a ClassBPositionReport")
 
@@ -70,8 +69,7 @@ struct ClassBPositionReportTests {
     }
 
     @Test func decodesSecondClassBPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBPositionReportTwo),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReportTwo)
         let report = try #require(ClassBPositionReport(nmea: sentence),
                                   "A Type 18 payload should initialize a ClassBPositionReport")
 
@@ -120,8 +118,7 @@ struct ClassBPositionReportTests {
     }
 
     @Test func decodesThirdClassBPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classBPositionReportThree),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReportThree)
         let report = try #require(ClassBPositionReport(nmea: sentence),
                                   "A Type 18 payload should initialize a ClassBPositionReport")
 

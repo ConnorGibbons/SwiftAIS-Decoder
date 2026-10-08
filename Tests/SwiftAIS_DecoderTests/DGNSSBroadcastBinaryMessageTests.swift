@@ -19,8 +19,7 @@ struct DGNSSBroadcastBinaryMessageTests {
     ]
 
     @Test func decodesDGNSSBroadcast() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.dgnssBroadcast),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.dgnssBroadcast)
 
         #expect(sentence.channel == .A)
 
@@ -88,10 +87,8 @@ struct DGNSSBroadcastBinaryMessageTests {
     ]
 
     @Test func decodesMultipartDGNSSBroadcast() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.multipartDGNSSBroadcast1),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.multipartDGNSSBroadcast2),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartDGNSSBroadcast1)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartDGNSSBroadcast2)
 
         #expect(sentence1.channel == .B)
         #expect(sentence2.channel == .B)

@@ -23,8 +23,7 @@ struct SingleSlotBinaryMessageTests {
     ]
 
     @Test func decodesSingleSlotAddressedUnstructuredBinaryMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.singleSlotAddressedUnstructuredBinaryMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.singleSlotAddressedUnstructuredBinaryMessage)
 
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 0)
@@ -77,8 +76,7 @@ struct SingleSlotBinaryMessageTests {
     ]
 
     @Test func decodesSingleSlotBroadcastStructuredBinaryMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.singleSlotBroadcastStructuredBinaryMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.singleSlotBroadcastStructuredBinaryMessage)
 
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 0)
@@ -128,8 +126,7 @@ struct SingleSlotBinaryMessageTests {
     ]
 
     @Test func decodesSingleSlotBroadcastUnstructuredBinaryMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.singleSlotBroadcastUnstructuredBinaryMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.singleSlotBroadcastUnstructuredBinaryMessage)
 
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 0)

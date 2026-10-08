@@ -16,14 +16,14 @@
 /// keeps its number, with naming layered on top.
 ///
 /// Sources: ITU-R M.1371-5 Annex 5, IMO SN.1/Circ.289, IALA ASM register (https://www.iala.int/asm/).
-struct DesignatedAreaCode: RawRepresentable, Equatable, Hashable {
-    let rawValue: UInt16
+public struct DesignatedAreaCode: RawRepresentable, Equatable, Hashable, Sendable {
+    public let rawValue: UInt16
 
-    init(rawValue: UInt16) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
 
-    static let international = DesignatedAreaCode(rawValue: 1)
+    public static let international = DesignatedAreaCode(rawValue: 1)
 
     /// DACs with a registration in the IALA ASM register. Regional DACs that only ever name their
     /// administration are left out — `description` names those from the MID table instead.
@@ -45,11 +45,11 @@ struct DesignatedAreaCode: RawRepresentable, Equatable, Hashable {
 
     /// Whether this DAC has a registration in the IALA ASM register.
     /// A registered DAC doesn't imply the DAC/FI pair itself is registered.
-    var isRegistered: Bool {
+    public var isRegistered: Bool {
         Self.registrants[rawValue] != nil
     }
 
-    var description: String {
+    public var description: String {
         if let registrant = Self.registrants[rawValue] { return registrant }
         // Regional DACs are keyed to the owning administration's MID, so anything left that's a valid MID
         // at least names the country, even without a registration of its own.

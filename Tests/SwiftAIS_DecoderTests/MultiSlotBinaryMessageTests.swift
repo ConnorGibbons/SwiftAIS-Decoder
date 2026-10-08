@@ -23,8 +23,7 @@ struct MultiSlotBinaryMessageTests {
     ]
 
     @Test func decodesMultiSlotAddressedStructuredBinaryMessage() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.multiSlotAddressedStructuredBinaryMessage),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.multiSlotAddressedStructuredBinaryMessage)
 
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)

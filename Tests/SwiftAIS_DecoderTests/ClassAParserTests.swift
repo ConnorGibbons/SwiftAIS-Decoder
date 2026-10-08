@@ -14,8 +14,7 @@ struct ClassAParserTests {
     private static let classAPositionReport_2 = "!AIVDM,1,1,,A,15MrVH0000KH<:V:NtBLoqFP2H9:,0*2F"
 
     @Test func decodesCommonNavigationBlock_1() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classAPositionReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classAPositionReport)
         let report = try #require(ClassAPositionReport(nmea: sentence),
                                   "A Type 1 payload should initialize a ClassA_PositionReport")
 
@@ -58,8 +57,7 @@ struct ClassAParserTests {
     }
     
     @Test func decodesCommonNavigationBlock_2() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.classAPositionReport_2),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.classAPositionReport_2)
         let report = try #require(ClassAPositionReport(nmea: sentence),
                                   "A Type 1 payload should initialize a ClassA_PositionReport")
 

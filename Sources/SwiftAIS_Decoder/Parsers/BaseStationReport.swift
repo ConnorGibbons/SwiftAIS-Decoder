@@ -7,27 +7,27 @@
 //  Type 4: Base Station Report
 
 
-struct BaseStationReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct BaseStationReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let year: UTCYear
-    let month: UTCMonth
-    let day: UTCDay
-    let hour: UTCHour
-    let minute: UTCMinute
-    let second: TimeStamp
-    let positionAccuracy: PositionAccuracy
-    let longitude: Longitude
-    let latitude: Latitude
-    let fixType: EPFDFixType
-    let spareBits: UInt64
-    let raimFlag: RAIMFlag
-    let radioStatus: RadioStatus
+    public let year: UTCYear
+    public let month: UTCMonth
+    public let day: UTCDay
+    public let hour: UTCHour
+    public let minute: UTCMinute
+    public let second: TimeStamp
+    public let positionAccuracy: PositionAccuracy
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let fixType: EPFDFixType
+    public let spareBits: UInt64
+    public let raimFlag: RAIMFlag
+    public let radioStatus: RadioStatus
     
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -83,7 +83,7 @@ struct BaseStationReport: AISMessage {
         self.radioStatus = RadioStatus(rawValue: radioStatusBits)
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

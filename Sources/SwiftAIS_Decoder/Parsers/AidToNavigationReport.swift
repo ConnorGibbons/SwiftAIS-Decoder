@@ -9,33 +9,33 @@
 
 import SignalTools
 
-struct AidToNavigationReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct AidToNavigationReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let aidType: AtoNType
-    let name: AISText
-    let positionAccuracy: PositionAccuracy
-    let longitude: Longitude
-    let latitude: Latitude
-    let dimensionToBow: UInt16
-    let dimensionToStern: UInt16
-    let dimensionToPort: UInt8
-    let dimensionToStarboard: UInt8
-    let fixType: EPFDFixType
-    let timestamp: TimeStamp // UTC Second
-    let offPositionFlag: OffPositionFlag
-    let regionalReserved: UInt8 // Not sure what this is used for
-    let raimFlag: RAIMFlag
-    let virtualAidFlag: VirtualAidFlag
-    let assignedFlag: AssignedFlag
-    let spare: UInt8?
-    let nameExtension: AISText?
+    public let aidType: AtoNType
+    public let name: AISText
+    public let positionAccuracy: PositionAccuracy
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let dimensionToBow: UInt16
+    public let dimensionToStern: UInt16
+    public let dimensionToPort: UInt8
+    public let dimensionToStarboard: UInt8
+    public let fixType: EPFDFixType
+    public let timestamp: TimeStamp // UTC Second
+    public let offPositionFlag: OffPositionFlag
+    public let regionalReserved: UInt8 // Not sure what this is used for
+    public let raimFlag: RAIMFlag
+    public let virtualAidFlag: VirtualAidFlag
+    public let assignedFlag: AssignedFlag
+    public let spare: UInt8?
+    public let nameExtension: AISText?
     
-    let additionalSentences: [AISNMEA0183Sentence]?
+    public let additionalSentences: [AISNMEA0183Sentence]?
     
-    init?(nmeaSentences: [AISNMEA0183Sentence]) {
+    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
         guard nmeaSentences.count > 0 else { return nil }
         self.nmeaSentence = nmeaSentences[0]
         
@@ -140,7 +140,7 @@ struct AidToNavigationReport: AISMessage {
         
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

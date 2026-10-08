@@ -5,17 +5,17 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
-struct TrueHeading {
-    let rawValue: UInt16
-    let value: Double?
+public struct TrueHeading {
+    public let rawValue: UInt16
+    public let value: Double?
     
-    init(rawValue: UInt16) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
         if(rawValue >= 0 && rawValue <= 360) { self.value = Double(rawValue) }
         else { value = nil }
     }
     
-    var description: String {
+    public var description: String {
         if let heading = value {
             return "\(heading) degrees"
         }

@@ -10,26 +10,26 @@
 
 import SignalTools
 
-struct SingleSlotAidToNavigationReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct SingleSlotAidToNavigationReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let timeStamp: TimeStamp
-    let longitude: Longitude
-    let latitude: Latitude
-    let restrictedUseIndicator: RestrictedUseIndicator
-    let stationType: AtoNStationType
-    let aidType: AtoNType
-    let marineResourceName: UInt32 // 17-bit IALA identification number
-    let dimensions: AtoNDimensions
-    let chartedStatus: AtoNChartedStatus
-    let onStationStatus: AtoNOnStationStatus
-    let regionalReserved: UInt8 // This does actually have a meaning in the spec, as does the same field in type 21, but it seems to be region dependent
-    let spare: UInt8 // "Not uses" (lol) and should be 0
-    let authenticationFlag: AuthenticationFlag
+    public let timeStamp: TimeStamp
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let restrictedUseIndicator: RestrictedUseIndicator
+    public let stationType: AtoNStationType
+    public let aidType: AtoNType
+    public let marineResourceName: UInt32 // 17-bit IALA identification number
+    public let dimensions: AtoNDimensions
+    public let chartedStatus: AtoNChartedStatus
+    public let onStationStatus: AtoNOnStationStatus
+    public let regionalReserved: UInt8 // This does actually have a meaning in the spec, as does the same field in type 21, but it seems to be region dependent
+    public let spare: UInt8 // "Not uses" (lol) and should be 0
+    public let authenticationFlag: AuthenticationFlag
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         let bits = nmea.payloadBits
         self.nmeaSentence = nmea
         
@@ -95,7 +95,7 @@ struct SingleSlotAidToNavigationReport: AISMessage {
         self.authenticationFlag = AuthenticationFlag(rawValue: authenticationFlagBit > 0)
     }
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

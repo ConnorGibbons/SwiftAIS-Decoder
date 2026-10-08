@@ -7,7 +7,7 @@
 import ArgumentParser
 
 @main
-struct SwiftAIS_Decoder: ParsableCommand {
+struct SwiftAIS_DecoderCLI: ParsableCommand {
     mutating func run() throws {
         print("Hello, world!")
     }

@@ -10,13 +10,13 @@
 
 /// Dimensions A and B of an AtoN, interpreted according to its dimension type.
 /// This is strictly for message type 28
-struct AtoNDimensions {
-    let type: AtoNDimensionType
-    let additionalDataFlag: Bool
-    let a: UInt16
-    let b: UInt16
+public struct AtoNDimensions {
+    public let type: AtoNDimensionType
+    public let additionalDataFlag: Bool
+    public let a: UInt16
+    public let b: UInt16
 
-    init?(type: AtoNDimensionType, additionalDataFlag: Bool, a: UInt16, b: UInt16) {
+    public init?(type: AtoNDimensionType, additionalDataFlag: Bool, a: UInt16, b: UInt16) {
         guard a <= 0b111111111 else { return nil } // Max val is 511, field is 9 bits
         guard b <= 0b11111111111 else { return nil } // Max val is 2047, field is 11 bits
         self.type = type
@@ -25,7 +25,7 @@ struct AtoNDimensions {
         self.b = b
     }
 
-    var description: String {
+    public var description: String {
         guard additionalDataFlag, let combination = combinationDescription else { return dimensionsDescription }
         return "\(dimensionsDescription) (\(combination))"
     }

@@ -12,8 +12,7 @@ struct BinaryAcknowledgeTests {
     private static let binaryAcknowledge = "!AIVDM,1,1,,A,7022QP00V206,0*42"
 
     @Test func decodesBinaryAcknowledge() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.binaryAcknowledge),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.binaryAcknowledge)
         let report = try #require(BinaryAcknowledge(nmea: sentence),
                                   "A Type 7 payload should initialize a BinaryAcknowledge")
 
@@ -28,8 +27,7 @@ struct BinaryAcknowledgeTests {
     private static let singleDestination = "!AIVDM,1,1,,A,702R5`hwCjq8,0*6B"
 
     @Test func decodesSingleDestination() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.singleDestination),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.singleDestination)
         let report = try #require(BinaryAcknowledge(nmea: sentence),
                                   "A Type 7 payload should initialize a BinaryAcknowledge")
 
@@ -48,8 +46,7 @@ struct BinaryAcknowledgeTests {
     private static let multiDestination = "!AIVDM,1,1,,A,7IiQ4T`UjA9lC;b:M<MWE@,4*01"
 
     @Test func decodesMultipleDestinations() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.multiDestination),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.multiDestination)
         let report = try #require(BinaryAcknowledge(nmea: sentence),
                                   "A Type 7 payload should initialize a BinaryAcknowledge")
 
@@ -68,8 +65,7 @@ struct BinaryAcknowledgeTests {
     private static let channelBAcknowledge = "!AIVDM,1,1,,B,7;UnTqiR>Wh0HSat1@,4*46"
 
     @Test func decodesChannelBAcknowledge() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.channelBAcknowledge),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.channelBAcknowledge)
         #expect(sentence.channel == .B)
 
         let report = try #require(BinaryAcknowledge(nmea: sentence),

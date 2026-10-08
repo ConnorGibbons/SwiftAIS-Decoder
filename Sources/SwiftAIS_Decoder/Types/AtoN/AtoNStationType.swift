@@ -6,7 +6,7 @@
 //
 
 
-enum AtoNStationType: UInt8 {
+public enum AtoNStationType: UInt8 {
     case physicalFloating = 0
     case physicalFixed = 1
     case syntheticPredicted = 2
@@ -16,7 +16,7 @@ enum AtoNStationType: UInt8 {
     case reserved = 6
     case reserved2 = 7
     
-    var description: String {
+    public var description: String {
         switch self {
         case .physicalFloating:
             "Physical Aid To Navigation (Floating)"

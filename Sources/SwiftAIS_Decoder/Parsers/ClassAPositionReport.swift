@@ -5,26 +5,26 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
-struct ClassAPositionReport: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct ClassAPositionReport: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let navStatus: NavigationStatus
-    let rateOfTurn: RateOfTurn
-    let speedOverGround: SpeedOverGround
-    let positionAccuracy: PositionAccuracy
-    let longitude: Longitude
-    let latitude: Latitude
-    let courseOverGround: CourseOverGround
-    let trueHeading: TrueHeading
-    let timestamp: TimeStamp
-    let maneuverIndicator: ManeuverIndicator
-    let spare: SpareData
-    let raimFlag: RAIMFlag
-    let radioStatus: RadioStatus
+    public let navStatus: NavigationStatus
+    public let rateOfTurn: RateOfTurn
+    public let speedOverGround: SpeedOverGround
+    public let positionAccuracy: PositionAccuracy
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let courseOverGround: CourseOverGround
+    public let trueHeading: TrueHeading
+    public let timestamp: TimeStamp
+    public let maneuverIndicator: ManeuverIndicator
+    public let spare: SpareData
+    public let raimFlag: RAIMFlag
+    public let radioStatus: RadioStatus
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -89,7 +89,7 @@ struct ClassAPositionReport: AISMessage {
     
     
     
-    func description() -> String {
+    public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

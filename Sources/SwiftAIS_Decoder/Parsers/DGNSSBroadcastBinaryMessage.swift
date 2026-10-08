@@ -9,32 +9,32 @@
 
 import SignalTools
 
-struct DGNSSBroadcastBinaryMessage: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct DGNSSBroadcastBinaryMessage: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let additionalSentences: [AISNMEA0183Sentence]?
-    let spare1: UInt8
-    let longitude: Longitude
-    let latitude: Latitude
-    let spare2: UInt8
-    let data: BitBuffer
+    public let additionalSentences: [AISNMEA0183Sentence]?
+    public let spare1: UInt8
+    public let longitude: Longitude
+    public let latitude: Latitude
+    public let spare2: UInt8
+    public let data: BitBuffer
     
     // These fields are the header fields of RTCM 2.X. I'm putting them in here because they're interesting to decode, but they won't always work.
     // I wouldn't put full faith into these being accurate, and I won't pretend I fully understand them either!
     
-    let messageTypeIdentifier: UInt8?
-    let stationID: UInt16?
-    let zCount: UInt16? // Given in 0.6 second increments
-    let sequenceNumber: UInt8?
-    let length: UInt8? // Given in 24-bit words
-    let stationHealth: UInt8?
+    public let messageTypeIdentifier: UInt8?
+    public let stationID: UInt16?
+    public let zCount: UInt16? // Given in 0.6 second increments
+    public let sequenceNumber: UInt8?
+    public let length: UInt8? // Given in 24-bit words
+    public let stationHealth: UInt8?
     
     
     
     
-    init?(nmeaSentences: [AISNMEA0183Sentence]) {
+    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
         guard nmeaSentences.count > 0 else { return nil }
         self.nmeaSentence = nmeaSentences[0]
         
@@ -112,7 +112,7 @@ struct DGNSSBroadcastBinaryMessage: AISMessage {
         }
     }
     
-    func description() -> String {
+    public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),

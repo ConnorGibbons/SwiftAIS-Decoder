@@ -25,8 +25,7 @@ struct BinaryBroadcastTests {
     ]
 
     @Test func decodesBinaryBroadcast() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.binaryBroadcast),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.binaryBroadcast)
 
         #expect(sentence.channel == .A)
 

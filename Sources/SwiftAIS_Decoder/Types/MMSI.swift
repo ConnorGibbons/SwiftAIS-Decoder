@@ -5,21 +5,21 @@
 //  Created by Connor Gibbons on 7/8/26.
 //
 
-struct MMSI {
-    var value: UInt32
+public struct MMSI {
+    public var value: UInt32
     
-    init?(value: UInt32) {
+    public init?(value: UInt32) {
         guard value <= 0b111011100110101100100111111111 else { return nil } // 999 999 999
         self.value = value
     }
     
-    var description: String {
+    public var description: String {
         return String(format: "%09u", value)
     }
 
     /// The country or territory allocated to this MMSI's Maritime Identification Digits
     /// Sourced from `description` so leading zeroes are preserved. Returns "Unknown" if the MID is unallocated.
-    var country: String {
+    public var country: String {
         guard let mid = UInt16(description.prefix(3)),
               let areaCode = AreaCode(rawValue: mid) else {
             return "Unknown"
@@ -30,7 +30,7 @@ struct MMSI {
     
 }
 
-enum IdentityType: UInt8 {
+public enum IdentityType: UInt8 {
     case shipGroup = 0
     case searchAndRescueAircraft = 1
     case individualShip = 2
@@ -41,7 +41,7 @@ enum IdentityType: UInt8 {
 /// Maritime Identification Digits (MID) — Contained at a particular offset in the MMSI depending on the prefix length.
 ///
 /// Source: ITU Table of Maritime Identification Digits.
-enum AreaCode: UInt16 {
+public enum AreaCode: UInt16 {
     case international = 1
     case albania = 201
     case andorra = 202
@@ -337,7 +337,7 @@ enum AreaCode: UInt16 {
     case venezuela = 775
 
     /// The country or territory allocated to this MID.
-    var description: String {
+    public var description: String {
         switch self {
         case .international:
             return "International (ITU)"

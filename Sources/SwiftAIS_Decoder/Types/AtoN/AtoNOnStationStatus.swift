@@ -6,7 +6,7 @@
 //
 //  Describes the current state of an Aid to Navigation
 
-enum AtoNOnStationStatus: UInt8 {
+public enum AtoNOnStationStatus: UInt8 {
     case onStation = 0
     case onStationOrOnCourse = 1 // For mobile AtoNs
     case onStationNotVisible = 2 // Damaged, occulted, submerged or otherwise not properly visible
@@ -24,7 +24,7 @@ enum AtoNOnStationStatus: UInt8 {
     case reserved14 = 14
     case reserved15 = 15
 
-    var description: String {
+    public var description: String {
         switch self {
         case .onStation:
             return "On-station"

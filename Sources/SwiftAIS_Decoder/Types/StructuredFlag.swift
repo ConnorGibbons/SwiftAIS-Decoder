@@ -5,17 +5,17 @@
 //  Created by Connor Gibbons on 9/10/26.
 //
 
-enum StructuredFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum StructuredFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case structured
     case unstructured
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .structured : .unstructured
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .structured:
             return true
@@ -24,7 +24,7 @@ enum StructuredFlag: RawRepresentable {
         }
     }
     
-    var description: String {
+    public var description: String {
         if self.rawValue { return "Is structured" }
         else { return "Not structured" }
     }

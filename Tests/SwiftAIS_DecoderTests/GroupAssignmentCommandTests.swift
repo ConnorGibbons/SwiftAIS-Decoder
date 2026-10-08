@@ -11,8 +11,7 @@ struct GroupAssignmentCommandTests {
     private static let groupAssignmentCommand = "!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12"
 
     @Test func decodesGroupAssignmentCommand() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.groupAssignmentCommand),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.groupAssignmentCommand)
 
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 160)

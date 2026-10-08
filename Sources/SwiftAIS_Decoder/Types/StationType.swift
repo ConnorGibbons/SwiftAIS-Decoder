@@ -5,7 +5,7 @@
 //  Created by Connor Gibbons on 9/8/26.
 //
 
-enum StationType: UInt8 {
+public enum StationType: UInt8 {
     case allTypes = 0
     case reserved1 = 1
     case allClassB = 2
@@ -15,7 +15,7 @@ enum StationType: UInt8 {
     case regionalUse = 6
     case reserved7 = 7
     
-    var description: String {
+    public var description: String {
         switch self {
         case .allTypes:
             return "All types of mobiles (default)"

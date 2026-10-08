@@ -9,11 +9,11 @@ func dateStringFromUTCElements(year: UTCYear, month: UTCMonth, day: UTCDay, hour
     return "\(year.description)-\(month.description)-\(day.description) " + "\(hour.description):\(minute.description):\(second.description)"
 }
 
-struct UTCYear {
-    let rawValue: UInt16
-    let year: UInt16?
+public struct UTCYear {
+    public let rawValue: UInt16
+    public let year: UInt16?
     
-    init(rawValue: UInt16) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
         if(rawValue > 0 && rawValue <= 9999) {
             self.year = rawValue
@@ -23,7 +23,7 @@ struct UTCYear {
         }
     }
     
-    var description: String {
+    public var description: String {
         if let year = year {
             return "\(year)"
         }
@@ -34,11 +34,11 @@ struct UTCYear {
     
 }
 
-struct UTCMonth {
-    let rawValue: UInt8
-    let month: UInt8?
+public struct UTCMonth {
+    public let rawValue: UInt8
+    public let month: UInt8?
     
-    init(rawValue: UInt8) {
+    public init(rawValue: UInt8) {
         self.rawValue = rawValue
         if(rawValue > 0 && rawValue <= 12) {
             self.month = rawValue
@@ -48,7 +48,7 @@ struct UTCMonth {
         }
     }
     
-    var description: String {
+    public var description: String {
         if let month = month {
             return "\(month)"
         }
@@ -59,11 +59,11 @@ struct UTCMonth {
     
 }
 
-struct UTCDay {
-    let rawValue: UInt8
-    let day: UInt8?
+public struct UTCDay {
+    public let rawValue: UInt8
+    public let day: UInt8?
     
-    init(rawValue: UInt8) {
+    public init(rawValue: UInt8) {
         self.rawValue = rawValue
         if(rawValue > 0 && rawValue <= 31) {
             self.day = rawValue
@@ -73,7 +73,7 @@ struct UTCDay {
         }
     }
     
-    var description: String {
+    public var description: String {
         if let day = day {
             return "\(day)"
         }
@@ -84,11 +84,11 @@ struct UTCDay {
     
 }
 
-struct UTCHour {
-    let rawValue: UInt8
-    let hour: UInt8?
+public struct UTCHour {
+    public let rawValue: UInt8
+    public let hour: UInt8?
     
-    init(rawValue: UInt8) {
+    public init(rawValue: UInt8) {
         self.rawValue = rawValue
         if(rawValue <= 23) {
             self.hour = rawValue
@@ -98,7 +98,7 @@ struct UTCHour {
         }
     }
     
-    var description: String {
+    public var description: String {
         if let hour = hour {
             return "\(hour)"
         }
@@ -109,11 +109,11 @@ struct UTCHour {
     
 }
 
-struct UTCMinute {
-    let rawValue: UInt8
-    let minute: UInt8?
+public struct UTCMinute {
+    public let rawValue: UInt8
+    public let minute: UInt8?
     
-    init(rawValue: UInt8) {
+    public init(rawValue: UInt8) {
         self.rawValue = rawValue
         if(rawValue <= 59) {
             self.minute = rawValue
@@ -123,7 +123,7 @@ struct UTCMinute {
         }
     }
     
-    var description: String {
+    public var description: String {
         if let minute = minute {
             return "\(minute)"
         }

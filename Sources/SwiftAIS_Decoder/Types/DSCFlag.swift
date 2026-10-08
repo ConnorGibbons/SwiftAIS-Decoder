@@ -7,17 +7,17 @@
 //  Used to signify whether the radio is DSC call capable
 //  Check out SwiftDSC :^)
 
-enum DSCFlag: RawRepresentable {
-    typealias RawValue = Bool
+public enum DSCFlag: RawRepresentable {
+    public typealias RawValue = Bool
     
     case hasDSC
     case noDSC
     
-    init(rawValue: Bool) {
+    public init(rawValue: Bool) {
         self = rawValue ? .hasDSC : .noDSC
     }
     
-    var rawValue: Bool {
+    public var rawValue: Bool {
         switch self {
         case .hasDSC:
             return true
@@ -26,7 +26,7 @@ enum DSCFlag: RawRepresentable {
         }
     }
 
-    var description: String {
+    public var description: String {
         if self.rawValue { return "Has DSC" }
         else { return "Does Not Have DSC" }
     }

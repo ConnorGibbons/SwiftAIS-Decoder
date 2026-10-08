@@ -17,11 +17,11 @@
 //
 //  More here, since it's kinda neat: http://www.allaboutais.com/index.php/en/technical-info/transmission-types
 
-enum CSUnit: UInt8 {
+public enum CSUnit: UInt8 {
     case sotdma = 0
     case carrierSense = 1
 
-    var description: String {
+    public var description: String {
         switch self {
         case .carrierSense:
             "CSTDMA: Carrier Sense Time Division Multiple Access"

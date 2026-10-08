@@ -13,8 +13,7 @@ struct AircraftPositionReportTests {
     private static let aircraftPositionReportTwo = "!AIVDM,1,1,,A,91b55vRB23OnO7>M0<Ujik020@7r,0*07"
 
     @Test func decodesAircraftPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.aircraftPositionReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.aircraftPositionReport)
         let report = try #require(AircraftPositionReport(nmea: sentence),
                                   "A Type 9 payload should initialize an AircraftPositionReport")
 
@@ -71,8 +70,7 @@ struct AircraftPositionReportTests {
     }
 
     @Test func decodesSecondAircraftPositionReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.aircraftPositionReportTwo),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.aircraftPositionReportTwo)
         let report = try #require(AircraftPositionReport(nmea: sentence),
                                   "A Type 9 payload should initialize an AircraftPositionReport")
 

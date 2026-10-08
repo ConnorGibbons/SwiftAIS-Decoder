@@ -5,11 +5,11 @@
 //  Created by Connor Gibbons on 9/8/26.
 //
 
-enum TransmitPower: UInt8 {
+public enum TransmitPower: UInt8 {
     case lowPower = 0
     case highPower = 1
     
-    var description: String {
+    public var description: String {
         switch self {
         case .lowPower:
             return "Low Power"

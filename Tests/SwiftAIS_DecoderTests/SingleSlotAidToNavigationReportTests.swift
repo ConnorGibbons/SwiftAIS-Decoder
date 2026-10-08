@@ -11,8 +11,7 @@ struct SingleSlotAidToNavigationReportTests {
     private static let singleSlotAidToNavigationReport = "!AIVDM,1,1,,A,L>k`@BC=MVsh<75N0303rA080D?8,0*1B"
 
     @Test func decodesSingleSlotAidToNavigationReport() throws {
-        let sentence = try #require(AISNMEA0183Sentence(raw: Self.singleSlotAidToNavigationReport),
-                                    "The example sentence should parse as a valid AIS sentence")
+        let sentence = try AISNMEA0183Sentence(raw: Self.singleSlotAidToNavigationReport)
         let report = try #require(SingleSlotAidToNavigationReport(nmea: sentence),
                                   "A Type 28 payload should initialize a SingleSlotAidToNavigationReport")
 

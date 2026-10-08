@@ -14,10 +14,8 @@ struct StaticAndVoyageDataTests {
     private static let staticAndVoyage2 = "!AIVDM,2,2,9,B,888888888888880,2*2E"
 
     @Test func decodesStaticAndVoyageData() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.staticAndVoyage1),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.staticAndVoyage2),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage1)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage2)
         let report = try #require(StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2),
                                   "A Type 5 payload should initialize a StaticAndVoyageData")
 
@@ -61,10 +59,8 @@ struct StaticAndVoyageDataTests {
     private static let staticAndVoyage4 = "!AIVDM,2,2,1,B,88888888880,2*26"
 
     @Test func decodesStaticAndVoyageDataPresto() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.staticAndVoyage3),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.staticAndVoyage4),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage3)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage4)
         let report = try #require(StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2),
                                   "A Type 5 payload should initialize a StaticAndVoyageData")
 
@@ -108,10 +104,8 @@ struct StaticAndVoyageDataTests {
     private static let staticAndVoyage6 = "!AIVDM,2,2,2,A,00000000000,2*26"
 
     @Test func decodesStaticAndVoyageDataCorky() throws {
-        let sentence1 = try #require(AISNMEA0183Sentence(raw: Self.staticAndVoyage5),
-                                     "The first fragment should parse as a valid AIS sentence")
-        let sentence2 = try #require(AISNMEA0183Sentence(raw: Self.staticAndVoyage6),
-                                     "The second fragment should parse as a valid AIS sentence")
+        let sentence1 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage5)
+        let sentence2 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage6)
         let report = try #require(StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2),
                                   "A Type 5 payload should initialize a StaticAndVoyageData")
 

@@ -6,15 +6,15 @@
 //
 //  Type 7
 
-struct BinaryAcknowledge: AISMessage {
-    let nmeaSentence: AISNMEA0183Sentence
-    let messageType: AISMessageType
-    let mmsiNumber: MMSI
+public struct BinaryAcknowledge: AISMessage {
+    public let nmeaSentence: AISNMEA0183Sentence
+    public let messageType: AISMessageType
+    public let mmsiNumber: MMSI
     
-    let mmsis: [MMSI]
+    public let mmsis: [MMSI]
     
     
-    init?(nmea: AISNMEA0183Sentence) {
+    public init?(nmea: AISNMEA0183Sentence) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
         
@@ -42,7 +42,7 @@ struct BinaryAcknowledge: AISMessage {
     
     
     
-    func description() -> String {
+    public func description() -> String {
         let acknowledged: String
         if mmsis.isEmpty {
             acknowledged = "None"
