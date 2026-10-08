@@ -19,8 +19,8 @@ public struct SafetyBroadcastMessage: AISMessage {
     public let payload: BitBuffer
     public let text: AISText?
     
-    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
-        guard nmeaSentences.count > 0 else { return nil }
+    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
+        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
         self.nmeaSentence = nmeaSentences[0]
         
         var bits: BitBuffer = .init()
@@ -34,21 +34,19 @@ public struct SafetyBroadcastMessage: AISMessage {
             bits.append(contentsOf: sentence.payloadBits)
         }
         
-        guard bits.count > 40 else { return nil } // Spare ends at 40th bit, so this ensures there's at least one payload bit
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 14 else { return nil }
+        guard bits.count > 40 else { throw .payloadTooShort(field: "payload", bits: 40..<41, available: bits.count) } // Spare ends at 40th bit, so this ensures there's at least one payload bit
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 14 else { throw .unexpectedMessageType(messageType.rawValue, expected: [14]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsiNumber = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsiNumber = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsiNumber
-        
-        guard let spareBits: UInt8 = bits[38...39] else { return nil }
-        self.spare = spareBits
-        
-        guard let payloadBits: BitBuffer = bits[40..<bits.count] else { return nil }
+
+        self.spare = try bits.read(38...39, "spare")
+
+        let payloadBits: BitBuffer = try bits.read(40..<bits.count, "payload")
         self.payload = payloadBits
         
         // Fill bits can leave a partial character at the end of the payload, so only whole characters are decoded.

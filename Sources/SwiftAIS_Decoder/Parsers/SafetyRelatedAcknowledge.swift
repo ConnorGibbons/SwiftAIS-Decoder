@@ -16,17 +16,16 @@ public struct SafetyRelatedAcknowledge: AISMessage {
     public let mmsis: [MMSI]
     
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 13 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 13 else { throw .unexpectedMessageType(messageType.rawValue, expected: [13]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
         
         var mmsis: [MMSI] = []

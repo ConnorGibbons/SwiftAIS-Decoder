@@ -16,8 +16,7 @@ struct StaticDataReportTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 160)
 
-        let report = try #require(StaticDataReport(nmea: sentence),
-                                  "A Type 24 payload should initialize a StaticDataReport")
+        let report = try StaticDataReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 24)
         #expect(report.mmsiNumber.value == 25660450)
@@ -50,8 +49,7 @@ struct StaticDataReportTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 168)
 
-        let report = try #require(StaticDataReport(nmea: sentence),
-                                  "A Type 24 payload should initialize a StaticDataReport")
+        let report = try StaticDataReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 24)
         #expect(report.mmsiNumber.value == 961040384)
@@ -92,10 +90,8 @@ struct StaticDataReportTests {
         #expect(sentenceA.payloadBits.count == 160)
         #expect(sentenceB.payloadBits.count == 168)
 
-        let partA = try #require(StaticDataReport(nmea: sentenceA),
-                                 "A Type 24 payload should initialize a StaticDataReport")
-        let partB = try #require(StaticDataReport(nmea: sentenceB),
-                                 "A Type 24 payload should initialize a StaticDataReport")
+        let partA = try StaticDataReport(nmea: sentenceA)
+        let partB = try StaticDataReport(nmea: sentenceB)
 
         #expect(partA.mmsiNumber.value == 271041815)
         #expect(partB.mmsiNumber.value == 271041815)
@@ -146,8 +142,7 @@ struct StaticDataReportTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 168)
 
-        let report = try #require(StaticDataReport(nmea: sentence),
-                                  "A Type 24 payload should initialize a StaticDataReport")
+        let report = try StaticDataReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 24)
         #expect(report.mmsiNumber.value == 980696666)

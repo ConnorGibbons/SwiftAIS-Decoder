@@ -28,74 +28,58 @@ public struct ChannelManagement: AISMessage {
     // nautical miles" - https://web.archive.org/web/20111110211252/https://www.ialathree.org/iala/pages/AIS/IALATech1.5.pdf
     public let spare2: UInt32?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 22 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 22 else { throw .unexpectedMessageType(messageType.rawValue, expected: [22]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let spare1Bits: UInt8 = bits[38...39] else { return nil }
-        self.spare1 = spare1Bits
-        
-        guard let channelABits: UInt16 = bits[40...51] else { return nil }
-        let channelA = VHFChannel(channel: Int(channelABits))
-        self.channelA = channelA
-        
-        guard let channelBBits: UInt16 = bits[52...63] else { return nil }
-        let channelB = VHFChannel(channel: Int(channelBBits))
-        self.channelB = channelB
-        
-        guard let txrxBits: UInt8 = bits[64...67] else { return nil }
-        guard let txrx = TxRxModes(rawValue: txrxBits) else { return nil }
-        self.txrx = txrx
-        
-        guard let powerBit: UInt8 = bits[68...68] else { return nil }
-        guard let power = TransmitPower(rawValue: powerBit) else { return nil }
-        self.power = power
-        
-        guard let addressedBit: UInt8 = bits[139...139] else { return nil }
-        guard let addressed = Addressed(rawValue: addressedBit) else { return nil }
+
+        self.spare1 = try bits.read(38...39, "spare1")
+
+        let channelABits: UInt16 = try bits.read(40...51, "channelA")
+        self.channelA = VHFChannel(channel: Int(channelABits))
+
+        let channelBBits: UInt16 = try bits.read(52...63, "channelB")
+        self.channelB = VHFChannel(channel: Int(channelBBits))
+
+        self.txrx = try bits.read(64...67, "txrx")
+        self.power = try bits.read(68...68, "power")
+
+        let addressed: Addressed = try bits.read(139...139, "addressed")
         self.addressed = addressed
-        
+
         if addressed == .addressed { // Format of the message is gated based on addressed bit, which for some reason comes *after* the fields it dictates.
-            guard let dest1Bits: UInt32 = bits[69...98] else { return nil }
-            guard let dest1 = MMSI(value: dest1Bits) else { return nil }
+            let dest1Bits: UInt32 = try bits.read(69...98, "dest1")
+            guard let dest1 = MMSI(value: dest1Bits) else { throw .invalidValue(field: "dest1", rawValue: UInt64(dest1Bits)) }
             self.dest1 = dest1
-            
-            guard let dest2Bits: UInt32 = bits[104...133] else { return nil }
-            guard let dest2 = MMSI(value: dest2Bits) else { return nil }
+
+            let dest2Bits: UInt32 = try bits.read(104...133, "dest2")
+            guard let dest2 = MMSI(value: dest2Bits) else { throw .invalidValue(field: "dest2", rawValue: UInt64(dest2Bits)) }
             self.dest2 = dest2
-            
+
             self.region = nil
         }
         else {
-            guard let neLongitudeBits: UInt32 = bits[69...86] else { return nil }
-            guard let neLatitudeBits: UInt32 = bits[87...103] else { return nil }
-            guard let swLongitudeBits: UInt32 = bits[104...121] else { return nil }
-            guard let swLatitudeBits: UInt32 = bits[122...138] else { return nil }
-            let region = LatLongRegion(longitudeNEMins: neLongitudeBits, latitudeNEMins: neLatitudeBits, longitudeSWMins: swLongitudeBits, latitudeSWMins: swLatitudeBits)
-            self.region = region
-            
+            let neLongitudeBits: UInt32 = try bits.read(69...86, "neLongitude")
+            let neLatitudeBits: UInt32 = try bits.read(87...103, "neLatitude")
+            let swLongitudeBits: UInt32 = try bits.read(104...121, "swLongitude")
+            let swLatitudeBits: UInt32 = try bits.read(122...138, "swLatitude")
+            self.region = LatLongRegion(longitudeNEMins: neLongitudeBits, latitudeNEMins: neLatitudeBits, longitudeSWMins: swLongitudeBits, latitudeSWMins: swLatitudeBits)
+
             self.dest1 = nil
             self.dest2 = nil
         }
-        
-        guard let channelABandwidthBit: UInt8 = bits[140...140] else { return nil }
-        guard let channelABandwidth = Bandwidth(rawValue: channelABandwidthBit) else { return nil }
-        self.channelABandwidth = channelABandwidth
-        
-        guard let channelBBandwidthBit: UInt8 = bits[141...141] else { return nil }
-        guard let channelBBandwidth = Bandwidth(rawValue: channelBBandwidthBit) else { return nil }
-        self.channelBBandwidth = channelBBandwidth
-        
-        guard let zoneSizeBits: UInt8 = bits[142...144] else { return nil }
+
+        self.channelABandwidth = try bits.read(140...140, "channelABandwidth")
+        self.channelBBandwidth = try bits.read(141...141, "channelBBandwidth")
+
+        let zoneSizeBits: UInt8 = try bits.read(142...144, "zoneSize")
         self.zoneSize = zoneSizeBits + 1 // See comment on property definition
         
         if let spare2Bits: UInt32 = bits[145...167] {

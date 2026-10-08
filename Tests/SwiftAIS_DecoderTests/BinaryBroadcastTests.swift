@@ -29,8 +29,7 @@ struct BinaryBroadcastTests {
 
         #expect(sentence.channel == .A)
 
-        let report = try #require(BinaryBroadcastMessage(nmeaSentences: [sentence]),
-                                  "A Type 8 payload should initialize a BinaryBroadcastMessage")
+        let report = try BinaryBroadcastMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 8)
 

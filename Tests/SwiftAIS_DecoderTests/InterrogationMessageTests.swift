@@ -17,8 +17,7 @@ struct InterrogationMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 88)
 
-        let report = try #require(InterrogationMessage(nmea: sentence),
-                                  "A Type 15 payload should initialize an InterrogationMessage")
+        let report = try InterrogationMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 368578000)
@@ -49,8 +48,7 @@ struct InterrogationMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 88)
 
-        let report = try #require(InterrogationMessage(nmea: sentence),
-                                  "A Type 15 payload should initialize an InterrogationMessage")
+        let report = try InterrogationMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 367036840)
@@ -81,8 +79,7 @@ struct InterrogationMessageTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 112)
 
-        let report = try #require(InterrogationMessage(nmea: sentence),
-                                  "A Type 15 payload should initialize an InterrogationMessage")
+        let report = try InterrogationMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 3669720)
@@ -116,6 +113,8 @@ struct InterrogationMessageTests {
         let requestedMessageTypeBits: UInt8 = try #require(sentence.payloadBits[70...75])
         #expect(requestedMessageTypeBits == 0)
 
-        #expect(InterrogationMessage(nmea: sentence) == nil)
+        #expect(throws: AISDecodingError.invalidValue(field: "requestedMessageType_1", rawValue: 0)) {
+            try InterrogationMessage(nmea: sentence)
+        }
     }
 }

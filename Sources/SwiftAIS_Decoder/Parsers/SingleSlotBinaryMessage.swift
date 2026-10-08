@@ -28,43 +28,42 @@ public struct SingleSlotBinaryMessage: AISMessage {
     public let dac: DesignatedAreaCode?
     public let fid: UInt8?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 25 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 25 else { throw .unexpectedMessageType(messageType.rawValue, expected: [25]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let addressedBit: UInt8 = bits[38...38] else { return nil }
-        guard let addressed = Addressed(rawValue: addressedBit) else { return nil }
+
+        let addressed: Addressed = try bits.read(38...38, "addressed")
         self.addressed = addressed
-        
-        guard let structuredFlagBit: UInt8 = bits[39...39] else { return nil }
-        let structuredFlag = StructuredFlag(rawValue: structuredFlagBit == 1)
+
+        let structuredFlag = StructuredFlag(rawValue: try bits.read(39, "structuredFlag"))
         self.structuredFlag = structuredFlag
-        
+
         var ptr = 40
         if(addressed == .addressed) {
-            guard let destinationMMSIBits: UInt32 = bits[ptr..<ptrAdvance(ptr: &ptr, advanceBy: 30)] else { return nil }
-            guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { return nil }
+            let destinationMMSIBits: UInt32 = try bits.read(ptr..<ptrAdvance(ptr: &ptr, advanceBy: 30), "destinationMMSI")
+            guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
             self.destinationMMSI = destinationMMSI
             // ITU-R M.1371-5 Table 79 gives the spare a width of 0/2 bits: present only when the
             // destination ID is used. Some decoders (aggsoft, for one) skip it and read the payload
             // two bits early.
             _ = ptrAdvance(ptr: &ptr, advanceBy: 2)
+            // The spare is skipped rather than read, so a message ending inside it would otherwise build an inverted payload range below and crash.
+            guard ptr <= bits.count else { throw .payloadTooShort(field: "spare", bits: (ptr - 2)..<ptr, available: bits.count) }
         }
         else {
             self.destinationMMSI = nil
         }
         
         if(structuredFlag.rawValue) {
-            guard let appIDBits: UInt16 = bits[ptr..<ptrAdvance(ptr: &ptr, advanceBy: 16)] else { return nil }
+            let appIDBits: UInt16 = try bits.read(ptr..<ptrAdvance(ptr: &ptr, advanceBy: 16), "appID")
             self.appID = appIDBits
             // The application ID is a 10-bit DAC followed by a 6-bit FI.
             self.dac = DesignatedAreaCode(rawValue: (appIDBits & 0b1111111111000000) >> 6)
@@ -76,7 +75,7 @@ public struct SingleSlotBinaryMessage: AISMessage {
             self.fid = nil
         }
         
-        guard let payloadBits: BitBuffer = bits[ptr..<bits.count] else { return nil }
+        let payloadBits: BitBuffer = try bits.read(ptr..<bits.count, "payload")
         self.payload = payloadBits
         
         // Fill bits can leave a partial character at the end of the payload, so only whole characters are decoded.

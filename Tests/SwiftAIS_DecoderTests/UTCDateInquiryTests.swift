@@ -13,8 +13,7 @@ struct UTCDateInquiryTests {
 
     @Test func decodesUTCDateInquiry() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.utcDateInquiry)
-        let report = try #require(UTCDateInquiry(nmea: sentence),
-                                  "A Type 10 payload should initialize a UTCDateInquiry")
+        let report = try UTCDateInquiry(nmea: sentence)
 
         #expect(report.messageType.rawValue == 10)
         #expect(report.mmsiNumber.value == 538090168)
@@ -30,8 +29,7 @@ struct UTCDateInquiryTests {
 
     @Test func decodesSecondUTCDateInquiry() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.secondUTCDateInquiry)
-        let report = try #require(UTCDateInquiry(nmea: sentence),
-                                  "A Type 10 payload should initialize a UTCDateInquiry")
+        let report = try UTCDateInquiry(nmea: sentence)
 
         #expect(report.messageType.rawValue == 10)
         #expect(report.mmsiNumber.value == 538090168)
@@ -48,8 +46,7 @@ struct UTCDateInquiryTests {
         let sentence = try AISNMEA0183Sentence(raw: Self.channelBUTCDateInquiry)
         #expect(sentence.channel == .B)
 
-        let report = try #require(UTCDateInquiry(nmea: sentence),
-                                  "A Type 10 payload should initialize a UTCDateInquiry")
+        let report = try UTCDateInquiry(nmea: sentence)
 
         #expect(report.messageType.rawValue == 10)
         #expect(report.mmsiNumber.value == 538002009)

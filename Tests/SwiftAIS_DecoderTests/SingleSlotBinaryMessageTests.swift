@@ -29,8 +29,7 @@ struct SingleSlotBinaryMessageTests {
         #expect(sentence.fillBits == 0)
         #expect(sentence.payloadBits.count == 168)
 
-        let report = try #require(SingleSlotBinaryMessage(nmea: sentence),
-                                  "A Type 25 payload should initialize a SingleSlotBinaryMessage")
+        let report = try SingleSlotBinaryMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 25)
 
@@ -82,8 +81,7 @@ struct SingleSlotBinaryMessageTests {
         #expect(sentence.fillBits == 0)
         #expect(sentence.payloadBits.count == 168)
 
-        let report = try #require(SingleSlotBinaryMessage(nmea: sentence),
-                                  "A Type 25 payload should initialize a SingleSlotBinaryMessage")
+        let report = try SingleSlotBinaryMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 25)
 
@@ -132,8 +130,7 @@ struct SingleSlotBinaryMessageTests {
         #expect(sentence.fillBits == 0)
         #expect(sentence.payloadBits.count == 168)
 
-        let report = try #require(SingleSlotBinaryMessage(nmea: sentence),
-                                  "A Type 25 payload should initialize a SingleSlotBinaryMessage")
+        let report = try SingleSlotBinaryMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 25)
 

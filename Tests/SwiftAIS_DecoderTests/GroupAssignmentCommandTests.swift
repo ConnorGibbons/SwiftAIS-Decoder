@@ -16,8 +16,7 @@ struct GroupAssignmentCommandTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 160)
 
-        let report = try #require(GroupAssignmentCommand(nmea: sentence),
-                                  "A Type 23 payload should initialize a GroupAssignmentCommand")
+        let report = try GroupAssignmentCommand(nmea: sentence)
 
         #expect(report.messageType.rawValue == 23)
         #expect(report.mmsiNumber.value == 2268120)

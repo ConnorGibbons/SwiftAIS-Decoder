@@ -34,8 +34,8 @@ public struct DGNSSBroadcastBinaryMessage: AISMessage {
     
     
     
-    public init?(nmeaSentences: [AISNMEA0183Sentence]) {
-        guard nmeaSentences.count > 0 else { return nil }
+    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
+        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
         self.nmeaSentence = nmeaSentences[0]
         
         var bits: BitBuffer = .init()
@@ -49,31 +49,19 @@ public struct DGNSSBroadcastBinaryMessage: AISMessage {
             bits.append(contentsOf: sentence.payloadBits)
         }
         
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 17 else { return nil }
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 17 else { throw .unexpectedMessageType(messageType.rawValue, expected: [17]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsiNumber = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsiNumber = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsiNumber
-        
-        guard let spare1Bits: UInt8 = bits[38...39] else { return nil }
-        self.spare1 = spare1Bits
-        
-        guard let longitudeBits: UInt32 = bits[40...57] else { return nil }
-        let longitude = Longitude(rawValue: longitudeBits, isTenths: true)
-        self.longitude = longitude
-        
-        guard let latitudeBits: UInt32 = bits[58...74] else { return nil }
-        let latitude = Latitude(rawValue: latitudeBits, isTenths: true)
-        self.latitude = latitude
-        
-        guard let spare2Bits: UInt8 = bits[75...79] else { return nil }
-        self.spare2 = spare2Bits
-        
-        guard let dataBits: BitBuffer = bits[80..<bits.count] else { return nil }
-        self.data = dataBits
+
+        self.spare1 = try bits.read(38...39, "spare1")
+        self.longitude = Longitude(rawValue: try bits.read(40...57, "longitude"), isTenths: true)
+        self.latitude = Latitude(rawValue: try bits.read(58...74, "latitude"), isTenths: true)
+        self.spare2 = try bits.read(75...79, "spare2")
+        self.data = try bits.read(80..<bits.count, "data")
         
         if let messageTypeIdentifierBits: UInt8 = bits[80...85] {
             self.messageTypeIdentifier = messageTypeIdentifierBits

@@ -23,51 +23,33 @@ public struct GroupAssignmentCommand: AISMessage {
     public let quietTime: UInt8 // Minutes affected stations should remain silent
     public let spare3: UInt8?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 23 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 23 else { throw .unexpectedMessageType(messageType.rawValue, expected: [23]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let spare1Bits: UInt8 = bits[38...39] else { return nil }
-        self.spare1 = spare1Bits
-        
-        guard let neLongitudeBits: UInt32 = bits[40...57] else { return nil }
-        guard let neLatitudeBits: UInt32 = bits[58...74] else { return nil }
-        guard let swLongitudeBits: UInt32 = bits[75...92] else { return nil }
-        guard let swLatitudeBits: UInt32 = bits[93...109] else { return nil }
-        let region = LatLongRegion(longitudeNEMins: neLongitudeBits, latitudeNEMins: neLatitudeBits, longitudeSWMins: swLongitudeBits, latitudeSWMins: swLatitudeBits)
-        self.region = region
-        
-        guard let stationTypeBits: UInt8 = bits[110...113] else { return nil }
-        guard let stationType = StationType(rawValue: stationTypeBits) else { return nil }
-        self.stationType = stationType
-        
-        guard let shipTypeBits: UInt8 = bits[114...121] else { return nil }
-        guard let shipType = ShipType(rawValue: shipTypeBits) else { return nil }
-        self.shipType = shipType
-        
-        guard let spare2Bits: UInt32 = bits[122...143] else { return nil }
-        self.spare2 = spare2Bits
-        
-        guard let txrxBits: UInt8 = bits[144...145] else { return nil }
-        guard let txrx = TxRxModes(rawValue: txrxBits) else { return nil }
-        self.txrx = txrx
-        
-        guard let reportIntervalBits: UInt8 = bits[146...149] else { return nil }
-        guard let reportInterval = ReportInterval(rawValue: reportIntervalBits) else { return nil }
-        self.reportInterval = reportInterval
-        
-        guard let quietTimeBits: UInt8 = bits[150...153] else { return nil }
-        self.quietTime = quietTimeBits
-        
+
+        self.spare1 = try bits.read(38...39, "spare1")
+
+        let neLongitudeBits: UInt32 = try bits.read(40...57, "neLongitude")
+        let neLatitudeBits: UInt32 = try bits.read(58...74, "neLatitude")
+        let swLongitudeBits: UInt32 = try bits.read(75...92, "swLongitude")
+        let swLatitudeBits: UInt32 = try bits.read(93...109, "swLatitude")
+        self.region = LatLongRegion(longitudeNEMins: neLongitudeBits, latitudeNEMins: neLatitudeBits, longitudeSWMins: swLongitudeBits, latitudeSWMins: swLatitudeBits)
+
+        self.stationType = try bits.read(110...113, "stationType")
+        self.shipType = try bits.read(114...121, "shipType")
+        self.spare2 = try bits.read(122...143, "spare2")
+        self.txrx = try bits.read(144...145, "txrx")
+        self.reportInterval = try bits.read(146...149, "reportInterval")
+        self.quietTime = try bits.read(150...153, "quietTime")
+
         if let spare3Bits: UInt8 = bits[154...159] {
             self.spare3 = spare3Bits
         } else {

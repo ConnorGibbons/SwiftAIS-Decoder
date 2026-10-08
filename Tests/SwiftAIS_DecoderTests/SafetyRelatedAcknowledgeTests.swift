@@ -15,8 +15,7 @@ struct SafetyRelatedAcknowledgeTests {
         let sentence = try AISNMEA0183Sentence(raw: Self.safetyRelatedAcknowledge)
         #expect(sentence.channel == .A)
 
-        let report = try #require(SafetyRelatedAcknowledge(nmea: sentence),
-                                  "A Type 13 payload should initialize a SafetyRelatedAcknowledge")
+        let report = try SafetyRelatedAcknowledge(nmea: sentence)
 
         #expect(report.messageType.rawValue == 13)
         #expect(report.mmsiNumber.value == 211378120)
@@ -35,6 +34,8 @@ struct SafetyRelatedAcknowledgeTests {
 
     @Test func rejectsNonSafetyRelatedAcknowledge() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.binaryAcknowledge)
-        #expect(SafetyRelatedAcknowledge(nmea: sentence) == nil)
+        #expect(throws: AISDecodingError.unexpectedMessageType(7, expected: [13])) {
+            try SafetyRelatedAcknowledge(nmea: sentence)
+        }
     }
 }

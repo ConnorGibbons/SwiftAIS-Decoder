@@ -26,8 +26,7 @@ struct DGNSSBroadcastBinaryMessageTests {
         // 34 armored characters minus the 4 fill bits
         #expect(sentence.payloadBits.count == 200)
 
-        let report = try #require(DGNSSBroadcastBinaryMessage(nmeaSentences: [sentence]),
-                                  "A Type 17 payload should initialize a DGNSSBroadcastBinaryMessage")
+        let report = try DGNSSBroadcastBinaryMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 17)
 
@@ -99,8 +98,7 @@ struct DGNSSBroadcastBinaryMessageTests {
         #expect(sentence1.payloadBits.count == 360)
         #expect(sentence2.payloadBits.count == 96)
 
-        let report = try #require(DGNSSBroadcastBinaryMessage(nmeaSentences: [sentence1, sentence2]),
-                                  "A Type 17 payload should initialize a DGNSSBroadcastBinaryMessage")
+        let report = try DGNSSBroadcastBinaryMessage(nmeaSentences: [sentence1, sentence2])
 
         #expect(report.messageType.rawValue == 17)
 

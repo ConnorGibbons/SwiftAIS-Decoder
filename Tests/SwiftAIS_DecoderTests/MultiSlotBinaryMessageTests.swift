@@ -29,8 +29,7 @@ struct MultiSlotBinaryMessageTests {
         #expect(sentence.fillBits == 2)
         #expect(sentence.payloadBits.count == 256)
 
-        let report = try #require(MultiSlotBinaryMessage(nmea: sentence),
-                                  "A Type 26 payload should initialize a MultiSlotBinaryMessage")
+        let report = try MultiSlotBinaryMessage(nmea: sentence)
 
         #expect(report.messageType.rawValue == 26)
 

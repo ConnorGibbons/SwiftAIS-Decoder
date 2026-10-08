@@ -29,70 +29,40 @@ public struct SingleSlotAidToNavigationReport: AISMessage {
     public let spare: UInt8 // "Not uses" (lol) and should be 0
     public let authenticationFlag: AuthenticationFlag
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         let bits = nmea.payloadBits
         self.nmeaSentence = nmea
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 28 else { return nil }
-        self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
-        self.mmsiNumber = mmsi
-        
-        guard let timeStampBits: UInt8 = bits[38...43] else { return nil }
-        let timeStamp = TimeStamp(rawValue: timeStampBits)
-        self.timeStamp = timeStamp
-        
-        guard let longitudeBits: UInt32 = bits[44...71] else { return nil }
-        let longitude = Longitude(rawValue: longitudeBits)
-        self.longitude = longitude
-        
-        guard let latitudeBits: UInt32 = bits[72...98] else { return nil }
-        let latitude = Latitude(rawValue: latitudeBits)
-        self.latitude = latitude
-        
-        guard let restrictedUseBits: UInt8 = bits[99...100] else { return nil }
-        guard let restrictedUseIndicator = RestrictedUseIndicator(rawValue: restrictedUseBits) else { return nil }
-        self.restrictedUseIndicator = restrictedUseIndicator
-        
-        guard let stationTypeBits: UInt8 = bits[101...103] else { return nil }
-        guard let stationType = AtoNStationType(rawValue: stationTypeBits) else { return nil }
-        self.stationType = stationType
-        
-        guard let aidTypeBits: UInt8 = bits[104...110] else { return nil }
-        guard let aidType = AtoNType(rawValue: aidTypeBits) else { return nil }
-        self.aidType = aidType
-        
-        guard let marineResourceNameBits: UInt32 = bits[111...127] else { return nil }
-        self.marineResourceName = marineResourceNameBits
-        
-        guard let dimensionTypeBits: UInt8 = bits[128...131] else { return nil }
-        guard let dimensionType = AtoNDimensionType(rawValue: dimensionTypeBits) else { return nil }
-        guard let dimensionABits: UInt16 = bits[132...140] else { return nil }
-        guard let dimensionBBits: UInt16 = bits[141...151] else { return nil }
-        guard let additionalDataFlagBit: UInt8 = bits[152...152] else { return nil }
-        guard let dimensions = AtoNDimensions(type: dimensionType, additionalDataFlag: additionalDataFlagBit > 0, a: dimensionABits, b: dimensionBBits) else { return nil }
-        self.dimensions = dimensions
-        
-        guard let chartedStatusBit: UInt8 = bits[153...153] else { return nil }
-        guard let chartedStatus = AtoNChartedStatus(rawValue: chartedStatusBit) else { return nil }
-        self.chartedStatus = chartedStatus
-        
-        guard let onStationStatusBits: UInt8 = bits[154...157] else { return nil }
-        guard let onStationStatus = AtoNOnStationStatus(rawValue: onStationStatusBits) else { return nil }
-        self.onStationStatus = onStationStatus
 
-        guard let regionalReservedBits: UInt8 = bits[158...165] else { return nil }
-        self.regionalReserved = regionalReservedBits
-        
-        guard let spareBit: UInt8 = bits[166...166] else { return nil }
-        self.spare = spareBit
-        
-        guard let authenticationFlagBit: UInt8 = bits[167...167] else { return nil }
-        self.authenticationFlag = AuthenticationFlag(rawValue: authenticationFlagBit > 0)
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 28 else { throw .unexpectedMessageType(messageType.rawValue, expected: [28]) }
+        self.messageType = messageType
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
+        self.mmsiNumber = mmsi
+
+        self.timeStamp = TimeStamp(rawValue: try bits.read(38...43, "timeStamp"))
+        self.longitude = Longitude(rawValue: try bits.read(44...71, "longitude"))
+        self.latitude = Latitude(rawValue: try bits.read(72...98, "latitude"))
+        self.restrictedUseIndicator = try bits.read(99...100, "restrictedUseIndicator")
+        self.stationType = try bits.read(101...103, "stationType")
+        self.aidType = try bits.read(104...110, "aidType")
+        self.marineResourceName = try bits.read(111...127, "marineResourceName")
+
+        let dimensionType: AtoNDimensionType = try bits.read(128...131, "dimensionType")
+        let dimensionABits: UInt16 = try bits.read(132...140, "dimensionA")
+        let dimensionBBits: UInt16 = try bits.read(141...151, "dimensionB")
+        let additionalDataFlag: Bool = try bits.read(152, "additionalDataFlag")
+        guard let dimensions = AtoNDimensions(type: dimensionType, additionalDataFlag: additionalDataFlag, a: dimensionABits, b: dimensionBBits) else {
+            throw .invalidValue(field: "dimensions", rawValue: (UInt64(dimensionABits) << 11) | UInt64(dimensionBBits)) // A and B are the only fields AtoNDimensions can reject
+        }
+        self.dimensions = dimensions
+
+        self.chartedStatus = try bits.read(153...153, "chartedStatus")
+        self.onStationStatus = try bits.read(154...157, "onStationStatus")
+        self.regionalReserved = try bits.read(158...165, "regionalReserved")
+        self.spare = try bits.read(166...166, "spare")
+        self.authenticationFlag = AuthenticationFlag(rawValue: try bits.read(167, "authenticationFlag"))
     }
     
     public func description() -> String {

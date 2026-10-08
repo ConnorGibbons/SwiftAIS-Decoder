@@ -30,34 +30,24 @@ public struct DataLinkManagement: AISMessage {
     public let timeout4: UInt8?
     public let increment4: UInt16?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 20 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 20 else { throw .unexpectedMessageType(messageType.rawValue, expected: [20]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let spareBits: UInt8 = bits[38...39] else { return nil }
-        self.spare = spareBits
-        
-        guard let offset1Bits: UInt16 = bits[40...51] else { return nil }
-        self.offset1 = offset1Bits
-        
-        guard let reservedSlots1Bits: UInt8 = bits[52...55] else { return nil }
-        self.reservedSlots1 = reservedSlots1Bits
-        
-        guard let timeout1Bits: UInt8 = bits[56...58] else { return nil }
-        self.timeout1 = timeout1Bits
-        
-        guard let increment1Bits: UInt16 = bits[59...69] else { return nil }
-        self.increment1 = increment1Bits
-        
+
+        self.spare = try bits.read(38...39, "spare")
+        self.offset1 = try bits.read(40...51, "offset1")
+        self.reservedSlots1 = try bits.read(52...55, "reservedSlots1")
+        self.timeout1 = try bits.read(56...58, "timeout1")
+        self.increment1 = try bits.read(59...69, "increment1")
+
         if let offset2Bits: UInt16 = bits[70...81] {
             self.offset2 = offset2Bits
         } else {

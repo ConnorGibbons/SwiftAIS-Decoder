@@ -15,8 +15,7 @@ struct ChannelManagementTests {
 
         #expect(sentence.channel == .A)
 
-        let report = try #require(ChannelManagement(nmea: sentence),
-                                  "A Type 22 payload should initialize a ChannelManagement")
+        let report = try ChannelManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 22)
 
@@ -53,8 +52,7 @@ struct ChannelManagementTests {
 
         #expect(sentence.channel == .B)
 
-        let report = try #require(ChannelManagement(nmea: sentence),
-                                  "A Type 22 payload should initialize a ChannelManagement")
+        let report = try ChannelManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 22)
 

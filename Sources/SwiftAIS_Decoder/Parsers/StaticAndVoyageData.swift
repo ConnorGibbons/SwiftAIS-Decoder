@@ -33,74 +33,48 @@ public struct StaticAndVoyageData: AISMessage {
     public let dte: DTE?
     public let spare: Bool? // Just 1 bit
     
-    public init?(nmea1: AISNMEA0183Sentence, nmea2: AISNMEA0183Sentence) {
+    public init(nmea1: AISNMEA0183Sentence, nmea2: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea1
         self.nmeaSentence2 = nmea2
-        
+
         var bits = nmea1.payloadBits
         bits.append(contentsOf: nmea2.payloadBits)
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 5 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 5 else { throw .unexpectedMessageType(messageType.rawValue, expected: [5]) }
         self.messageType = messageType
 
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let aisVersionBits: UInt8 = bits[38...39] else { return nil }
-        guard let aisVersion = AISVersion(rawValue: aisVersionBits) else { return nil }
-        self.aisVersion = aisVersion
-        
-        guard let imoNumberBits: UInt32 = bits[40...69] else { return nil }
-        self.imoNumber = imoNumberBits
-        
-        guard let callSignBits: BitBuffer = bits[70...111] else { return nil }
-        guard let callSign = AISText(raw: callSignBits) else { return nil }
+
+        self.aisVersion = try bits.read(38...39, "aisVersion")
+        self.imoNumber = try bits.read(40...69, "imoNumber")
+
+        let callSignBits: BitBuffer = try bits.read(70...111, "callSign")
+        guard let callSign = AISText(raw: callSignBits) else { throw .invalidText(field: "callSign") }
         self.callSign = callSign
-        
-        guard let vesselNameBits: BitBuffer = bits[112...231] else { return nil }
-        guard let vesselName = AISText(raw: vesselNameBits) else { return nil }
+
+        let vesselNameBits: BitBuffer = try bits.read(112...231, "vesselName")
+        guard let vesselName = AISText(raw: vesselNameBits) else { throw .invalidText(field: "vesselName") }
         self.vesselName = vesselName
-        
-        guard let shipTypeBits: UInt8 = bits[232...239] else { return nil }
-        guard let shipType = ShipType(rawValue: shipTypeBits) else { return nil }
-        self.shipType = shipType
-        
-        guard let dimensionToBow: UInt16 = bits[240...248] else { return nil }
-        self.dimensionToBow = dimensionToBow
-        
-        guard let dimensionToStern: UInt16 = bits[249...257] else { return nil }
-        self.dimensionToStern = dimensionToStern
-        
-        guard let dimensionToPort: UInt8 = bits[258...263] else { return nil }
-        self.dimensionToPort = dimensionToPort
-        
-        guard let dimensionToStarboard: UInt8 = bits[264...269] else { return nil }
-        self.dimensionToStarboard = dimensionToStarboard
-        
-        guard let fixTypeBits: UInt8 = bits[270...273] else { return nil }
-        guard let fixType = EPFDFixType(rawValue: fixTypeBits) else { return nil }
-        self.fixType = fixType
-        
-        guard let monthBits: UInt8 = bits[274...277] else { return nil }
-        self.month = UTCMonth(rawValue: monthBits)
-        
-        guard let dayBits: UInt8 = bits[278...282] else { return nil }
-        self.day = UTCDay(rawValue: dayBits)
-        
-        guard let hourBits: UInt8 = bits[283...287] else { return nil }
-        self.hour = UTCHour(rawValue: hourBits)
-        
-        guard let minuteBits: UInt8 = bits[288...293] else { return nil }
-        self.minute = UTCMinute(rawValue: minuteBits)
-        
-        guard let draughtBits: UInt8 = bits[294...301] else { return nil }
+
+        self.shipType = try bits.read(232...239, "shipType")
+        self.dimensionToBow = try bits.read(240...248, "dimensionToBow")
+        self.dimensionToStern = try bits.read(249...257, "dimensionToStern")
+        self.dimensionToPort = try bits.read(258...263, "dimensionToPort")
+        self.dimensionToStarboard = try bits.read(264...269, "dimensionToStarboard")
+        self.fixType = try bits.read(270...273, "fixType")
+        self.month = UTCMonth(rawValue: try bits.read(274...277, "month"))
+        self.day = UTCDay(rawValue: try bits.read(278...282, "day"))
+        self.hour = UTCHour(rawValue: try bits.read(283...287, "hour"))
+        self.minute = UTCMinute(rawValue: try bits.read(288...293, "minute"))
+
+        let draughtBits: UInt8 = try bits.read(294...301, "draught")
         self.draught = Double(UInt16(draughtBits)) / 10
-        
-        guard let destinationBits: BitBuffer = bits[302...421] else { return nil }
-        guard let destination = AISText(raw: destinationBits) else { return nil }
+
+        let destinationBits: BitBuffer = try bits.read(302...421, "destination")
+        guard let destination = AISText(raw: destinationBits) else { throw .invalidText(field: "destination") }
         self.destination = destination
         
         if(bits.count > 422) {

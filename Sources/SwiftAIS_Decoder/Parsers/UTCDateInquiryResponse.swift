@@ -26,60 +26,31 @@ public struct UTCDateInquiryResponse: AISMessage {
     public let radioStatus: RadioStatus
     
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 11 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 11 else { throw .unexpectedMessageType(messageType.rawValue, expected: [11]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
 
-        guard let yearBits: UInt16 = bits[38...51] else { return nil }
-        self.year = UTCYear(rawValue: yearBits)
-
-        guard let monthBits: UInt8 = bits[52...55] else { return nil }
-        self.month = UTCMonth(rawValue: monthBits)
-
-        guard let dayBits: UInt8 = bits[56...60] else { return nil }
-        self.day = UTCDay(rawValue: dayBits)
-
-        guard let hourBits: UInt8 = bits[61...65] else { return nil }
-        self.hour = UTCHour(rawValue: hourBits)
-
-        guard let minuteBits: UInt8 = bits[66...71] else { return nil }
-        self.minute = UTCMinute(rawValue: minuteBits)
-
-        guard let secondBits: UInt8 = bits[72...77] else { return nil }
-        self.second = TimeStamp(rawValue: secondBits)
-
-        guard let positionAccuracyBits: UInt8 = bits[78...78] else { return nil }
-        guard let positionAccuracy = PositionAccuracy(rawValue: positionAccuracyBits) else { return nil }
-        self.positionAccuracy = positionAccuracy
-
-        guard let longitudeBits: UInt32 = bits[79...106] else { return nil }
-        self.longitude = Longitude(rawValue: longitudeBits)
-
-        guard let latitudeBits: UInt32 = bits[107...133] else { return nil }
-        self.latitude = Latitude(rawValue: latitudeBits)
-
-        guard let fixTypeBits: UInt8 = bits[134...137] else { return nil }
-        guard let fixType = EPFDFixType(rawValue: fixTypeBits) else { return nil }
-        self.fixType = fixType
-
-        guard let spareBits: UInt64 = bits[138...147] else { return nil }
-        self.spareBits = spareBits
-
-        guard let raimBits: UInt8 = bits[148...148] else { return nil }
-        guard let raimFlag = RAIMFlag(rawValue: raimBits) else { return nil }
-        self.raimFlag = raimFlag
-
-        guard let radioStatusBits: UInt32 = bits[149...167] else { return nil }
-        self.radioStatus = RadioStatus(rawValue: radioStatusBits)
+        self.year = UTCYear(rawValue: try bits.read(38...51, "year"))
+        self.month = UTCMonth(rawValue: try bits.read(52...55, "month"))
+        self.day = UTCDay(rawValue: try bits.read(56...60, "day"))
+        self.hour = UTCHour(rawValue: try bits.read(61...65, "hour"))
+        self.minute = UTCMinute(rawValue: try bits.read(66...71, "minute"))
+        self.second = TimeStamp(rawValue: try bits.read(72...77, "second"))
+        self.positionAccuracy = try bits.read(78...78, "positionAccuracy")
+        self.longitude = Longitude(rawValue: try bits.read(79...106, "longitude"))
+        self.latitude = Latitude(rawValue: try bits.read(107...133, "latitude"))
+        self.fixType = try bits.read(134...137, "fixType")
+        self.spareBits = try bits.read(138...147, "spareBits")
+        self.raimFlag = try bits.read(148...148, "raimFlag")
+        self.radioStatus = RadioStatus(rawValue: try bits.read(149...167, "radioStatus"))
     }
     
     public func description() -> String {

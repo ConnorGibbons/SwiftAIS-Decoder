@@ -14,7 +14,7 @@ public struct ClassBPositionReport: AISMessage {
     
     public let regionalReserved1: UInt8 // I'm not sure what this field is actually used for but it's here
     public let speedOverGround: SpeedOverGround
-    public let positonAccuracy: PositionAccuracy
+    public let positionAccuracy: PositionAccuracy
     public let longitude: Longitude
     public let latitude: Latitude
     public let courseOverGround: CourseOverGround
@@ -30,88 +30,46 @@ public struct ClassBPositionReport: AISMessage {
     public let raimFlag: RAIMFlag
     public let radioStatus: RadioStatus
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 18 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 18 else { throw .unexpectedMessageType(messageType.rawValue, expected: [18]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let regionalReserved1Bits: UInt8 = bits[38...45] else { return nil }
-        self.regionalReserved1 = regionalReserved1Bits
-        
-        guard let speedOverGroundBits: UInt16 = bits[46...55] else { return nil }
-        guard let speedOverGround = SpeedOverGround(rawValue: speedOverGroundBits) else { return nil }
+
+        self.regionalReserved1 = try bits.read(38...45, "regionalReserved1")
+
+        let speedOverGroundBits: UInt16 = try bits.read(46...55, "speedOverGround")
+        guard let speedOverGround = SpeedOverGround(rawValue: speedOverGroundBits) else { throw .invalidValue(field: "speedOverGround", rawValue: UInt64(speedOverGroundBits)) }
         self.speedOverGround = speedOverGround
-        
-        guard let positionAccuracyBit: UInt8 = bits[56...56] else { return nil }
-        guard let positionAccuracy = PositionAccuracy(rawValue: positionAccuracyBit) else { return nil }
-        self.positonAccuracy = positionAccuracy
-        
-        guard let longitudeBits: UInt32 = bits[57...84] else { return nil }
-        let longitude = Longitude(rawValue: longitudeBits)
-        self.longitude = longitude
-        
-        guard let latitudeBits: UInt32 = bits[85...111] else { return nil }
-        let latitude = Latitude(rawValue: latitudeBits)
-        self.latitude = latitude
-        
-        guard let courseOverGroundBits: UInt16 = bits[112...123] else { return nil }
-        guard let courseOverGround = CourseOverGround(rawValue: courseOverGroundBits) else { return nil }
+
+        self.positionAccuracy = try bits.read(56...56, "positionAccuracy")
+        self.longitude = Longitude(rawValue: try bits.read(57...84, "longitude"))
+        self.latitude = Latitude(rawValue: try bits.read(85...111, "latitude"))
+
+        let courseOverGroundBits: UInt16 = try bits.read(112...123, "courseOverGround")
+        guard let courseOverGround = CourseOverGround(rawValue: courseOverGroundBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(courseOverGroundBits)) }
         self.courseOverGround = courseOverGround
-        
-        guard let trueHeadingBits: UInt16 = bits[124...132] else { return nil }
-        let trueHeading = TrueHeading(rawValue: trueHeadingBits)
-        self.heading = trueHeading
-        
-        guard let timeStampBits: UInt8 = bits[133...138] else { return nil }
-        let timeStamp = TimeStamp(rawValue: timeStampBits)
-        self.timestamp = timeStamp
-        
-        guard let regionalReserved2Bits: UInt8 = bits[139...140] else { return nil }
-        self.regionalReserved2 = regionalReserved2Bits
-        
-        guard let csUnitBit: UInt8 = bits[141...141] else { return nil }
-        guard let csUnit = CSUnit(rawValue: csUnitBit) else { return nil }
-        self.csUnit = csUnit
-        
-        guard let displayBit: UInt8 = bits[142...142] else { return nil }
-        let visualDisplay = VisualDisplay(rawValue: displayBit == 1)
-        self.visualDisplay = visualDisplay
-        
-        guard let dscBit: UInt8 = bits[143...143] else { return nil }
-        let dscFlag = DSCFlag(rawValue: dscBit == 1)
-        self.dscFlag = dscFlag
-        
-        guard let bandBit: UInt8 = bits[144...144] else { return nil }
-        let bandFlag = BandFlag(rawValue: bandBit == 1)
-        self.bandFlag = bandFlag
-        
-        guard let message22Bit: UInt8 = bits[145...145] else { return nil }
-        let type22Flag = Type22Flag(rawValue: message22Bit == 1)
-        self.type22Flag = type22Flag
-        
-        guard let assignedBit: UInt8 = bits[146...146] else { return nil }
-        let assignedFlag = AssignedFlag(rawValue: assignedBit == 1)
-        self.assignedFlag = assignedFlag
-        
-        guard let raimBit: UInt8 = bits[147...147] else { return nil }
-        guard let raimFlag = RAIMFlag(rawValue: raimBit) else { return nil }
-        self.raimFlag = raimFlag
-        
-        // For now, the radio status might not be right. There is a bit here being skipped that determines whether it's SOTDMA or ITDMA state.
-        // My decoder currently only handles SOTDMA
-        guard let radioStatusTypeBit: UInt8 = bits[148...148] else { return nil }
-        guard let radioStatusType = RadioStatusType(rawValue: radioStatusTypeBit) else { return nil }
-        guard let radioStatusBits: UInt32 = bits[149...167] else { return nil }
-        let radioStatus = RadioStatus(rawValue: radioStatusBits, statusType: radioStatusType)
-        self.radioStatus = radioStatus
+
+        self.heading = TrueHeading(rawValue: try bits.read(124...132, "heading"))
+        self.timestamp = TimeStamp(rawValue: try bits.read(133...138, "timestamp"))
+        self.regionalReserved2 = try bits.read(139...140, "regionalReserved2")
+        self.csUnit = try bits.read(141...141, "csUnit")
+        self.visualDisplay = VisualDisplay(rawValue: try bits.read(142, "visualDisplay"))
+        self.dscFlag = DSCFlag(rawValue: try bits.read(143, "dscFlag"))
+        self.bandFlag = BandFlag(rawValue: try bits.read(144, "bandFlag"))
+        self.type22Flag = Type22Flag(rawValue: try bits.read(145, "type22Flag"))
+        self.assignedFlag = AssignedFlag(rawValue: try bits.read(146, "assignedFlag"))
+        self.raimFlag = try bits.read(147...147, "raimFlag")
+
+        // Bit 148 selects whether the radio status is SOTDMA or ITDMA. Only SOTDMA fields are decoded; ITDMA statuses are kept raw.
+        let radioStatusType: RadioStatusType = try bits.read(148...148, "radioStatusType")
+        self.radioStatus = RadioStatus(rawValue: try bits.read(149...167, "radioStatus"), statusType: radioStatusType)
     }
     
     public func description() -> String {
@@ -119,7 +77,7 @@ public struct ClassBPositionReport: AISMessage {
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("Speed Over Ground:", speedOverGround.description),
-            row("Position Accuracy:", positonAccuracy.description),
+            row("Position Accuracy:", positionAccuracy.description),
             row("Latitude:", latitude.description),
             row("Longitude:", longitude.description),
             row("Course Over Ground:", courseOverGround.description),

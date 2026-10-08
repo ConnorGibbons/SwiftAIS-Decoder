@@ -34,29 +34,27 @@ public struct StaticDataReport: AISMessage {
     public let mothershipMMSI: MMSI?
     public let spare2: UInt8?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 24 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 24 else { throw .unexpectedMessageType(messageType.rawValue, expected: [24]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let partBits: UInt8 = bits[38...39] else { return nil }
-        guard let part = StaticDataReportPart(rawValue: partBits) else { return nil }
+
+        let part: StaticDataReportPart = try bits.read(38...39, "part")
         self.part = part
         
         // The message can be sent containing one of two "parts", A or B, each contain different info.
         // The parts are expected to be broadcast one after the other.
         // Part A has the name and nothing else
         if(part == .a) {
-            guard let nameBits: BitBuffer = bits[40...159] else { return nil }
-            guard let name = AISText(raw: nameBits) else { return nil }
+            let nameBits: BitBuffer = try bits.read(40...159, "vesselName")
+            guard let name = AISText(raw: nameBits) else { throw .invalidText(field: "vesselName") }
             self.vesselName = name
             if let spareBits: UInt8 = bits[160...167] { // Not going to guard on this becuase it's stated that these spare bits are commonly left out
                 self.spare = spareBits
@@ -77,20 +75,19 @@ public struct StaticDataReport: AISMessage {
         }
         // Part B has various ship & AIS module metadata
         else {
-            guard let shipTypeBits: UInt8 = bits[40...47] else { return nil }
-            guard let shipType = ShipType(rawValue: shipTypeBits) else { return nil }
+            let shipType: ShipType = try bits.read(40...47, "shipType")
             self.shipType = shipType
             
             // Explanation for this: Originally this field was 7 characters and was the AIS equipment vendor.
             // It was later changed to 3 letter vendor ID + unit model + serial number
             // Both are still used. The code here attempts to decode 7 characters, if all 7 are alphanumeric it treats it as the AIS equipment vendor.
             // Otherwise it'll treat it as vendorID + unit model + serial number
-            guard let vendorIDBits: BitBuffer = bits[48...65] else { return nil }
-            guard let vendorID = AISText(raw: vendorIDBits) else { return nil }
-            guard let unitModelCodeBits: UInt8 = bits[66...69] else { return nil }
-            guard let serialNumberBits: UInt32 = bits[70...89] else { return nil }
-            guard let fullVendorIDBits: BitBuffer = bits[48...89] else { return nil }
-            guard let fullVendorID = AISText(raw: fullVendorIDBits) else { return nil }
+            let vendorIDBits: BitBuffer = try bits.read(48...65, "vendorID")
+            guard let vendorID = AISText(raw: vendorIDBits) else { throw .invalidText(field: "vendorID") }
+            let unitModelCodeBits: UInt8 = try bits.read(66...69, "unitModelCode")
+            let serialNumberBits: UInt32 = try bits.read(70...89, "serialNumber")
+            let fullVendorIDBits: BitBuffer = try bits.read(48...89, "vendorID")
+            guard let fullVendorID = AISText(raw: fullVendorIDBits) else { throw .invalidText(field: "vendorID") }
             let lastFour = fullVendorID.text.suffix(4)
             if(lastFour.allSatisfy({$0.isLetter || $0.isNumber})) {
                 self.vendorID = fullVendorID
@@ -103,13 +100,13 @@ public struct StaticDataReport: AISMessage {
                 self.serialNumber = serialNumberBits
             }
 
-            guard let callSignBits: BitBuffer = bits[90...131] else { return nil }
-            guard let callSign = AISText(raw: callSignBits) else { return nil }
+            let callSignBits: BitBuffer = try bits.read(90...131, "callSign")
+            guard let callSign = AISText(raw: callSignBits) else { throw .invalidText(field: "callSign") }
             self.callSign = callSign
-            
+
             if(mmsiNumber.description.prefix(2) == "98") { // "98"-prefixed MMSI indicates an auxiliary craft, which sends its mothership MMSI in this slot
-                guard let mothershipMMSIBits: UInt32 = bits[132...161] else { return nil }
-                guard let mothershipMMSI = MMSI(value: mothershipMMSIBits) else { return nil }
+                let mothershipMMSIBits: UInt32 = try bits.read(132...161, "mothershipMMSI")
+                guard let mothershipMMSI = MMSI(value: mothershipMMSIBits) else { throw .invalidValue(field: "mothershipMMSI", rawValue: UInt64(mothershipMMSIBits)) }
                 self.mothershipMMSI = mothershipMMSI
                 
                 self.dimensionToBow = nil
@@ -118,18 +115,15 @@ public struct StaticDataReport: AISMessage {
                 self.dimensionToStarboard = nil
             }
             else {
-                guard let dimensionToBowBits: UInt16 = bits[132...140] else { return nil }
-                self.dimensionToBow = dimensionToBowBits
-                
-                guard let dimensionToSternBits: UInt16 = bits[141...149] else { return nil }
-                self.dimensionToStern = dimensionToSternBits
-                
-                guard let dimensionToPortBits: UInt8 = bits[150...155] else { return nil }
-                self.dimensionToPort = dimensionToPortBits
-                
-                guard let dimensionToStarboardBits: UInt8 = bits[156...161] else { return nil }
-                self.dimensionToStarboard = dimensionToStarboardBits
-                
+                let dimensionToBow: UInt16 = try bits.read(132...140, "dimensionToBow")
+                self.dimensionToBow = dimensionToBow
+                let dimensionToStern: UInt16 = try bits.read(141...149, "dimensionToStern")
+                self.dimensionToStern = dimensionToStern
+                let dimensionToPort: UInt8 = try bits.read(150...155, "dimensionToPort")
+                self.dimensionToPort = dimensionToPort
+                let dimensionToStarboard: UInt8 = try bits.read(156...161, "dimensionToStarboard")
+                self.dimensionToStarboard = dimensionToStarboard
+
                 self.mothershipMMSI = nil
             }
             if let spare2Bits: UInt8 = bits[162...167] {

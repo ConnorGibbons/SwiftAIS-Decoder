@@ -29,31 +29,28 @@ public struct MultiSlotBinaryMessage: AISMessage {
     public let dac: DesignatedAreaCode?
     public let fid: UInt8?
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 26 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 26 else { throw .unexpectedMessageType(messageType.rawValue, expected: [26]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let addressedBit: UInt8 = bits[38...38] else { return nil }
-        guard let addressed = Addressed(rawValue: addressedBit) else { return nil }
+
+        let addressed: Addressed = try bits.read(38...38, "addressed")
         self.addressed = addressed
-        
-        guard let structuredFlagBit: UInt8 = bits[39...39] else { return nil }
-        let structuredFlag = StructuredFlag(rawValue: structuredFlagBit == 1)
+
+        let structuredFlag = StructuredFlag(rawValue: try bits.read(39, "structuredFlag"))
         self.structuredFlag = structuredFlag
-        
+
         var ptr = 40
         if(addressed == .addressed) {
-            guard let destinationMMSIBits: UInt32 = bits[ptr..<ptrAdvance(ptr: &ptr, advanceBy: 30)] else { return nil }
-            guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { return nil }
+            let destinationMMSIBits: UInt32 = try bits.read(ptr..<ptrAdvance(ptr: &ptr, advanceBy: 30), "destinationMMSI")
+            guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
             self.destinationMMSI = destinationMMSI
             // Same 0/2-bit spare as message 25 (ITU-R M.1371-5 Table 79): present only when the
             // destination ID is used.
@@ -64,7 +61,7 @@ public struct MultiSlotBinaryMessage: AISMessage {
         }
         
         if(structuredFlag.rawValue) {
-            guard let appIDBits: UInt16 = bits[ptr..<ptrAdvance(ptr: &ptr, advanceBy: 16)] else { return nil }
+            let appIDBits: UInt16 = try bits.read(ptr..<ptrAdvance(ptr: &ptr, advanceBy: 16), "appID")
             self.appID = appIDBits
             // The application ID is a 10-bit DAC followed by a 6-bit FI.
             self.dac = DesignatedAreaCode(rawValue: (appIDBits & 0b1111111111000000) >> 6)
@@ -76,7 +73,9 @@ public struct MultiSlotBinaryMessage: AISMessage {
             self.fid = nil
         }
         
-        guard let payloadBits: BitBuffer = bits[ptr..<(bits.count-20)] else { return nil }
+        // Without this, a message too short for the trailing 20-bit radio status would build an inverted range below and crash.
+        guard bits.count - 20 >= ptr else { throw .payloadTooShort(field: "radioStatus", bits: ptr..<(ptr + 20), available: bits.count) }
+        let payloadBits: BitBuffer = try bits.read(ptr..<(bits.count-20), "payload")
         self.payload = payloadBits
         
         // Fill bits can leave a partial character at the end of the payload, so only whole characters are decoded.
@@ -88,10 +87,8 @@ public struct MultiSlotBinaryMessage: AISMessage {
             self.text = nil
         }
         
-        guard let radioStatusTypeBit: UInt8 = bits[bits.count-20...bits.count-20] else { return nil }
-        guard let radioStatusType = RadioStatusType(rawValue: radioStatusTypeBit) else { return nil }
-        guard let radioStatusBits: UInt32 = bits[bits.count-19..<bits.count] else { return nil }
-        self.radioStatus = RadioStatus(rawValue: radioStatusBits, statusType: radioStatusType)
+        let radioStatusType: RadioStatusType = try bits.read(bits.count-20...bits.count-20, "radioStatusType")
+        self.radioStatus = RadioStatus(rawValue: try bits.read(bits.count-19..<bits.count, "radioStatus"), statusType: radioStatusType)
         
     }
     

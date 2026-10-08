@@ -29,33 +29,27 @@ public struct InterrogationMessage: AISMessage {
     public var spare_4: UInt8?
     
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 15 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 15 else { throw .unexpectedMessageType(messageType.rawValue, expected: [15]) }
         self.messageType = messageType
-        
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let spare1Bits: UInt8 = bits[38...39] else { return nil }
-        self.spare_1 = spare1Bits
-        
-        guard let interrogatedMMSI1Bits: UInt32 = bits[40...69] else { return nil }
-        guard let interrogatedMMSI_1 = MMSI(value: interrogatedMMSI1Bits) else { return nil }
+
+        self.spare_1 = try bits.read(38...39, "spare_1")
+
+        let interrogatedMMSI1Bits: UInt32 = try bits.read(40...69, "interrogatedMMSI_1")
+        guard let interrogatedMMSI_1 = MMSI(value: interrogatedMMSI1Bits) else { throw .invalidValue(field: "interrogatedMMSI_1", rawValue: UInt64(interrogatedMMSI1Bits)) }
         self.interrogatedMMSI_1 = interrogatedMMSI_1
-        
-        guard let requestedMessageType1Bits: UInt8 = bits[70...75] else { return nil }
-        guard let requestedMessageType_1 = AISMessageType(rawValue: Int(requestedMessageType1Bits)) else { return nil }
-        self.requestedMessageType_1 = requestedMessageType_1
-        
-        guard let slotOffset1Bits: UInt16 = bits[76...87] else { return nil }
-        self.slotOffset_1 = slotOffset1Bits
-        
+
+        self.requestedMessageType_1 = try bits.read(70...75, "requestedMessageType_1")
+        self.slotOffset_1 = try bits.read(76...87, "slotOffset_1")
+
         self.spare_2 = nil
         self.requestedMessageType_2 = nil
         self.slotOffset_2 = nil

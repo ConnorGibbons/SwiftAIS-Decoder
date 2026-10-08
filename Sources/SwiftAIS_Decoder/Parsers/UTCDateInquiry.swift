@@ -16,28 +16,25 @@ public struct UTCDateInquiry: AISMessage {
     public let spare2: UInt8
 
     
-    public init?(nmea: AISNMEA0183Sentence) {
+    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
         self.nmeaSentence = nmea
         let bits = nmea.payloadBits
-        
-        guard let messageTypeBits: UInt8 = bits[0...5] else { return nil }
-        guard let messageType = AISMessageType(rawValue: Int(messageTypeBits)) else { return nil }
-        guard messageType.rawValue == 10 else { return nil }
+
+        let messageType: AISMessageType = try bits.read(0...5, "messageType")
+        guard messageType.rawValue == 10 else { throw .unexpectedMessageType(messageType.rawValue, expected: [10]) }
         self.messageType = messageType
-                
-        guard let mmsiBits: UInt32 = bits[8...37] else { return nil }
-        guard let mmsi = MMSI(value: mmsiBits) else { return nil }
+
+        let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
+        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
         self.mmsiNumber = mmsi
-        
-        guard let spareBits1: UInt8 = bits[38...39] else { return nil }
-        self.spare1 = spareBits1
-        
-        guard let destinationMMSIBits: UInt32 = bits[40...69] else { return nil }
-        guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { return nil }
+
+        self.spare1 = try bits.read(38...39, "spare1")
+
+        let destinationMMSIBits: UInt32 = try bits.read(40...69, "destinationMMSI")
+        guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
         self.destinationMMSI = destinationMMSI
-        
-        guard let spareBits2: UInt8 = bits[70...71] else { return nil }
-        self.spare2 = spareBits2
+
+        self.spare2 = try bits.read(70...71, "spare2")
     }
     
     public func description() -> String {

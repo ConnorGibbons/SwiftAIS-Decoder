@@ -14,8 +14,7 @@ struct ClassBPositionReportTests {
 
     @Test func decodesClassBPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReport)
-        let report = try #require(ClassBPositionReport(nmea: sentence),
-                                  "A Type 18 payload should initialize a ClassBPositionReport")
+        let report = try ClassBPositionReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 18)
         #expect(report.mmsiNumber.value == 268)
@@ -24,7 +23,7 @@ struct ClassBPositionReportTests {
         #expect(report.speedOverGround.rawValue == 80)
         #expect(report.speedOverGround.speedOverGround == 8.0)
 
-        #expect(report.positonAccuracy == .highAccuracy)
+        #expect(report.positionAccuracy == .highAccuracy)
 
         // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == 70737224)
@@ -70,8 +69,7 @@ struct ClassBPositionReportTests {
 
     @Test func decodesSecondClassBPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReportTwo)
-        let report = try #require(ClassBPositionReport(nmea: sentence),
-                                  "A Type 18 payload should initialize a ClassBPositionReport")
+        let report = try ClassBPositionReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 18)
         #expect(report.mmsiNumber.value == 257357120)
@@ -80,7 +78,7 @@ struct ClassBPositionReportTests {
         #expect(report.speedOverGround.rawValue == 57)
         #expect(report.speedOverGround.speedOverGround == 5.7)
 
-        #expect(report.positonAccuracy == .lowAccuracy)
+        #expect(report.positionAccuracy == .lowAccuracy)
 
         // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == 7227982)
@@ -119,8 +117,7 @@ struct ClassBPositionReportTests {
 
     @Test func decodesThirdClassBPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReportThree)
-        let report = try #require(ClassBPositionReport(nmea: sentence),
-                                  "A Type 18 payload should initialize a ClassBPositionReport")
+        let report = try ClassBPositionReport(nmea: sentence)
 
         #expect(report.messageType.rawValue == 18)
         #expect(report.mmsiNumber.value == 244060919)
@@ -129,7 +126,7 @@ struct ClassBPositionReportTests {
         #expect(report.speedOverGround.rawValue == 0)
         #expect(report.speedOverGround.speedOverGround == 0.0)
 
-        #expect(report.positonAccuracy == .lowAccuracy)
+        #expect(report.positionAccuracy == .lowAccuracy)
 
         // Longitude — signed, 1/10000 minutes
         #expect(report.longitude.rawValue == 2643951)

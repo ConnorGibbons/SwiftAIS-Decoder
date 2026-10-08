@@ -17,8 +17,7 @@ struct SafetyBroadcastMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
-        let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence]),
-                                  "A Type 14 payload should initialize a SafetyBroadcastMessage")
+        let report = try SafetyBroadcastMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 14)
         #expect(report.mmsiNumber.value == 351809000)
@@ -42,8 +41,7 @@ struct SafetyBroadcastMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
-        let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence]),
-                                  "A Type 14 payload should initialize a SafetyBroadcastMessage")
+        let report = try SafetyBroadcastMessage(nmeaSentences: [sentence])
 
         #expect(report.messageType.rawValue == 14)
         #expect(report.mmsiNumber.value == 237008900)
@@ -65,8 +63,7 @@ struct SafetyBroadcastMessageTests {
     @Test func decodesMultipartSafetyBroadcastMessage() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage2)
-        let report = try #require(SafetyBroadcastMessage(nmeaSentences: [sentence1, sentence2]),
-                                  "A Type 14 payload should initialize a SafetyBroadcastMessage")
+        let report = try SafetyBroadcastMessage(nmeaSentences: [sentence1, sentence2])
 
         #expect(report.messageType.rawValue == 14)
         #expect(report.mmsiNumber.value == 899646391)
@@ -89,10 +86,14 @@ struct SafetyBroadcastMessageTests {
 
     @Test func rejectsNonSafetyBroadcastMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.addressedSafetyMessage)
-        #expect(SafetyBroadcastMessage(nmeaSentences: [sentence]) == nil)
+        #expect(throws: AISDecodingError.unexpectedMessageType(12, expected: [14])) {
+            try SafetyBroadcastMessage(nmeaSentences: [sentence])
+        }
     }
 
     @Test func rejectsEmptySentenceList() {
-        #expect(SafetyBroadcastMessage(nmeaSentences: []) == nil)
+        #expect(throws: AISDecodingError.payloadTooShort(field: "messageType", bits: 0..<6, available: 0)) {
+            try SafetyBroadcastMessage(nmeaSentences: [])
+        }
     }
 }

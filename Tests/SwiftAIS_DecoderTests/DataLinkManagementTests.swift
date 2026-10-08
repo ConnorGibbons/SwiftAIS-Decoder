@@ -16,8 +16,7 @@ struct DataLinkManagementTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 72)
 
-        let report = try #require(DataLinkManagement(nmea: sentence),
-                                  "A Type 20 payload should initialize a DataLinkManagement")
+        let report = try DataLinkManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 20)
         #expect(report.mmsiNumber.value == 3669706)
@@ -58,8 +57,7 @@ struct DataLinkManagementTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 108)
 
-        let report = try #require(DataLinkManagement(nmea: sentence),
-                                  "A Type 20 payload should initialize a DataLinkManagement")
+        let report = try DataLinkManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 20)
         #expect(report.mmsiNumber.value == 3100051)
@@ -98,8 +96,7 @@ struct DataLinkManagementTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 136)
 
-        let report = try #require(DataLinkManagement(nmea: sentence),
-                                  "A Type 20 payload should initialize a DataLinkManagement")
+        let report = try DataLinkManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 20)
         #expect(report.mmsiNumber.value == 3160096)
@@ -138,8 +135,7 @@ struct DataLinkManagementTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 160)
 
-        let report = try #require(DataLinkManagement(nmea: sentence),
-                                  "A Type 20 payload should initialize a DataLinkManagement")
+        let report = try DataLinkManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 20)
         #expect(report.mmsiNumber.value == 2243302)
@@ -176,8 +172,7 @@ struct DataLinkManagementTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 160)
 
-        let report = try #require(DataLinkManagement(nmea: sentence),
-                                  "A Type 20 payload should initialize a DataLinkManagement")
+        let report = try DataLinkManagement(nmea: sentence)
 
         #expect(report.messageType.rawValue == 20)
         #expect(report.mmsiNumber.value == 2734450)
