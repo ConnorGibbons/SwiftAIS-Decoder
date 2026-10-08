@@ -1,5 +1,5 @@
 {
-  "originHash" : "0a6f8bbdc4f3af80c78f471f3d07a8f8d39163d3a621702a43d05bcc6199f09f",
+  "originHash" : "a787ee32799ff33630f3f1b516d6b30c46bbe75e374d15d53c7d127fcaf902aa",
   "pins" : [
     {
       "identity" : "networking",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/ConnorGibbons/SignalTools",
       "state" : {
         "branch" : "main",
-        "revision" : "e4d75c09ce9aa8ec37908602f174e1c61af5393e"
+        "revision" : "ed1280667c48c89bf19f2ce6b94a924413a7ac6f"
       }
     },
     {
