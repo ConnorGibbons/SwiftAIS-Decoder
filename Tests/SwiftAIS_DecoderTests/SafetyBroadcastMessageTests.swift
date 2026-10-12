@@ -17,7 +17,7 @@ struct SafetyBroadcastMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
-        let report = try SafetyBroadcastMessage(nmeaSentences: [sentence])
+        let report = try SafetyBroadcastMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 14)
         #expect(report.mmsiNumber.value == 351809000)
@@ -26,8 +26,6 @@ struct SafetyBroadcastMessageTests {
         // Safety-related text — the fill bits leave a partial trailing character that shouldn't be decoded
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "RCVD YR TEST MSG")
-
-        #expect(report.additionalSentences == nil)
 
         print(report.description())
     }
@@ -41,7 +39,7 @@ struct SafetyBroadcastMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
-        let report = try SafetyBroadcastMessage(nmeaSentences: [sentence])
+        let report = try SafetyBroadcastMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 14)
         #expect(report.mmsiNumber.value == 237008900)
@@ -49,7 +47,6 @@ struct SafetyBroadcastMessageTests {
 
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "EP228 IX48 FG3 DK7 PL56.")
-        #expect(report.additionalSentences == nil)
 
         print(report.description())
     }
@@ -63,15 +60,13 @@ struct SafetyBroadcastMessageTests {
     @Test func decodesMultipartSafetyBroadcastMessage() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartSafetyBroadcastMessage2)
-        let report = try SafetyBroadcastMessage(nmeaSentences: [sentence1, sentence2])
+        let report = try SafetyBroadcastMessage(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 14)
         #expect(report.mmsiNumber.value == 899646391)
 
         // Spare — 1 for this message, unlike the single-fragment examples above
         #expect(report.spare == 1)
-
-        #expect(report.additionalSentences?.count == 1)
 
         // Safety-related text — assembled from both fragments. 264 payload bits total, so 224 bits
         // of text: 37 whole characters with 2 bits left over.
@@ -87,13 +82,14 @@ struct SafetyBroadcastMessageTests {
     @Test func rejectsNonSafetyBroadcastMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.addressedSafetyMessage)
         #expect(throws: AISDecodingError.unexpectedMessageType(12, expected: [14])) {
-            try SafetyBroadcastMessage(nmeaSentences: [sentence])
+            try SafetyBroadcastMessage(bits: sentence.payloadBits)
         }
     }
 
     @Test func rejectsEmptySentenceList() {
-        #expect(throws: AISDecodingError.payloadTooShort(field: "messageType", bits: 0..<6, available: 0)) {
-            try SafetyBroadcastMessage(nmeaSentences: [])
+        // The minimum-length guard runs before the message type read, so it's the one that fires.
+        #expect(throws: AISDecodingError.payloadTooShort(field: "payload", bits: 40..<41, available: 0)) {
+            try SafetyBroadcastMessage(bits: ([] as [AISNMEA0183Sentence]).payloadBits)
         }
     }
 }

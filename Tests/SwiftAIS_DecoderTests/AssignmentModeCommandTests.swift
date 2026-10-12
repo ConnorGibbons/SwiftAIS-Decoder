@@ -20,7 +20,7 @@ struct AssignmentModeCommandTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 96)
 
-        let report = try AssignmentModeCommand(nmea: sentence)
+        let report = try AssignmentModeCommand(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 16)
         #expect(report.mmsiNumber.value == 2053501)
@@ -47,7 +47,7 @@ struct AssignmentModeCommandTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 144)
 
-        let report = try AssignmentModeCommand(nmea: sentence)
+        let report = try AssignmentModeCommand(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 16)
         #expect(report.mmsiNumber.value == 3669955)

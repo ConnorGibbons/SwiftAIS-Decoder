@@ -8,8 +8,9 @@
 //  Broadcast by a control base station to set radio Tx/Rx parameters for a particular region.
 //  Payload Character: F
 
+import SignalTools
+
 public struct ChannelManagement: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -28,10 +29,7 @@ public struct ChannelManagement: AISMessage {
     // nautical miles" - https://web.archive.org/web/20111110211252/https://www.ialathree.org/iala/pages/AIS/IALATech1.5.pdf
     public let spare2: UInt32?
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 22 else { throw .unexpectedMessageType(messageType.rawValue, expected: [22]) }
         self.messageType = messageType

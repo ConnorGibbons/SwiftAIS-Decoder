@@ -13,7 +13,7 @@ struct BinaryAcknowledgeTests {
 
     @Test func decodesBinaryAcknowledge() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.binaryAcknowledge)
-        let report = try BinaryAcknowledge(nmea: sentence)
+        let report = try BinaryAcknowledge(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 7)
         #expect(report.mmsiNumber.value == 2138496)
@@ -27,7 +27,7 @@ struct BinaryAcknowledgeTests {
 
     @Test func decodesSingleDestination() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.singleDestination)
-        let report = try BinaryAcknowledge(nmea: sentence)
+        let report = try BinaryAcknowledge(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 7)
         #expect(report.mmsiNumber.value == 2655651)
@@ -45,7 +45,7 @@ struct BinaryAcknowledgeTests {
 
     @Test func decodesMultipleDestinations() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.multiDestination)
-        let report = try BinaryAcknowledge(nmea: sentence)
+        let report = try BinaryAcknowledge(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 7)
         #expect(report.mmsiNumber.value == 655901842)
@@ -65,7 +65,7 @@ struct BinaryAcknowledgeTests {
         let sentence = try AISNMEA0183Sentence(raw: Self.channelBAcknowledge)
         #expect(sentence.channel == .B)
 
-        let report = try BinaryAcknowledge(nmea: sentence)
+        let report = try BinaryAcknowledge(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 7)
         #expect(report.mmsiNumber.value == 777888999)

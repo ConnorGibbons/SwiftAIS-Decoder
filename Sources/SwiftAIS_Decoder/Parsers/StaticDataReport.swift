@@ -11,7 +11,6 @@
 import SignalTools
 
 public struct StaticDataReport: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -34,10 +33,7 @@ public struct StaticDataReport: AISMessage {
     public let mothershipMMSI: MMSI?
     public let spare2: UInt8?
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 24 else { throw .unexpectedMessageType(messageType.rawValue, expected: [24]) }
         self.messageType = messageType

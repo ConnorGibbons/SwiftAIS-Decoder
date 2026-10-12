@@ -6,8 +6,9 @@
 //
 //  Type 11: UTC/Date Inquiry Response -- response message to type 10.
 
+import SignalTools
+
 public struct UTCDateInquiryResponse: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -26,10 +27,7 @@ public struct UTCDateInquiryResponse: AISMessage {
     public let radioStatus: RadioStatus
     
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 11 else { throw .unexpectedMessageType(messageType.rawValue, expected: [11]) }
         self.messageType = messageType

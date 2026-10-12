@@ -26,7 +26,7 @@ struct DGNSSBroadcastBinaryMessageTests {
         // 34 armored characters minus the 4 fill bits
         #expect(sentence.payloadBits.count == 200)
 
-        let report = try DGNSSBroadcastBinaryMessage(nmeaSentences: [sentence])
+        let report = try DGNSSBroadcastBinaryMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 17)
 
@@ -37,7 +37,6 @@ struct DGNSSBroadcastBinaryMessageTests {
         #expect(report.mmsiNumber.value == 4310302)
         #expect(report.spare1 == 0)
         #expect(report.spare2 == 0)
-        #expect(report.additionalSentences == nil)
 
         // Longitude — 139°53.6'E, signed, 1/10 minutes
         #expect(report.longitude.rawValue == 83936)
@@ -98,7 +97,7 @@ struct DGNSSBroadcastBinaryMessageTests {
         #expect(sentence1.payloadBits.count == 360)
         #expect(sentence2.payloadBits.count == 96)
 
-        let report = try DGNSSBroadcastBinaryMessage(nmeaSentences: [sentence1, sentence2])
+        let report = try DGNSSBroadcastBinaryMessage(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 17)
 
@@ -108,8 +107,6 @@ struct DGNSSBroadcastBinaryMessageTests {
         #expect(report.mmsiNumber.value == 2734450)
         #expect(report.spare1 == 0)
         #expect(report.spare2 == 0)
-
-        #expect(report.additionalSentences?.count == 1)
 
         // Longitude — 29°7.8'E, signed, 1/10 minutes
         #expect(report.longitude.rawValue == 17478)

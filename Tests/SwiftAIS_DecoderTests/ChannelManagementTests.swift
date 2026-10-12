@@ -15,7 +15,7 @@ struct ChannelManagementTests {
 
         #expect(sentence.channel == .A)
 
-        let report = try ChannelManagement(nmea: sentence)
+        let report = try ChannelManagement(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 22)
 
@@ -52,7 +52,7 @@ struct ChannelManagementTests {
 
         #expect(sentence.channel == .B)
 
-        let report = try ChannelManagement(nmea: sentence)
+        let report = try ChannelManagement(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 22)
 

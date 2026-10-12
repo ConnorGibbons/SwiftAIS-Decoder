@@ -7,8 +7,9 @@
 //  Type 20: Data Link Management Message
 //  Payload Character: D
 
+import SignalTools
+
 public struct DataLinkManagement: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -30,10 +31,7 @@ public struct DataLinkManagement: AISMessage {
     public let timeout4: UInt8?
     public let increment4: UInt16?
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 20 else { throw .unexpectedMessageType(messageType.rawValue, expected: [20]) }
         self.messageType = messageType

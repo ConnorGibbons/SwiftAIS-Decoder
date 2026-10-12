@@ -6,18 +6,16 @@
 //
 //  Type 7
 
+import SignalTools
+
 public struct BinaryAcknowledge: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
     public let mmsis: [MMSI]
     
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 7 else { throw .unexpectedMessageType(messageType.rawValue, expected: [7]) }
         self.messageType = messageType

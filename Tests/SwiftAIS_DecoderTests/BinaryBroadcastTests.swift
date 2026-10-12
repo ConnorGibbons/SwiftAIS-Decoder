@@ -29,7 +29,7 @@ struct BinaryBroadcastTests {
 
         #expect(sentence.channel == .A)
 
-        let report = try BinaryBroadcastMessage(nmeaSentences: [sentence])
+        let report = try BinaryBroadcastMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 8)
 

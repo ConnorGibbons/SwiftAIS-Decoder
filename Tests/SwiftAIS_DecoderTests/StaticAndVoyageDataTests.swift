@@ -16,7 +16,7 @@ struct StaticAndVoyageDataTests {
     @Test func decodesStaticAndVoyageData() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage2)
-        let report = try StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2)
+        let report = try StaticAndVoyageData(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 5)
         #expect(report.mmsiNumber.value == 258315000)
@@ -60,7 +60,7 @@ struct StaticAndVoyageDataTests {
     @Test func decodesStaticAndVoyageDataPresto() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage3)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage4)
-        let report = try StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2)
+        let report = try StaticAndVoyageData(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 5)
         #expect(report.mmsiNumber.value == 205365700)
@@ -104,7 +104,7 @@ struct StaticAndVoyageDataTests {
     @Test func decodesStaticAndVoyageDataCorky() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage5)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.staticAndVoyage6)
-        let report = try StaticAndVoyageData(nmea1: sentence1, nmea2: sentence2)
+        let report = try StaticAndVoyageData(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 5)
         #expect(report.mmsiNumber.value == 367006780)

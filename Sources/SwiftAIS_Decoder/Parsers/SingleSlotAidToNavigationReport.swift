@@ -11,7 +11,6 @@
 import SignalTools
 
 public struct SingleSlotAidToNavigationReport: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -29,10 +28,7 @@ public struct SingleSlotAidToNavigationReport: AISMessage {
     public let spare: UInt8 // "Not uses" (lol) and should be 0
     public let authenticationFlag: AuthenticationFlag
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        let bits = nmea.payloadBits
-        self.nmeaSentence = nmea
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 28 else { throw .unexpectedMessageType(messageType.rawValue, expected: [28]) }
         self.messageType = messageType

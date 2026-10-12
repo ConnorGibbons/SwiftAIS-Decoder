@@ -12,7 +12,7 @@ struct AidToNavigationReportTests {
 
     @Test func decodesAidToNavigationReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.aidToNavigationReport)
-        let report = try AidToNavigationReport(nmeaSentences: [sentence])
+        let report = try AidToNavigationReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 79)
@@ -42,7 +42,6 @@ struct AidToNavigationReportTests {
         #expect(report.assignedFlag == .notAssignedMode)
         #expect(report.spare == 0)
         #expect(report.nameExtension == nil)
-        #expect(report.additionalSentences == nil)
 
         print(report.description())
     }
@@ -51,7 +50,7 @@ struct AidToNavigationReportTests {
 
     @Test func decodesSecondAidToNavigationReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.aidToNavigationReportTwo)
-        let report = try AidToNavigationReport(nmeaSentences: [sentence])
+        let report = try AidToNavigationReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 992111811)
@@ -81,7 +80,6 @@ struct AidToNavigationReportTests {
         #expect(report.assignedFlag == .notAssignedMode)
         #expect(report.spare == 0)
         #expect(report.nameExtension == nil)
-        #expect(report.additionalSentences == nil)
 
         print(report.description())
     }
@@ -93,7 +91,7 @@ struct AidToNavigationReportTests {
     @Test func decodesMultipartAidToNavigationReport() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartAidToNavigationReport2)
-        let report = try AidToNavigationReport(nmeaSentences: [sentence1, sentence2])
+        let report = try AidToNavigationReport(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 316021442)
@@ -120,8 +118,6 @@ struct AidToNavigationReportTests {
         #expect(report.regionalReserved == 0)
         #expect(report.raimFlag == .inUse)
 
-        #expect(report.additionalSentences?.count == 1)
-
         print(report.description())
     }
 
@@ -131,7 +127,7 @@ struct AidToNavigationReportTests {
     @Test func decodesSecondMultipartAidToNavigationReport() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.secondMultipartAidToNavigationReport2)
-        let report = try AidToNavigationReport(nmeaSentences: [sentence1, sentence2])
+        let report = try AidToNavigationReport(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 21)
         #expect(report.mmsiNumber.value == 4000003)
@@ -157,8 +153,6 @@ struct AidToNavigationReportTests {
         #expect(report.offPositionFlag == .onPosition)
         #expect(report.regionalReserved == 0)
         #expect(report.raimFlag == .notInUse)
-
-        #expect(report.additionalSentences?.count == 1)
 
         print(report.description())
     }

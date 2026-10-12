@@ -12,7 +12,7 @@ struct SingleSlotAidToNavigationReportTests {
 
     @Test func decodesSingleSlotAidToNavigationReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.singleSlotAidToNavigationReport)
-        let report = try SingleSlotAidToNavigationReport(nmea: sentence)
+        let report = try SingleSlotAidToNavigationReport(bits: sentence.payloadBits)
 
         #expect(sentence.channel == .A)
         #expect(report.messageType.rawValue == 28)

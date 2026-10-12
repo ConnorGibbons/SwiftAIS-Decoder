@@ -15,7 +15,7 @@ struct ClassAParserTests {
 
     @Test func decodesCommonNavigationBlock_1() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classAPositionReport)
-        let report = try ClassAPositionReport(nmea: sentence)
+        let report = try ClassAPositionReport(bits: sentence.payloadBits)
 
         #expect(report.mmsiNumber.value == 477553000)
         #expect(report.navStatus == .moored)
@@ -57,7 +57,7 @@ struct ClassAParserTests {
     
     @Test func decodesCommonNavigationBlock_2() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classAPositionReport_2)
-        let report = try ClassAPositionReport(nmea: sentence)
+        let report = try ClassAPositionReport(bits: sentence.payloadBits)
 
         #expect(report.mmsiNumber.value == 366913120)
         #expect(report.navStatus == .underWayUsingEngine)

@@ -6,8 +6,9 @@
 //
 //  Type 10: UTC/Date Inquiry
 
+import SignalTools
+
 public struct UTCDateInquiry: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -16,10 +17,7 @@ public struct UTCDateInquiry: AISMessage {
     public let spare2: UInt8
 
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 10 else { throw .unexpectedMessageType(messageType.rawValue, expected: [10]) }
         self.messageType = messageType

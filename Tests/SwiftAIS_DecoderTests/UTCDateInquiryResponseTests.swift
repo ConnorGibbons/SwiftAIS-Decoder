@@ -15,7 +15,7 @@ struct UTCDateInquiryResponseTests {
         let sentence = try AISNMEA0183Sentence(raw: Self.utcDateInquiryResponse)
         #expect(sentence.channel == .B)
 
-        let report = try UTCDateInquiryResponse(nmea: sentence)
+        let report = try UTCDateInquiryResponse(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 11)
         #expect(report.mmsiNumber.value == 4133412)

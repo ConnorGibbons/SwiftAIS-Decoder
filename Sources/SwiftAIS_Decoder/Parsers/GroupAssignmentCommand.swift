@@ -8,8 +8,9 @@
 //  Broadcast by a control station to set operational parameters for AIS stations in a particular region
 //  Payload character: G
 
+import SignalTools
+
 public struct GroupAssignmentCommand: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -23,10 +24,7 @@ public struct GroupAssignmentCommand: AISMessage {
     public let quietTime: UInt8 // Minutes affected stations should remain silent
     public let spare3: UInt8?
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 23 else { throw .unexpectedMessageType(messageType.rawValue, expected: [23]) }
         self.messageType = messageType

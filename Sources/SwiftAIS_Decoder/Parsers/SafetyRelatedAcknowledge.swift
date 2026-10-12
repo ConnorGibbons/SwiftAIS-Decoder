@@ -7,19 +7,16 @@
 //  Type 13: Safety Related Acknowledgement. Sent as a response to type 12. Same format as type 7 (BinaryAcknowledge).
 //  Payload character: =
 
+import SignalTools
 
 public struct SafetyRelatedAcknowledge: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
     public let mmsis: [MMSI]
     
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 13 else { throw .unexpectedMessageType(messageType.rawValue, expected: [13]) }
         self.messageType = messageType

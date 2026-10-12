@@ -7,9 +7,9 @@
 //  Type 9: Standard SAR Aircraft Position Report
 //  SAR: "Search and Rescue"
 
+import SignalTools
 
 public struct AircraftPositionReport: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -27,10 +27,7 @@ public struct AircraftPositionReport: AISMessage {
     public let raimFlag: RAIMFlag
     public let radioStatus: RadioStatus
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 9 else { throw .unexpectedMessageType(messageType.rawValue, expected: [9]) }
         self.messageType = messageType

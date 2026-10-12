@@ -14,7 +14,7 @@ struct ClassBPositionReportTests {
 
     @Test func decodesClassBPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReport)
-        let report = try ClassBPositionReport(nmea: sentence)
+        let report = try ClassBPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 18)
         #expect(report.mmsiNumber.value == 268)
@@ -69,7 +69,7 @@ struct ClassBPositionReportTests {
 
     @Test func decodesSecondClassBPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReportTwo)
-        let report = try ClassBPositionReport(nmea: sentence)
+        let report = try ClassBPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 18)
         #expect(report.mmsiNumber.value == 257357120)
@@ -117,7 +117,7 @@ struct ClassBPositionReportTests {
 
     @Test func decodesThirdClassBPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBPositionReportThree)
-        let report = try ClassBPositionReport(nmea: sentence)
+        let report = try ClassBPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 18)
         #expect(report.mmsiNumber.value == 244060919)

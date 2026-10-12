@@ -10,7 +10,6 @@
 import SignalTools
 
 public struct ClassBExtendedPositionReport: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -35,10 +34,7 @@ public struct ClassBExtendedPositionReport: AISMessage {
     public let assignedFlag: AssignedFlag
     public let spare: UInt8
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 19 else { throw .unexpectedMessageType(messageType.rawValue, expected: [19]) }
         self.messageType = messageType

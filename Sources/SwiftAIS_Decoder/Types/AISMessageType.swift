@@ -5,7 +5,8 @@
 //  Created by Connor Gibbons on 7/8/26.
 //
 
-public enum AISMessageType: Int {
+// Needs to be sendable or aisMessageTypeByPayloadChar in AISDecoder will get a compile time error complaining
+public enum AISMessageType: Int, Sendable {
     case positionReportClassA = 1
     case positionReportClassAAssignedSchedule = 2
     case positionReportClassAResponseToInterrogation = 3

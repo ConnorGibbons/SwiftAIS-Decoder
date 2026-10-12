@@ -6,7 +6,6 @@
 //
 
 public protocol AISMessage {
-    var nmeaSentence: AISNMEA0183Sentence { get }
     var messageType: AISMessageType { get }
     var mmsiNumber: MMSI { get }
     

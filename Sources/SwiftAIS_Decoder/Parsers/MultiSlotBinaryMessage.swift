@@ -11,7 +11,6 @@
 import SignalTools
 
 public struct MultiSlotBinaryMessage: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -29,10 +28,7 @@ public struct MultiSlotBinaryMessage: AISMessage {
     public let dac: DesignatedAreaCode?
     public let fid: UInt8?
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 26 else { throw .unexpectedMessageType(messageType.rawValue, expected: [26]) }
         self.messageType = messageType

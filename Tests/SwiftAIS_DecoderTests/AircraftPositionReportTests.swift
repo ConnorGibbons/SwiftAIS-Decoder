@@ -14,7 +14,7 @@ struct AircraftPositionReportTests {
 
     @Test func decodesAircraftPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.aircraftPositionReport)
-        let report = try AircraftPositionReport(nmea: sentence)
+        let report = try AircraftPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 9)
         #expect(report.mmsiNumber.value == 111232506)
@@ -70,7 +70,7 @@ struct AircraftPositionReportTests {
 
     @Test func decodesSecondAircraftPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.aircraftPositionReportTwo)
-        let report = try AircraftPositionReport(nmea: sentence)
+        let report = try AircraftPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 9)
 

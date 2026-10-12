@@ -8,8 +8,9 @@
 //  Used by base stations to control the operation of other base stations.
 //  Payload character: @
 
+import SignalTools
+
 public struct AssignmentModeCommand: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -23,10 +24,7 @@ public struct AssignmentModeCommand: AISMessage {
     public var increment2: UInt16?
     
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 16 else { throw .unexpectedMessageType(messageType.rawValue, expected: [16]) }
         self.messageType = messageType

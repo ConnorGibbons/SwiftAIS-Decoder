@@ -7,8 +7,9 @@
 //  Type 18: Standard Class B Position Report
 //  Payload character: "B"
 
+import SignalTools
+
 public struct ClassBPositionReport: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -30,10 +31,7 @@ public struct ClassBPositionReport: AISMessage {
     public let raimFlag: RAIMFlag
     public let radioStatus: RadioStatus
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 18 else { throw .unexpectedMessageType(messageType.rawValue, expected: [18]) }
         self.messageType = messageType

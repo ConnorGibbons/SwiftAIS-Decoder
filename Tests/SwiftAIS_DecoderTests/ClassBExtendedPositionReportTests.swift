@@ -12,7 +12,7 @@ struct ClassBExtendedPositionReportTests {
 
     @Test func decodesClassBExtendedPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBExtendedPositionReport)
-        let report = try ClassBExtendedPositionReport(nmea: sentence)
+        let report = try ClassBExtendedPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 19)
         #expect(report.mmsiNumber.value == 413775656)
@@ -67,7 +67,7 @@ struct ClassBExtendedPositionReportTests {
 
     @Test func decodesSecondClassBExtendedPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportTwo)
-        let report = try ClassBExtendedPositionReport(nmea: sentence)
+        let report = try ClassBExtendedPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 19)
         #expect(report.mmsiNumber.value == 412364741)
@@ -122,7 +122,7 @@ struct ClassBExtendedPositionReportTests {
 
     @Test func decodesThirdClassBExtendedPositionReport() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.classBExtendedPositionReportThree)
-        let report = try ClassBExtendedPositionReport(nmea: sentence)
+        let report = try ClassBExtendedPositionReport(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 19)
         #expect(report.mmsiNumber.value == 367059850)

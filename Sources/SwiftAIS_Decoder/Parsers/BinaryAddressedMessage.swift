@@ -10,7 +10,6 @@
 import SignalTools
 
 public struct BinaryAddressedMessage: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -19,25 +18,10 @@ public struct BinaryAddressedMessage: AISMessage {
     public var spare: Bool // Pretty much nothing, just here because it's in the spec.
     public var areaCode: DesignatedAreaCode
     public var functionalID: UInt8
-    public var additionalSentences: [AISNMEA0183Sentence]?
     public var payload: BitBuffer
     public var text: AISText? // Almost every message will not properly decode AISText here. Most payloads are a mixture of data types, far too many to write individual parsers for.
     
-    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
-        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
-        self.nmeaSentence = nmeaSentences[0]
-        
-        var bits: BitBuffer = .init()
-        if nmeaSentences.count > 1 {
-            self.additionalSentences = Array(nmeaSentences.dropFirst())
-        }
-        else {
-            self.additionalSentences = nil
-        }
-        for sentence in nmeaSentences {
-            bits.append(contentsOf: sentence.payloadBits)
-        }
-        
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         guard bits.count >= 89 else { throw .payloadTooShort(field: "payload", bits: 88..<89, available: bits.count) } // Functional ID is bit 87, so this guard is to ensure there's at least 1 payload bit
 
         let messageType: AISMessageType = try bits.read(0...5, "messageType")

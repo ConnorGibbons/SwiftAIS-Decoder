@@ -5,8 +5,9 @@
 //  Created by Connor Gibbons on 7/14/26.
 //
 
+import SignalTools
+
 public struct ClassAPositionReport: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -24,10 +25,7 @@ public struct ClassAPositionReport: AISMessage {
     public let raimFlag: RAIMFlag
     public let radioStatus: RadioStatus
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard [1,2,3].contains(messageType.rawValue) else {
             throw .unexpectedMessageType(messageType.rawValue, expected: [1,2,3])

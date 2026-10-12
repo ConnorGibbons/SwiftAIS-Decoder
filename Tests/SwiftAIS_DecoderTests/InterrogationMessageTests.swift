@@ -17,7 +17,7 @@ struct InterrogationMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 88)
 
-        let report = try InterrogationMessage(nmea: sentence)
+        let report = try InterrogationMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 368578000)
@@ -48,7 +48,7 @@ struct InterrogationMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.payloadBits.count == 88)
 
-        let report = try InterrogationMessage(nmea: sentence)
+        let report = try InterrogationMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 367036840)
@@ -79,7 +79,7 @@ struct InterrogationMessageTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 112)
 
-        let report = try InterrogationMessage(nmea: sentence)
+        let report = try InterrogationMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 15)
         #expect(report.mmsiNumber.value == 3669720)
@@ -114,7 +114,7 @@ struct InterrogationMessageTests {
         #expect(requestedMessageTypeBits == 0)
 
         #expect(throws: AISDecodingError.invalidValue(field: "requestedMessageType_1", rawValue: 0)) {
-            try InterrogationMessage(nmea: sentence)
+            try InterrogationMessage(bits: sentence.payloadBits)
         }
     }
 }

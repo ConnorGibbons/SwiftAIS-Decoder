@@ -14,7 +14,7 @@ struct AddressedSafetyMessageTests {
 
     @Test func decodesAddressedSafetyMessage() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.addressedSafetyMessage)
-        let report = try AddresedSafetyMessage(nmeaSentences: [sentence])
+        let report = try AddresedSafetyMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 2275200)
@@ -25,8 +25,6 @@ struct AddressedSafetyMessageTests {
 
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text.trimmingCharacters(in: [" "]) == "PLEASE REPORT TO JOBOURG TRAFFIC CHANNEL 13")
-
-        #expect(report.additionalSentences == nil)
 
         print(report.description())
     }
@@ -40,7 +38,7 @@ struct AddressedSafetyMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 4)
 
-        let report = try AddresedSafetyMessage(nmeaSentences: [sentence])
+        let report = try AddresedSafetyMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 351853000)
@@ -65,7 +63,7 @@ struct AddressedSafetyMessageTests {
         #expect(sentence.channel == .A)
         #expect(sentence.fillBits == 2)
 
-        let report = try AddresedSafetyMessage(nmeaSentences: [sentence])
+        let report = try AddresedSafetyMessage(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 271002099)
@@ -89,7 +87,7 @@ struct AddressedSafetyMessageTests {
     @Test func decodesMultipartAddressedSafetyMessage() throws {
         let sentence1 = try AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage1)
         let sentence2 = try AISNMEA0183Sentence(raw: Self.multipartAddressedSafetyMessage2)
-        let report = try AddresedSafetyMessage(nmeaSentences: [sentence1, sentence2])
+        let report = try AddresedSafetyMessage(bits: [sentence1, sentence2].payloadBits)
 
         #expect(report.messageType.rawValue == 12)
         #expect(report.mmsiNumber.value == 211217560)
@@ -97,8 +95,6 @@ struct AddressedSafetyMessageTests {
         #expect(report.destinationMMSI.value == 211378120)
         #expect(report.retransmit == .notRetransmitted)
         #expect(report.spare == false)
-
-        #expect(report.additionalSentences?.count == 1)
 
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
         #expect(text.text == "GUD PM 2U N HAPI NEW YIR OL D BES FRM AL FUJAIRAH")

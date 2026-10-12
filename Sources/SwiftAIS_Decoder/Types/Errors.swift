@@ -22,4 +22,5 @@ public enum AISDecodingError: Error, Equatable {
     case invalidValue(field: String, rawValue: UInt64)
     case unexpectedMessageType(Int, expected: [Int])
     case invalidText(field: String)
+    case tooManyNMEASentences(count: Int, expected: Int)
 }

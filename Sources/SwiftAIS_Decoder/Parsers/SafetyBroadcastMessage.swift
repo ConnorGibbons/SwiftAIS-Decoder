@@ -10,30 +10,14 @@
 import SignalTools
 
 public struct SafetyBroadcastMessage: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
-    
+
     public let spare: UInt8
-    public let additionalSentences: [AISNMEA0183Sentence]?
     public let payload: BitBuffer
     public let text: AISText?
     
-    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
-        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
-        self.nmeaSentence = nmeaSentences[0]
-        
-        var bits: BitBuffer = .init()
-        if nmeaSentences.count > 1 {
-            self.additionalSentences = Array(nmeaSentences.dropFirst())
-        }
-        else {
-            self.additionalSentences = nil
-        }
-        for sentence in nmeaSentences {
-            bits.append(contentsOf: sentence.payloadBits)
-        }
-        
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         guard bits.count > 40 else { throw .payloadTooShort(field: "payload", bits: 40..<41, available: bits.count) } // Spare ends at 40th bit, so this ensures there's at least one payload bit
 
         let messageType: AISMessageType = try bits.read(0...5, "messageType")

@@ -16,7 +16,7 @@ struct GroupAssignmentCommandTests {
         #expect(sentence.channel == .B)
         #expect(sentence.payloadBits.count == 160)
 
-        let report = try GroupAssignmentCommand(nmea: sentence)
+        let report = try GroupAssignmentCommand(bits: sentence.payloadBits)
 
         #expect(report.messageType.rawValue == 23)
         #expect(report.mmsiNumber.value == 2268120)

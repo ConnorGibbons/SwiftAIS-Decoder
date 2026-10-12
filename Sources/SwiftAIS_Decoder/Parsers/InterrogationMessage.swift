@@ -7,8 +7,9 @@
 //  Type 15: Interrogation message. Used to request 1 or 2 AIS stations send a particular message type.
 //  Payload character: ?
 
+import SignalTools
+
 public struct InterrogationMessage: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -29,10 +30,7 @@ public struct InterrogationMessage: AISMessage {
     public var spare_4: UInt8?
     
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 15 else { throw .unexpectedMessageType(messageType.rawValue, expected: [15]) }
         self.messageType = messageType

@@ -9,8 +9,9 @@
 //
 //  Short message that occupies less than a full slot, intended to be compact for long range reception.
 
+import SignalTools
+
 public struct AISSatelliteMessage: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
     
@@ -24,10 +25,7 @@ public struct AISSatelliteMessage: AISMessage {
     public let positionLatency: PositionLatency
     public let spare: UInt8?
     
-    public init(nmea: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea
-        let bits = nmea.payloadBits
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 27 else { throw .unexpectedMessageType(messageType.rawValue, expected: [27]) }
         self.messageType = messageType

@@ -10,11 +10,9 @@
 import SignalTools
 
 public struct AddresedSafetyMessage: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
-    
-    public let additionalSentences: [AISNMEA0183Sentence]?
+
     public let sequenceNumber: UInt8
     public let destinationMMSI: MMSI
     public let retransmit: RetransmitFlag
@@ -22,22 +20,7 @@ public struct AddresedSafetyMessage: AISMessage {
     public let payload: BitBuffer
     public let text: AISText? // The payload is described as not always containing normally encoded text, and I don't want that to make this init fail.
     
-    public init(nmeaSentences: [AISNMEA0183Sentence]) throws(AISDecodingError) {
-        guard nmeaSentences.count > 0 else { throw .payloadTooShort(field: "messageType", bits: 0..<6, available: 0) }
-        let nmea = nmeaSentences[0]
-        self.nmeaSentence = nmea
-        
-        var bits: BitBuffer = .init()
-        if nmeaSentences.count > 1 {
-            self.additionalSentences = Array(nmeaSentences.dropFirst())
-        }
-        else {
-            self.additionalSentences = nil
-        }
-        for sentence in nmeaSentences {
-            bits.append(contentsOf: sentence.payloadBits)
-        }
-        
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 12 else { throw .unexpectedMessageType(messageType.rawValue, expected: [12]) }
         self.messageType = messageType

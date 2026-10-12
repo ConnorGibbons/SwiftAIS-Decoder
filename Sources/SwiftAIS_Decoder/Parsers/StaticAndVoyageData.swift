@@ -9,11 +9,9 @@
 import SignalTools
 
 public struct StaticAndVoyageData: AISMessage {
-    public let nmeaSentence: AISNMEA0183Sentence
     public let messageType: AISMessageType
     public let mmsiNumber: MMSI
-    
-    public let nmeaSentence2: AISNMEA0183Sentence
+
     public let aisVersion: AISVersion
     public let imoNumber: UInt32
     public let callSign: AISText
@@ -33,13 +31,7 @@ public struct StaticAndVoyageData: AISMessage {
     public let dte: DTE?
     public let spare: Bool? // Just 1 bit
     
-    public init(nmea1: AISNMEA0183Sentence, nmea2: AISNMEA0183Sentence) throws(AISDecodingError) {
-        self.nmeaSentence = nmea1
-        self.nmeaSentence2 = nmea2
-
-        var bits = nmea1.payloadBits
-        bits.append(contentsOf: nmea2.payloadBits)
-
+    public init(bits: BitBuffer) throws(AISDecodingError) {
         let messageType: AISMessageType = try bits.read(0...5, "messageType")
         guard messageType.rawValue == 5 else { throw .unexpectedMessageType(messageType.rawValue, expected: [5]) }
         self.messageType = messageType
