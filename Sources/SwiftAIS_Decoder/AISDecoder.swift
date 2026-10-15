@@ -5,6 +5,7 @@
 //  Created by Connor Gibbons on 10/12/26.
 //
 //  AISDecoder is the class that implements the state & logic for handling NMEA AIS input.
+import SignalTools
 
 // Maps first character of armored NMEA AIS payload to a message type.
 // Works because the first 6 bits of the payload are the message type,
@@ -40,9 +41,35 @@ let aisMessageTypeByPayloadChar: [Character: AISMessageType] = [
     "L": .singleSlotAidToNavigationReport
 ]
 
-let messageTypeToParser: [AISMessageType: ] = [
-    .positionReportClassA: ClassAPositionReport.init
-    
+let messageTypeToParser: [AISMessageType: @Sendable (BitBuffer) throws -> AISMessage] = [
+    .positionReportClassA: ClassAPositionReport.init,
+    .positionReportClassAAssignedSchedule: ClassAPositionReport.init,
+    .positionReportClassAResponseToInterrogation: ClassAPositionReport.init,
+    .baseStationReport: BaseStationReport.init,
+    .staticAndVoyageRelatedData: StaticAndVoyageData.init,
+    .binaryAddressedMessage: BinaryAddressedMessage.init,
+    .binaryAcknowledge: BinaryAcknowledge.init,
+    .binaryBroadcastMessage: BinaryBroadcastMessage.init,
+    .standardSARAircraftPositionReport: AircraftPositionReport.init,
+    .utcAndDateInquiry: UTCDateInquiry.init,
+    .utcAndDateResponse: UTCDateInquiryResponse.init,
+    .addressedSafetyRelatedMessage: AddresedSafetyMessage.init,
+    .safetyRelatedAcknowledgement: SafetyRelatedAcknowledge.init,
+    .safetyRelatedBroadcastMessage: SafetyBroadcastMessage.init,
+    .interrogation: InterrogationMessage.init,
+    .assignmentModeCommand: AssignmentModeCommand.init,
+    .dgnssBinaryBroadcastMessage: DGNSSBroadcastBinaryMessage.init,
+    .standardClassBCSPositionReport: ClassBPositionReport.init,
+    .extendedClassBEquipmentPositionReport: ClassBExtendedPositionReport.init,
+    .dataLinkManagement: DataLinkManagement.init,
+    .aidToNavigationReport: AidToNavigationReport.init,
+    .channelManagement: ChannelManagement.init,
+    .groupAssignmentCommand: GroupAssignmentCommand.init,
+    .staticDataReport: StaticDataReport.init,
+    .singleSlotBinaryMessage: SingleSlotBinaryMessage.init,
+    .multipleSlotBinaryMessageWithCommunicationsState: MultiSlotBinaryMessage.init,
+    .positionReportForLongRangeApplications: AISSatelliteMessage.init,
+    .singleSlotAidToNavigationReport: SingleSlotAidToNavigationReport.init
 ]
 
 class AISDecoder {
@@ -52,11 +79,19 @@ class AISDecoder {
         self.state = AISDecoderState()
     }
     
-    func inputSentence(sentence: AISNMEA0183Sentence) -> AISMessage? throws {
-        if let allSentences = self.state.insert(sentence: sentence) {
-            
+    func inputSentence(sentence: AISNMEA0183Sentence) throws -> AISMessage? {
+        guard let allSentences = self.state.insert(sentence: sentence) else { return nil }
+        guard let messageTypeChar = sentence.payload.first else { return nil }
+        guard let messageType = aisMessageTypeByPayloadChar[messageTypeChar] else { return nil }
+        guard let parser = messageTypeToParser[messageType] else { return nil }
+        var combinedPayloads = BitBuffer()
+        for sentence in allSentences {
+            combinedPayloads.append(contentsOf: sentence.payloadBits)
         }
+        let parsedMessage = try parser(combinedPayloads)
+        return parsedMessage
     }
+    
 }
 
 private struct AISMessageMetadata: Hashable {
