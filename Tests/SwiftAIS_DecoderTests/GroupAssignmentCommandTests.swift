@@ -27,7 +27,7 @@ struct GroupAssignmentCommandTests {
         #expect(report.region.longitudeSW.degrees?.rounded(toPlaces: 6) == 1.826667)
         #expect(report.region.latitudeSW.degrees?.rounded(toPlaces: 6) == 50.68)
 
-        #expect(report.stationType == .regionalUse)
+        #expect(report.stationType == .regionalUseAndInlandWaterways(6))
         #expect(report.shipType == .notAvailable)
         #expect(report.spare2 == 0)
 

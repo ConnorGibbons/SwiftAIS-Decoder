@@ -29,12 +29,10 @@ public struct BinaryAddressedMessage: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi: MMSI = .init(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         let destinationMMSIBits: UInt32 = try bits.read(40...69, "destinationMMSI")
-        guard let destinationMMSI: MMSI = .init(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
-        self.destinationMMSI = destinationMMSI
+        self.destinationMMSI = MMSI(value: destinationMMSIBits)
 
         self.retransmit = RetransmitFlag(rawValue: try bits.read(70, "retransmit"))
         self.spare = try bits.read(71, "spare")

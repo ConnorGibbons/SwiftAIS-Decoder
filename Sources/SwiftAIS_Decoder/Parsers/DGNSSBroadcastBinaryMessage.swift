@@ -38,8 +38,7 @@ public struct DGNSSBroadcastBinaryMessage: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsiNumber = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsiNumber
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.spare1 = try bits.read(38...39, "spare1")
         self.longitude = Longitude(rawValue: try bits.read(40...57, "longitude"), isTenths: true)

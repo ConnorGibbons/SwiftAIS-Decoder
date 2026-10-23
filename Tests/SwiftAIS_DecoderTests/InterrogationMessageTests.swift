@@ -98,23 +98,15 @@ struct InterrogationMessageTests {
         print(report.description())
     }
 
-    // A real type 15 whose first requested message type is 0, which is not a valid AIS message
-    // type. Everything else decodes cleanly, but an interrogation that names no valid message type
-    // carries no instruction, so it is malformed and the parser rejects the whole sentence rather
-    // than reporting a partial result.
+    // A real type 15 whose first requested message type is 0, which is not a valid AIS message type.
     private static let zeroRequestedMessageType = "!AIVDM,1,1,,A,?h3Owpi;Etq0000,2*1A"
 
-    @Test func rejectsZeroRequestedMessageType() throws {
+    @Test func decodesZeroRequestedMessageType() throws {
         let sentence = try AISNMEA0183Sentence(raw: Self.zeroRequestedMessageType)
 
-        // The sentence itself is a well-formed type 15; only the requested type field is bad.
-        let messageTypeBits: UInt8 = try #require(sentence.payloadBits[0...5])
-        #expect(messageTypeBits == 15)
-        let requestedMessageTypeBits: UInt8 = try #require(sentence.payloadBits[70...75])
-        #expect(requestedMessageTypeBits == 0)
+        let report = try InterrogationMessage(bits: sentence.payloadBits)
 
-        #expect(throws: AISDecodingError.invalidValue(field: "requestedMessageType_1", rawValue: 0)) {
-            try InterrogationMessage(bits: sentence.payloadBits)
-        }
+        #expect(report.messageType == .interrogation)
+        #expect(report.requestedMessageType_1 == .invalid(0))
     }
 }

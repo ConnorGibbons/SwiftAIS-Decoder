@@ -39,10 +39,11 @@ public struct StaticDataReport: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         let part: StaticDataReportPart = try bits.read(38...39, "part")
+        // The part number decides the layout of the rest of the message, so an undefined part can't be parsed.
+        guard part.isValid else { throw .invalidValue(field: "part", rawValue: UInt64(part.rawValue)) }
         self.part = part
         
         // The message can be sent containing one of two "parts", A or B, each contain different info.
@@ -50,8 +51,7 @@ public struct StaticDataReport: AISMessage {
         // Part A has the name and nothing else
         if(part == .a) {
             let nameBits: BitBuffer = try bits.read(40...159, "vesselName")
-            guard let name = AISText(raw: nameBits) else { throw .invalidText(field: "vesselName") }
-            self.vesselName = name
+            self.vesselName = AISText(raw: nameBits)
             if let spareBits: UInt8 = bits[160...167] { // Not going to guard on this becuase it's stated that these spare bits are commonly left out
                 self.spare = spareBits
             } else {
@@ -79,13 +79,12 @@ public struct StaticDataReport: AISMessage {
             // Both are still used. The code here attempts to decode 7 characters, if all 7 are alphanumeric it treats it as the AIS equipment vendor.
             // Otherwise it'll treat it as vendorID + unit model + serial number
             let vendorIDBits: BitBuffer = try bits.read(48...65, "vendorID")
-            guard let vendorID = AISText(raw: vendorIDBits) else { throw .invalidText(field: "vendorID") }
+            let vendorID = AISText(raw: vendorIDBits)
             let unitModelCodeBits: UInt8 = try bits.read(66...69, "unitModelCode")
             let serialNumberBits: UInt32 = try bits.read(70...89, "serialNumber")
             let fullVendorIDBits: BitBuffer = try bits.read(48...89, "vendorID")
-            guard let fullVendorID = AISText(raw: fullVendorIDBits) else { throw .invalidText(field: "vendorID") }
-            let lastFour = fullVendorID.text.suffix(4)
-            if(lastFour.allSatisfy({$0.isLetter || $0.isNumber})) {
+            let fullVendorID = AISText(raw: fullVendorIDBits)
+            if let lastFour = fullVendorID.text?.suffix(4), lastFour.allSatisfy({$0.isLetter || $0.isNumber}) {
                 self.vendorID = fullVendorID
                 self.unitModelCode = nil
                 self.serialNumber = nil
@@ -97,13 +96,11 @@ public struct StaticDataReport: AISMessage {
             }
 
             let callSignBits: BitBuffer = try bits.read(90...131, "callSign")
-            guard let callSign = AISText(raw: callSignBits) else { throw .invalidText(field: "callSign") }
-            self.callSign = callSign
+            self.callSign = AISText(raw: callSignBits)
 
             if(mmsiNumber.description.prefix(2) == "98") { // "98"-prefixed MMSI indicates an auxiliary craft, which sends its mothership MMSI in this slot
                 let mothershipMMSIBits: UInt32 = try bits.read(132...161, "mothershipMMSI")
-                guard let mothershipMMSI = MMSI(value: mothershipMMSIBits) else { throw .invalidValue(field: "mothershipMMSI", rawValue: UInt64(mothershipMMSIBits)) }
-                self.mothershipMMSI = mothershipMMSI
+                self.mothershipMMSI = MMSI(value: mothershipMMSIBits)
                 
                 self.dimensionToBow = nil
                 self.dimensionToStern = nil
@@ -142,7 +139,7 @@ public struct StaticDataReport: AISMessage {
 
         // Each part carries a disjoint set of fields, so only report the ones this part actually contains.
         if(part == .a) {
-            rows.append(row("Vessel Name:", vesselName?.text ?? "Unavailable"))
+            rows.append(row("Vessel Name:", vesselName?.description ?? "Unavailable"))
         }
         else {
             rows.append(row("Ship Type:", shipType?.description ?? "Unavailable"))
@@ -150,15 +147,15 @@ public struct StaticDataReport: AISMessage {
             // A nil unit model code & serial number means the vendor field was read as the original
             // 7-character equipment vendor rather than the newer vendor ID + model + serial split.
             if(unitModelCode == nil && serialNumber == nil) {
-                rows.append(row("Equipment Vendor:", vendorID?.text ?? "Unavailable"))
+                rows.append(row("Equipment Vendor:", vendorID?.description ?? "Unavailable"))
             }
             else {
-                rows.append(row("Vendor ID:", vendorID?.text ?? "Unavailable"))
+                rows.append(row("Vendor ID:", vendorID?.description ?? "Unavailable"))
                 rows.append(row("Unit Model Code:", unitModelCode.map { "\($0)" } ?? "Unavailable"))
                 rows.append(row("Serial Number:", serialNumber.map { "\($0)" } ?? "Unavailable"))
             }
 
-            rows.append(row("Call Sign:", callSign?.text ?? "Unavailable"))
+            rows.append(row("Call Sign:", callSign?.description ?? "Unavailable"))
 
             // An auxiliary craft sends its mothership's MMSI in the slot the dimensions would otherwise occupy.
             if let mothershipMMSI {

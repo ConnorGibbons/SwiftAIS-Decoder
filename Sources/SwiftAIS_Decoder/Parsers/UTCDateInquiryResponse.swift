@@ -33,8 +33,7 @@ public struct UTCDateInquiryResponse: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.year = UTCYear(rawValue: try bits.read(38...51, "year"))
         self.month = UTCMonth(rawValue: try bits.read(52...55, "month"))

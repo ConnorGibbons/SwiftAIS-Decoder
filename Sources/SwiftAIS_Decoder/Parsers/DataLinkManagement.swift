@@ -37,8 +37,7 @@ public struct DataLinkManagement: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.spare = try bits.read(38...39, "spare")
         self.offset1 = try bits.read(40...51, "offset1")

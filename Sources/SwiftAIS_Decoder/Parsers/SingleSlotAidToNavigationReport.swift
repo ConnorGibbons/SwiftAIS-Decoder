@@ -34,8 +34,7 @@ public struct SingleSlotAidToNavigationReport: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.timeStamp = TimeStamp(rawValue: try bits.read(38...43, "timeStamp"))
         self.longitude = Longitude(rawValue: try bits.read(44...71, "longitude"))
@@ -49,10 +48,7 @@ public struct SingleSlotAidToNavigationReport: AISMessage {
         let dimensionABits: UInt16 = try bits.read(132...140, "dimensionA")
         let dimensionBBits: UInt16 = try bits.read(141...151, "dimensionB")
         let additionalDataFlag: Bool = try bits.read(152, "additionalDataFlag")
-        guard let dimensions = AtoNDimensions(type: dimensionType, additionalDataFlag: additionalDataFlag, a: dimensionABits, b: dimensionBBits) else {
-            throw .invalidValue(field: "dimensions", rawValue: (UInt64(dimensionABits) << 11) | UInt64(dimensionBBits)) // A and B are the only fields AtoNDimensions can reject
-        }
-        self.dimensions = dimensions
+        self.dimensions = AtoNDimensions(type: dimensionType, additionalDataFlag: additionalDataFlag, a: dimensionABits, b: dimensionBBits)
 
         self.chartedStatus = try bits.read(153...153, "chartedStatus")
         self.onStationStatus = try bits.read(154...157, "onStationStatus")

@@ -23,7 +23,7 @@ struct StaticDataReportTests {
         #expect(report.part == .a)
 
         #expect(report.vesselName?.text == "WIKING              ")
-        #expect(report.vesselName?.text.trimmingCharacters(in: [" "]) == "WIKING")
+        #expect(report.vesselName?.text?.trimmingCharacters(in: [" "]) == "WIKING")
         #expect(report.spare == nil)
 
         #expect(report.shipType == nil)
@@ -62,7 +62,7 @@ struct StaticDataReportTests {
         #expect(report.serialNumber == nil)
         
         #expect(report.callSign?.text == "       ")
-        #expect(report.callSign?.text.trimmingCharacters(in: [" "]) == "")
+        #expect(report.callSign?.text?.trimmingCharacters(in: [" "]) == "")
 
         #expect(report.mothershipMMSI == nil)
         #expect(report.dimensionToBow == 0)
@@ -103,7 +103,7 @@ struct StaticDataReportTests {
         #expect(partB.part == .b)
 
         #expect(partA.vesselName?.text == "PROGUY@@@@@@@@@@@@@@")
-        #expect(partA.vesselName?.text.trimmingCharacters(in: ["@"]) == "PROGUY")
+        #expect(partA.vesselName?.text?.trimmingCharacters(in: ["@"]) == "PROGUY")
         #expect(partA.spare == nil)
         #expect(partA.shipType == nil)
         #expect(partA.vendorID == nil)
@@ -116,7 +116,7 @@ struct StaticDataReportTests {
         #expect(partB.serialNumber == nil)
 
         #expect(partB.callSign?.text == "TC6163@")
-        #expect(partB.callSign?.text.trimmingCharacters(in: ["@"]) == "TC6163")
+        #expect(partB.callSign?.text?.trimmingCharacters(in: ["@"]) == "TC6163")
 
         #expect(partB.mothershipMMSI == nil)
         #expect(partB.dimensionToBow == 0)
@@ -148,14 +148,14 @@ struct StaticDataReportTests {
         #expect(report.mmsiNumber.value == 980696666)
         #expect(report.part == .b)
 
-        #expect(report.shipType == .highSpeedCraftReserved45)
+        #expect(report.shipType == .highSpeedCraftReserved(45))
 
         #expect(report.vendorID?.text == "FOO")
         #expect(report.unitModelCode == 1)
         #expect(report.serialNumber == 444)
 
         #expect(report.callSign?.text == "BOOBAZ@")
-        #expect(report.callSign?.text.trimmingCharacters(in: ["@"]) == "BOOBAZ")
+        #expect(report.callSign?.text?.trimmingCharacters(in: ["@"]) == "BOOBAZ")
 
         // "98"-prefixed MMSI marks an auxiliary craft, so this slot holds the mothership's MMSI
         // Online decoders get this wrong, however https://www.aiscatcher.org/tools/nmea-decoder does it properly, and I used that to generate the ground truth.

@@ -25,9 +25,9 @@ struct StaticAndVoyageDataTests {
         #expect(report.aisVersion == .standard)
         #expect(report.imoNumber == 6514895)
 
-        #expect(report.callSign.text.trimmingCharacters(in: [" "]) == "LFNA")
+        #expect(report.callSign.text?.trimmingCharacters(in: [" "]) == "LFNA")
 
-        #expect(report.vesselName.text.trimmingCharacters(in: [" "]) == "FALKVIK")
+        #expect(report.vesselName.text?.trimmingCharacters(in: [" "]) == "FALKVIK")
 
         // Type of ship & cargo — 79: Cargo, No additional information
         #expect(report.shipType == .cargoNoAdditionalInfo)
@@ -44,7 +44,7 @@ struct StaticAndVoyageDataTests {
         // Max static draught — raw 1/10 m field scaled to meters
         #expect(abs(report.draught - 3.8) < 0.0001)
 
-        #expect(report.destination.text.trimmingCharacters(in: [" "]) == "FORUS")
+        #expect(report.destination.text?.trimmingCharacters(in: [" "]) == "FORUS")
 
         // DTE (data terminal equipment) — 0: available
         #expect(report.dte == .ready)
@@ -67,9 +67,9 @@ struct StaticAndVoyageDataTests {
         #expect(report.aisVersion == .future)
         #expect(report.imoNumber == 0)
 
-        #expect(report.callSign.text.trimmingCharacters(in: [" "]) == "OT3657")
+        #expect(report.callSign.text?.trimmingCharacters(in: [" "]) == "OT3657")
 
-        #expect(report.vesselName.text.trimmingCharacters(in: [" "]) == "PRESTO")
+        #expect(report.vesselName.text?.trimmingCharacters(in: [" "]) == "PRESTO")
 
         // Type of ship & cargo — 99: Other Type, No additional information
         #expect(report.shipType == .otherTypeNoAdditionalInfo)
@@ -86,7 +86,7 @@ struct StaticAndVoyageDataTests {
         // Max static draught — raw 1/10 m field scaled to meters
         #expect(abs(report.draught - 2.5) < 0.0001)
 
-        #expect(report.destination.text.trimmingCharacters(in: [" "]) == "ANTWERPEN")
+        #expect(report.destination.text?.trimmingCharacters(in: [" "]) == "ANTWERPEN")
 
         // DTE (data terminal equipment) — 0: available
         #expect(report.dte == .ready)

@@ -33,8 +33,7 @@ public struct AircraftPositionReport: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.altitude = try bits.read(38...49, "altitude")
         self.speedOverGround = try bits.read(50...59, "speedOverGround") // Unlike in position report, it's given in knots, so can use value directly
@@ -43,8 +42,7 @@ public struct AircraftPositionReport: AISMessage {
         self.latitude = Latitude(rawValue: try bits.read(89...115, "latitude"))
 
         let cogBits: UInt16 = try bits.read(116...127, "courseOverGround")
-        guard let courseOverGround = CourseOverGround(rawValue: cogBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(cogBits)) }
-        self.courseOverGround = courseOverGround
+        self.courseOverGround = CourseOverGround(rawValue: cogBits)
 
         self.timestamp = TimeStamp(rawValue: try bits.read(128...133, "timestamp"))
         self.regionalReserved = try bits.read(134...141, "regionalReserved")

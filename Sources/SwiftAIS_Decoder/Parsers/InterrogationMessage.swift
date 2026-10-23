@@ -36,14 +36,12 @@ public struct InterrogationMessage: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.spare_1 = try bits.read(38...39, "spare_1")
 
         let interrogatedMMSI1Bits: UInt32 = try bits.read(40...69, "interrogatedMMSI_1")
-        guard let interrogatedMMSI_1 = MMSI(value: interrogatedMMSI1Bits) else { throw .invalidValue(field: "interrogatedMMSI_1", rawValue: UInt64(interrogatedMMSI1Bits)) }
-        self.interrogatedMMSI_1 = interrogatedMMSI_1
+        self.interrogatedMMSI_1 = MMSI(value: interrogatedMMSI1Bits)
 
         self.requestedMessageType_1 = try bits.read(70...75, "requestedMessageType_1")
         self.slotOffset_1 = try bits.read(76...87, "slotOffset_1")
@@ -62,8 +60,7 @@ public struct InterrogationMessage: AISMessage {
         
         guard let requestedMessageType2Bits: UInt8 = bits[90...95] else { return }
         if(requestedMessageType2Bits != 0) { // If querying two stations for one type each, this field & slot offset will be 0
-            guard let requestedMessageType_2 = AISMessageType(rawValue: Int(requestedMessageType2Bits)) else { return }
-            self.requestedMessageType_2 = requestedMessageType_2
+            self.requestedMessageType_2 = AISMessageType(rawValue: Int(requestedMessageType2Bits))
         }
         
         guard let slotOffset2Bits: UInt16 = bits[96...107] else { return }
@@ -74,13 +71,11 @@ public struct InterrogationMessage: AISMessage {
         
         guard let interrogatedMMSI2Bits: UInt32 = bits[110...139] else { return }
         if(interrogatedMMSI2Bits != 0) { // If it's zero, it's just sender zero filling empty fields.
-            guard let interrogatedMMSI_2 = MMSI(value: interrogatedMMSI2Bits) else { return } // If there's this many bits in the message, the second MMSI is non-optional.
-            self.interrogatedMMSI_2 = interrogatedMMSI_2
+            self.interrogatedMMSI_2 = MMSI(value: interrogatedMMSI2Bits) // If there's this many bits in the message, the second MMSI is non-optional.
         }
         
         guard let requestedMessageType3Bits: UInt8 = bits[140...145] else { return }
-        guard let requestedMessageType_3 = AISMessageType(rawValue: Int(requestedMessageType3Bits)) else { return }
-        self.requestedMessageType_3 = requestedMessageType_3
+        self.requestedMessageType_3 = AISMessageType(rawValue: Int(requestedMessageType3Bits))
         
         guard let slotOffset3Bits: UInt16 = bits[146...157] else { return }
         self.slotOffset_3 = slotOffset3Bits

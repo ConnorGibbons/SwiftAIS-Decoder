@@ -5,10 +5,18 @@
 // https://swiftpackageindex.com/apple/swift-argument-parser/documentation
 
 import ArgumentParser
+import Foundation
+import SwiftAIS_Decoder
 
 @main
 struct SwiftAIS_DecoderCLI: ParsableCommand {
+    
+    @Argument(help: "File path")
+    var filePath: String
+    
     mutating func run() throws {
-        print("Hello, world!")
+        let fileURL = URL(string: filePath)
+        try offlineDecode(fileURL: fileURL!)
     }
+    
 }

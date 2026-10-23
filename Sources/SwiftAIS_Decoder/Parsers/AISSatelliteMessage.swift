@@ -31,8 +31,7 @@ public struct AISSatelliteMessage: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.positionAccuracy = try bits.read(38...38, "positionAccuracy")
         self.raimFlag = try bits.read(39...39, "raimFlag")
@@ -41,12 +40,10 @@ public struct AISSatelliteMessage: AISMessage {
         self.latitude = Latitude(rawValue: try bits.read(62...78, "latitude"), isTenths: true)
 
         let speedOverGroundBits: UInt8 = try bits.read(79...84, "speedOverGround")
-        guard let speedOverGround = SpeedOverGroundCompact(rawValue: speedOverGroundBits) else { throw .invalidValue(field: "speedOverGround", rawValue: UInt64(speedOverGroundBits)) }
-        self.speedOverGround = speedOverGround
+        self.speedOverGround = SpeedOverGroundCompact(rawValue: speedOverGroundBits)
 
         let courseOverGroundBits: UInt16 = try bits.read(85...93, "courseOverGround")
-        guard let courseOverGround = CourseOverGroundCompact(rawValue: courseOverGroundBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(courseOverGroundBits)) }
-        self.courseOverGround = courseOverGround
+        self.courseOverGround = CourseOverGroundCompact(rawValue: courseOverGroundBits)
 
         self.positionLatency = try bits.read(94...94, "positionLatency")
 

@@ -37,19 +37,16 @@ public struct StaticAndVoyageData: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.aisVersion = try bits.read(38...39, "aisVersion")
         self.imoNumber = try bits.read(40...69, "imoNumber")
 
         let callSignBits: BitBuffer = try bits.read(70...111, "callSign")
-        guard let callSign = AISText(raw: callSignBits) else { throw .invalidText(field: "callSign") }
-        self.callSign = callSign
+        self.callSign = AISText(raw: callSignBits)
 
         let vesselNameBits: BitBuffer = try bits.read(112...231, "vesselName")
-        guard let vesselName = AISText(raw: vesselNameBits) else { throw .invalidText(field: "vesselName") }
-        self.vesselName = vesselName
+        self.vesselName = AISText(raw: vesselNameBits)
 
         self.shipType = try bits.read(232...239, "shipType")
         self.dimensionToBow = try bits.read(240...248, "dimensionToBow")
@@ -66,8 +63,7 @@ public struct StaticAndVoyageData: AISMessage {
         self.draught = Double(UInt16(draughtBits)) / 10
 
         let destinationBits: BitBuffer = try bits.read(302...421, "destination")
-        guard let destination = AISText(raw: destinationBits) else { throw .invalidText(field: "destination") }
-        self.destination = destination
+        self.destination = AISText(raw: destinationBits)
         
         if(bits.count > 422) {
             let DTEBit = bits[422]
@@ -92,14 +88,14 @@ public struct StaticAndVoyageData: AISMessage {
             row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
             row("AIS Version:", "\(aisVersion)"),
             row("IMO Number:", "\(imoNumber)"),
-            row("Call Sign:", callSign.text),
-            row("Vessel Name:", vesselName.text),
+            row("Call Sign:", callSign.description),
+            row("Vessel Name:", vesselName.description),
             row("Ship Type:", shipType.description),
             row("Dimensions (m):", "Bow \(dimensionToBow), Stern \(dimensionToStern), Port \(dimensionToPort), Starboard \(dimensionToStarboard)"),
             row("EPFD Fix Type:", fixType.description),
             row("ETA (UTC):", "\(month.description)-\(day.description) \(hour.description):\(minute.description)"),
             row("Draught (m):", "\(draught)"),
-            row("Destination:", destination.text),
+            row("Destination:", destination.description),
             row("DTE:", dte?.description ?? "Unavailable")
         ] as [String]).joined(separator: "\n")
     }

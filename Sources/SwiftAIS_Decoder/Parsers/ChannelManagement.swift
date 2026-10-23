@@ -35,8 +35,7 @@ public struct ChannelManagement: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.spare1 = try bits.read(38...39, "spare1")
 
@@ -54,12 +53,10 @@ public struct ChannelManagement: AISMessage {
 
         if addressed == .addressed { // Format of the message is gated based on addressed bit, which for some reason comes *after* the fields it dictates.
             let dest1Bits: UInt32 = try bits.read(69...98, "dest1")
-            guard let dest1 = MMSI(value: dest1Bits) else { throw .invalidValue(field: "dest1", rawValue: UInt64(dest1Bits)) }
-            self.dest1 = dest1
+            self.dest1 = MMSI(value: dest1Bits)
 
             let dest2Bits: UInt32 = try bits.read(104...133, "dest2")
-            guard let dest2 = MMSI(value: dest2Bits) else { throw .invalidValue(field: "dest2", rawValue: UInt64(dest2Bits)) }
-            self.dest2 = dest2
+            self.dest2 = MMSI(value: dest2Bits)
 
             self.region = nil
         }

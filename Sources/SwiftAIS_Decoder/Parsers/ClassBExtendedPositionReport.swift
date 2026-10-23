@@ -40,30 +40,26 @@ public struct ClassBExtendedPositionReport: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.regionalReserved1 = try bits.read(38...45, "regionalReserved1")
 
         let speedOverGroundBits: UInt16 = try bits.read(46...55, "speedOverGround")
-        guard let speedOverGround = SpeedOverGround(rawValue: speedOverGroundBits) else { throw .invalidValue(field: "speedOverGround", rawValue: UInt64(speedOverGroundBits)) }
-        self.speedOverGround = speedOverGround
+        self.speedOverGround = SpeedOverGround(rawValue: speedOverGroundBits)
 
         self.positionAccuracy = try bits.read(56...56, "positionAccuracy")
         self.longitude = Longitude(rawValue: try bits.read(57...84, "longitude"))
         self.latitude = Latitude(rawValue: try bits.read(85...111, "latitude"))
 
         let courseOverGroundBits: UInt16 = try bits.read(112...123, "courseOverGround")
-        guard let courseOverGround = CourseOverGround(rawValue: courseOverGroundBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(courseOverGroundBits)) }
-        self.courseOverGround = courseOverGround
+        self.courseOverGround = CourseOverGround(rawValue: courseOverGroundBits)
 
         self.trueHeading = TrueHeading(rawValue: try bits.read(124...132, "trueHeading"))
         self.timeStamp = TimeStamp(rawValue: try bits.read(133...138, "timeStamp"))
         self.regionalReserved2 = try bits.read(139...142, "regionalReserved2")
 
         let nameBits: BitBuffer = try bits.read(143...262, "name")
-        guard let name = AISText(raw: nameBits) else { throw .invalidText(field: "name") }
-        self.name = name
+        self.name = AISText(raw: nameBits)
 
         self.shipType = try bits.read(263...270, "shipType")
         self.dimensionToBow = try bits.read(271...279, "dimensionToBow")
@@ -88,7 +84,7 @@ public struct ClassBExtendedPositionReport: AISMessage {
             row("Course Over Ground:", courseOverGround.description),
             row("True Heading:", trueHeading.description),
             row("Timestamp:", timeStamp.description),
-            row("Name:", name.text),
+            row("Name:", name.description),
             row("Ship Type:", shipType.description),
             row("Dimensions (m):", "Bow \(dimensionToBow), Stern \(dimensionToStern), Port \(dimensionToPort), Starboard \(dimensionToStarboard)"),
             row("EPFD Fix Type:", fixType.description),

@@ -16,16 +16,19 @@ public struct AtoNDimensions {
     public let a: UInt16
     public let b: UInt16
 
-    public init?(type: AtoNDimensionType, additionalDataFlag: Bool, a: UInt16, b: UInt16) {
-        guard a <= 0b111111111 else { return nil } // Max val is 511, field is 9 bits
-        guard b <= 0b11111111111 else { return nil } // Max val is 2047, field is 11 bits
+    public init(type: AtoNDimensionType, additionalDataFlag: Bool, a: UInt16, b: UInt16) {
         self.type = type
         self.additionalDataFlag = additionalDataFlag
         self.a = a
         self.b = b
     }
 
+    public var isValid: Bool {
+        return a <= 0b111111111 && b <= 0b11111111111 // A max is 511 (9 bits), B max is 2047 (11 bits)
+    }
+
     public var description: String {
+        guard isValid else { return "A: \(a), B: \(b) [bad data]" }
         guard additionalDataFlag, let combination = combinationDescription else { return dimensionsDescription }
         return "\(dimensionsDescription) (\(combination))"
     }

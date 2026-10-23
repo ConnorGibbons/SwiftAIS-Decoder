@@ -34,8 +34,7 @@ public struct MultiSlotBinaryMessage: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         let addressed: Addressed = try bits.read(38...38, "addressed")
         self.addressed = addressed
@@ -46,8 +45,7 @@ public struct MultiSlotBinaryMessage: AISMessage {
         var ptr = 40
         if(addressed == .addressed) {
             let destinationMMSIBits: UInt32 = try bits.read(ptr..<ptrAdvance(ptr: &ptr, advanceBy: 30), "destinationMMSI")
-            guard let destinationMMSI = MMSI(value: destinationMMSIBits) else { throw .invalidValue(field: "destinationMMSI", rawValue: UInt64(destinationMMSIBits)) }
-            self.destinationMMSI = destinationMMSI
+            self.destinationMMSI = MMSI(value: destinationMMSIBits)
             // Same 0/2-bit spare as message 25 (ITU-R M.1371-5 Table 79): present only when the
             // destination ID is used.
             _ = ptrAdvance(ptr: &ptr, advanceBy: 2)

@@ -21,16 +21,13 @@ public struct BinaryAcknowledge: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
         
         var mmsis: [MMSI] = []
         var bitIndex: Int = 40
         while(bitIndex + 29 < bits.count) {
             if let mmsi: UInt32 = bits[bitIndex...bitIndex + 29] {
-                if let mmsiValue = MMSI(value: mmsi) {
-                    mmsis.append(mmsiValue)
-                }
+                mmsis.append(MMSI(value: mmsi))
             }
             bitIndex += 32
         }

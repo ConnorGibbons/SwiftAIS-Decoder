@@ -5,135 +5,231 @@
 //  Created by Connor Gibbons on 7/24/26.
 //
 
-public enum ShipType: UInt8 {
-    case notAvailable = 0
+public enum ShipType: RawRepresentable, Equatable, Hashable {
+    public typealias RawValue = UInt8
 
-    // 1-19: Reserved for future use
-    case reserved1 = 1
-    case reserved2 = 2
-    case reserved3 = 3
-    case reserved4 = 4
-    case reserved5 = 5
-    case reserved6 = 6
-    case reserved7 = 7
-    case reserved8 = 8
-    case reserved9 = 9
-    case reserved10 = 10
-    case reserved11 = 11
-    case reserved12 = 12
-    case reserved13 = 13
-    case reserved14 = 14
-    case reserved15 = 15
-    case reserved16 = 16
-    case reserved17 = 17
-    case reserved18 = 18
-    case reserved19 = 19
+    case notAvailable
+    case reserved(UInt8)
 
     // 20-29: Wing in ground (WIG)
-    case wingInGround = 20
-    case wingInGroundHazardousA = 21
-    case wingInGroundHazardousB = 22
-    case wingInGroundHazardousC = 23
-    case wingInGroundHazardousD = 24
-    case wingInGroundReserved25 = 25
-    case wingInGroundReserved26 = 26
-    case wingInGroundReserved27 = 27
-    case wingInGroundReserved28 = 28
-    case wingInGroundReserved29 = 29
+    case wingInGround
+    case wingInGroundHazardousA
+    case wingInGroundHazardousB
+    case wingInGroundHazardousC
+    case wingInGroundHazardousD
+    case wingInGroundReserved(UInt8)
 
     // 30-39
-    case fishing = 30
-    case towing = 31
-    case towingLarge = 32
-    case dredgingOrUnderwaterOps = 33
-    case divingOps = 34
-    case militaryOps = 35
-    case sailing = 36
-    case pleasureCraft = 37
-    case reserved38 = 38
-    case reserved39 = 39
+    case fishing
+    case towing
+    case towingLarge
+    case dredgingOrUnderwaterOps
+    case divingOps
+    case militaryOps
+    case sailing
+    case pleasureCraft
 
     // 40-49: High speed craft (HSC)
-    case highSpeedCraft = 40
-    case highSpeedCraftHazardousA = 41
-    case highSpeedCraftHazardousB = 42
-    case highSpeedCraftHazardousC = 43
-    case highSpeedCraftHazardousD = 44
-    case highSpeedCraftReserved45 = 45
-    case highSpeedCraftReserved46 = 46
-    case highSpeedCraftReserved47 = 47
-    case highSpeedCraftReserved48 = 48
-    case highSpeedCraftNoAdditionalInfo = 49
+    case highSpeedCraft
+    case highSpeedCraftHazardousA
+    case highSpeedCraftHazardousB
+    case highSpeedCraftHazardousC
+    case highSpeedCraftHazardousD
+    case highSpeedCraftReserved(UInt8)
+    case highSpeedCraftNoAdditionalInfo
 
     // 50-59
-    case pilotVessel = 50
-    case searchAndRescueVessel = 51
-    case tug = 52
-    case portTender = 53
-    case antiPollutionEquipment = 54
-    case lawEnforcement = 55
-    case spareLocalVessel56 = 56
-    case spareLocalVessel57 = 57
-    case medicalTransport = 58
-    case noncombatant = 59
+    case pilotVessel
+    case searchAndRescueVessel
+    case tug
+    case portTender
+    case antiPollutionEquipment
+    case lawEnforcement
+    case spareLocalVessel(UInt8)
+    case medicalTransport
+    case noncombatant
 
     // 60-69: Passenger
-    case passenger = 60
-    case passengerHazardousA = 61
-    case passengerHazardousB = 62
-    case passengerHazardousC = 63
-    case passengerHazardousD = 64
-    case passengerReserved65 = 65
-    case passengerReserved66 = 66
-    case passengerReserved67 = 67
-    case passengerReserved68 = 68
-    case passengerNoAdditionalInfo = 69
+    case passenger
+    case passengerHazardousA
+    case passengerHazardousB
+    case passengerHazardousC
+    case passengerHazardousD
+    case passengerReserved(UInt8)
+    case passengerNoAdditionalInfo
 
     // 70-79: Cargo
-    case cargo = 70
-    case cargoHazardousA = 71
-    case cargoHazardousB = 72
-    case cargoHazardousC = 73
-    case cargoHazardousD = 74
-    case cargoReserved75 = 75
-    case cargoReserved76 = 76
-    case cargoReserved77 = 77
-    case cargoReserved78 = 78
-    case cargoNoAdditionalInfo = 79
+    case cargo
+    case cargoHazardousA
+    case cargoHazardousB
+    case cargoHazardousC
+    case cargoHazardousD
+    case cargoReserved(UInt8)
+    case cargoNoAdditionalInfo
 
     // 80-89: Tanker
-    case tanker = 80
-    case tankerHazardousA = 81
-    case tankerHazardousB = 82
-    case tankerHazardousC = 83
-    case tankerHazardousD = 84
-    case tankerReserved85 = 85
-    case tankerReserved86 = 86
-    case tankerReserved87 = 87
-    case tankerReserved88 = 88
-    case tankerNoAdditionalInfo = 89
+    case tanker
+    case tankerHazardousA
+    case tankerHazardousB
+    case tankerHazardousC
+    case tankerHazardousD
+    case tankerReserved(UInt8)
+    case tankerNoAdditionalInfo
 
     // 90-99: Other Type
-    case otherType = 90
-    case otherTypeHazardousA = 91
-    case otherTypeHazardousB = 92
-    case otherTypeHazardousC = 93
-    case otherTypeHazardousD = 94
-    case otherTypeReserved95 = 95
-    case otherTypeReserved96 = 96
-    case otherTypeReserved97 = 97
-    case otherTypeReserved98 = 98
-    case otherTypeNoAdditionalInfo = 99
+    case otherType
+    case otherTypeHazardousA
+    case otherTypeHazardousB
+    case otherTypeHazardousC
+    case otherTypeHazardousD
+    case otherTypeReserved(UInt8)
+    case otherTypeNoAdditionalInfo
+
+    case invalid(UInt8)
+
+    public init(rawValue: UInt8) {
+        switch rawValue {
+        case 0: self = .notAvailable
+        case 1...19, 38, 39: self = .reserved(rawValue)
+        case 20: self = .wingInGround
+        case 21: self = .wingInGroundHazardousA
+        case 22: self = .wingInGroundHazardousB
+        case 23: self = .wingInGroundHazardousC
+        case 24: self = .wingInGroundHazardousD
+        case 25...29: self = .wingInGroundReserved(rawValue)
+        case 30: self = .fishing
+        case 31: self = .towing
+        case 32: self = .towingLarge
+        case 33: self = .dredgingOrUnderwaterOps
+        case 34: self = .divingOps
+        case 35: self = .militaryOps
+        case 36: self = .sailing
+        case 37: self = .pleasureCraft
+        case 40: self = .highSpeedCraft
+        case 41: self = .highSpeedCraftHazardousA
+        case 42: self = .highSpeedCraftHazardousB
+        case 43: self = .highSpeedCraftHazardousC
+        case 44: self = .highSpeedCraftHazardousD
+        case 45...48: self = .highSpeedCraftReserved(rawValue)
+        case 49: self = .highSpeedCraftNoAdditionalInfo
+        case 50: self = .pilotVessel
+        case 51: self = .searchAndRescueVessel
+        case 52: self = .tug
+        case 53: self = .portTender
+        case 54: self = .antiPollutionEquipment
+        case 55: self = .lawEnforcement
+        case 56, 57: self = .spareLocalVessel(rawValue)
+        case 58: self = .medicalTransport
+        case 59: self = .noncombatant
+        case 60: self = .passenger
+        case 61: self = .passengerHazardousA
+        case 62: self = .passengerHazardousB
+        case 63: self = .passengerHazardousC
+        case 64: self = .passengerHazardousD
+        case 65...68: self = .passengerReserved(rawValue)
+        case 69: self = .passengerNoAdditionalInfo
+        case 70: self = .cargo
+        case 71: self = .cargoHazardousA
+        case 72: self = .cargoHazardousB
+        case 73: self = .cargoHazardousC
+        case 74: self = .cargoHazardousD
+        case 75...78: self = .cargoReserved(rawValue)
+        case 79: self = .cargoNoAdditionalInfo
+        case 80: self = .tanker
+        case 81: self = .tankerHazardousA
+        case 82: self = .tankerHazardousB
+        case 83: self = .tankerHazardousC
+        case 84: self = .tankerHazardousD
+        case 85...88: self = .tankerReserved(rawValue)
+        case 89: self = .tankerNoAdditionalInfo
+        case 90: self = .otherType
+        case 91: self = .otherTypeHazardousA
+        case 92: self = .otherTypeHazardousB
+        case 93: self = .otherTypeHazardousC
+        case 94: self = .otherTypeHazardousD
+        case 95...98: self = .otherTypeReserved(rawValue)
+        case 99: self = .otherTypeNoAdditionalInfo
+        default: self = .invalid(rawValue)
+        }
+    }
+
+    public var rawValue: UInt8 {
+        switch self {
+        case .notAvailable: 0
+        case .wingInGround: 20
+        case .wingInGroundHazardousA: 21
+        case .wingInGroundHazardousB: 22
+        case .wingInGroundHazardousC: 23
+        case .wingInGroundHazardousD: 24
+        case .fishing: 30
+        case .towing: 31
+        case .towingLarge: 32
+        case .dredgingOrUnderwaterOps: 33
+        case .divingOps: 34
+        case .militaryOps: 35
+        case .sailing: 36
+        case .pleasureCraft: 37
+        case .highSpeedCraft: 40
+        case .highSpeedCraftHazardousA: 41
+        case .highSpeedCraftHazardousB: 42
+        case .highSpeedCraftHazardousC: 43
+        case .highSpeedCraftHazardousD: 44
+        case .highSpeedCraftNoAdditionalInfo: 49
+        case .pilotVessel: 50
+        case .searchAndRescueVessel: 51
+        case .tug: 52
+        case .portTender: 53
+        case .antiPollutionEquipment: 54
+        case .lawEnforcement: 55
+        case .medicalTransport: 58
+        case .noncombatant: 59
+        case .passenger: 60
+        case .passengerHazardousA: 61
+        case .passengerHazardousB: 62
+        case .passengerHazardousC: 63
+        case .passengerHazardousD: 64
+        case .passengerNoAdditionalInfo: 69
+        case .cargo: 70
+        case .cargoHazardousA: 71
+        case .cargoHazardousB: 72
+        case .cargoHazardousC: 73
+        case .cargoHazardousD: 74
+        case .cargoNoAdditionalInfo: 79
+        case .tanker: 80
+        case .tankerHazardousA: 81
+        case .tankerHazardousB: 82
+        case .tankerHazardousC: 83
+        case .tankerHazardousD: 84
+        case .tankerNoAdditionalInfo: 89
+        case .otherType: 90
+        case .otherTypeHazardousA: 91
+        case .otherTypeHazardousB: 92
+        case .otherTypeHazardousC: 93
+        case .otherTypeHazardousD: 94
+        case .otherTypeNoAdditionalInfo: 99
+        case .reserved(let value),
+             .wingInGroundReserved(let value),
+             .highSpeedCraftReserved(let value),
+             .spareLocalVessel(let value),
+             .passengerReserved(let value),
+             .cargoReserved(let value),
+             .tankerReserved(let value),
+             .otherTypeReserved(let value),
+             .invalid(let value):
+            value
+        }
+    }
+
+    public var isValid: Bool {
+        if case .invalid = self { return false }
+        return true
+    }
 
     public var description: String {
         switch self {
         case .notAvailable:
             return "Not available (default)"
-        case .reserved1, .reserved2, .reserved3, .reserved4, .reserved5,
-             .reserved6, .reserved7, .reserved8, .reserved9, .reserved10,
-             .reserved11, .reserved12, .reserved13, .reserved14, .reserved15,
-             .reserved16, .reserved17, .reserved18, .reserved19,
-             .reserved38, .reserved39:
+        case .reserved:
             return "Reserved for future use"
 
         case .wingInGround:
@@ -146,8 +242,7 @@ public enum ShipType: UInt8 {
             return "Wing in ground (WIG), Hazardous category C"
         case .wingInGroundHazardousD:
             return "Wing in ground (WIG), Hazardous category D"
-        case .wingInGroundReserved25, .wingInGroundReserved26, .wingInGroundReserved27,
-             .wingInGroundReserved28, .wingInGroundReserved29:
+        case .wingInGroundReserved:
             return "Wing in ground (WIG), Reserved for future use"
 
         case .fishing:
@@ -177,8 +272,7 @@ public enum ShipType: UInt8 {
             return "High speed craft (HSC), Hazardous category C"
         case .highSpeedCraftHazardousD:
             return "High speed craft (HSC), Hazardous category D"
-        case .highSpeedCraftReserved45, .highSpeedCraftReserved46,
-             .highSpeedCraftReserved47, .highSpeedCraftReserved48:
+        case .highSpeedCraftReserved:
             return "High speed craft (HSC), Reserved for future use"
         case .highSpeedCraftNoAdditionalInfo:
             return "High speed craft (HSC), No additional information"
@@ -195,7 +289,7 @@ public enum ShipType: UInt8 {
             return "Anti-pollution equipment"
         case .lawEnforcement:
             return "Law Enforcement"
-        case .spareLocalVessel56, .spareLocalVessel57:
+        case .spareLocalVessel:
             return "Spare - Local Vessel"
         case .medicalTransport:
             return "Medical Transport"
@@ -212,8 +306,7 @@ public enum ShipType: UInt8 {
             return "Passenger, Hazardous category C"
         case .passengerHazardousD:
             return "Passenger, Hazardous category D"
-        case .passengerReserved65, .passengerReserved66,
-             .passengerReserved67, .passengerReserved68:
+        case .passengerReserved:
             return "Passenger, Reserved for future use"
         case .passengerNoAdditionalInfo:
             return "Passenger, No additional information"
@@ -228,7 +321,7 @@ public enum ShipType: UInt8 {
             return "Cargo, Hazardous category C"
         case .cargoHazardousD:
             return "Cargo, Hazardous category D"
-        case .cargoReserved75, .cargoReserved76, .cargoReserved77, .cargoReserved78:
+        case .cargoReserved:
             return "Cargo, Reserved for future use"
         case .cargoNoAdditionalInfo:
             return "Cargo, No additional information"
@@ -243,7 +336,7 @@ public enum ShipType: UInt8 {
             return "Tanker, Hazardous category C"
         case .tankerHazardousD:
             return "Tanker, Hazardous category D"
-        case .tankerReserved85, .tankerReserved86, .tankerReserved87, .tankerReserved88:
+        case .tankerReserved:
             return "Tanker, Reserved for future use"
         case .tankerNoAdditionalInfo:
             return "Tanker, No additional information"
@@ -258,10 +351,13 @@ public enum ShipType: UInt8 {
             return "Other Type, Hazardous category C"
         case .otherTypeHazardousD:
             return "Other Type, Hazardous category D"
-        case .otherTypeReserved95, .otherTypeReserved96, .otherTypeReserved97, .otherTypeReserved98:
+        case .otherTypeReserved:
             return "Other Type, Reserved for future use"
         case .otherTypeNoAdditionalInfo:
             return "Other Type, No additional information"
+
+        case .invalid(let value):
+            return "Invalid (\(value))"
         }
     }
 }

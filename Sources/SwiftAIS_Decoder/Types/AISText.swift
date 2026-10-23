@@ -23,14 +23,23 @@ let bitsToCharacter: [UInt8: Character] = {
 
 public struct AISText {
     public let raw: BitBuffer
-    public let text: String
+    public let text: String?
 
-    public init?(raw: BitBuffer) {
-        guard raw.count % 6 == 0 else {
-            print("ERROR: AISText bit count (\(raw.count)) must be a multiple of 6.")
-            return nil
-        }
+    public init(raw: BitBuffer) {
         self.raw = raw
+        self.text = AISText.decode(raw)
+    }
+
+    public var isValid: Bool {
+        return raw.count % 6 == 0
+    }
+
+    public var description: String {
+        return text ?? "\(raw.count) bits [bad data]"
+    }
+
+    private static func decode(_ raw: BitBuffer) -> String? {
+        guard raw.count % 6 == 0 else { return nil }
         let charCount = raw.count / 6
         var chars: [Character] = .init(repeating: " ", count: charCount)
         for i in 0..<charCount {
@@ -39,7 +48,7 @@ public struct AISText {
             guard let sixBits: UInt8 = raw[lowerBound..<upperBound] else { return nil }
             chars[i] = bitsToCharacter[sixBits] ?? "?"
         }
-        self.text = String(chars)
+        return String(chars)
     }
 
 }

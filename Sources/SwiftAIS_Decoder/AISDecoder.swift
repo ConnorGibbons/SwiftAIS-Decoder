@@ -72,16 +72,17 @@ let messageTypeToParser: [AISMessageType: @Sendable (BitBuffer) throws -> AISMes
     .singleSlotAidToNavigationReport: SingleSlotAidToNavigationReport.init
 ]
 
-class AISDecoder {
+public class AISDecoder {
     private var state: AISDecoderState
     
-    init() {
+    public init() {
         self.state = AISDecoderState()
     }
     
-    func inputSentence(sentence: AISNMEA0183Sentence) throws -> AISMessage? {
+    public func inputSentence(sentence: AISNMEA0183Sentence) throws -> AISMessage? {
         guard let allSentences = self.state.insert(sentence: sentence) else { return nil }
-        guard let messageTypeChar = sentence.payload.first else { return nil }
+        guard let firstSentence = allSentences.first else { return nil }
+        guard let messageTypeChar = firstSentence.payload.first else { return nil }
         guard let messageType = aisMessageTypeByPayloadChar[messageTypeChar] else { return nil }
         guard let parser = messageTypeToParser[messageType] else { return nil }
         var combinedPayloads = BitBuffer()
@@ -127,7 +128,7 @@ class AISDecoderState {
         }
         
         let metadata = AISMessageMetadata(channel: sentence.channel, fragmentCount: sentence.fragmentCount, sequenceNumber: sentence.sequentialID!)
-        if var openMessage = openMessages[metadata] {
+        if var openMessage = openMessages[metadata] { // Multi fragment + matches an existing message
             let last = openMessage.last!
             if(sentence.fragmentNumber == 1) {
                 // Rule 2
@@ -146,12 +147,13 @@ class AISDecoderState {
             openMessages.updateValue(openMessage, forKey: metadata)
             return nil
         }
-        else {
+        else { // Multi-fragment + not related to an existing message
             if(sentence.fragmentNumber != 1) {
                 // Rule 3
                 return nil
             }
             openMessages.updateValue([sentence], forKey: metadata)
+            return nil
         }
     }
 }

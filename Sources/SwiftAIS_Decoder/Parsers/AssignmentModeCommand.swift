@@ -30,22 +30,19 @@ public struct AssignmentModeCommand: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.spare1 = try bits.read(38...39, "spare1")
 
         let destination1Bits: UInt32 = try bits.read(40...69, "destination1")
-        guard let destination1 = MMSI(value: destination1Bits) else { throw .invalidValue(field: "destination1", rawValue: UInt64(destination1Bits)) }
-        self.destination1 = destination1
+        self.destination1 = MMSI(value: destination1Bits)
 
         self.offset1 = try bits.read(70...81, "offset1")
         self.increment1 = try bits.read(82...91, "increment1")
 
         if(bits.count > 96) { // 96 instead of 92 becuase according to the spec, 4 fill bits are inserted in messages where 1 station is addressed
             let destination2Bits: UInt32 = try bits.read(92...121, "destination2")
-            guard let destination2 = MMSI(value: destination2Bits) else { throw .invalidValue(field: "destination2", rawValue: UInt64(destination2Bits)) }
-            self.destination2 = destination2
+            self.destination2 = MMSI(value: destination2Bits)
 
             self.offset2 = try bits.read(122...133, "offset2")
             self.increment2 = try bits.read(134...143, "increment2")

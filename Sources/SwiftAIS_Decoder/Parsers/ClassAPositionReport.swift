@@ -33,23 +33,20 @@ public struct ClassAPositionReport: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.navStatus = try bits.read(38...41, "navStatus")
         self.rateOfTurn = RateOfTurn(value: Int8(bitPattern: try bits.read(42...49, "rateOfTurn"))) // 8-bit signed field (I3)
 
         let sogBits: UInt16 = try bits.read(50...59, "speedOverGround")
-        guard let speedOverGround = SpeedOverGround(rawValue: sogBits) else { throw .invalidValue(field: "speedOverGround", rawValue: UInt64(sogBits)) }
-        self.speedOverGround = speedOverGround
+        self.speedOverGround = SpeedOverGround(rawValue: sogBits)
 
         self.positionAccuracy = try bits.read(60...60, "positionAccuracy")
         self.longitude = Longitude(rawValue: try bits.read(61...88, "longitude")) // 28-bit signed, sign-extended in init
         self.latitude = Latitude(rawValue: try bits.read(89...115, "latitude")) // 27-bit signed, sign-extended in init
 
         let courseBits: UInt16 = try bits.read(116...127, "courseOverGround")
-        guard let courseOverGround = CourseOverGround(rawValue: courseBits) else { throw .invalidValue(field: "courseOverGround", rawValue: UInt64(courseBits)) }
-        self.courseOverGround = courseOverGround
+        self.courseOverGround = CourseOverGround(rawValue: courseBits)
 
         self.trueHeading = TrueHeading(rawValue: try bits.read(128...136, "trueHeading"))
         self.timestamp = TimeStamp(rawValue: try bits.read(137...142, "timestamp"))

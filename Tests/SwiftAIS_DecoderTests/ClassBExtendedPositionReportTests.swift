@@ -43,7 +43,7 @@ struct ClassBExtendedPositionReportTests {
         #expect(report.timeStamp.rawValue == 22)
         #expect(report.regionalReserved2 == 3)
 
-        #expect(report.name.text.trimmingCharacters(in: [" "]) == "HUA YUAN")
+        #expect(report.name.text?.trimmingCharacters(in: [" "]) == "HUA YUAN")
 
         // Type of ship & cargo — 70: Cargo, all ships of this type
         #expect(report.shipType == .cargo)
@@ -98,7 +98,7 @@ struct ClassBExtendedPositionReportTests {
         #expect(report.timeStamp.rawValue == 32)
         #expect(report.regionalReserved2 == 3)
 
-        #expect(report.name.text.trimmingCharacters(in: [" "]) == "SUGANYU04276")
+        #expect(report.name.text?.trimmingCharacters(in: [" "]) == "SUGANYU04276")
 
         // Type of ship & cargo — 30: Fishing
         #expect(report.shipType == .fishing)

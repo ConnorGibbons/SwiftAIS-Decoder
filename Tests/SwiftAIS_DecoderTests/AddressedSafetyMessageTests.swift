@@ -24,7 +24,7 @@ struct AddressedSafetyMessageTests {
         #expect(report.spare == false)
 
         let text = try #require(report.text, "The payload should decode as 6-bit ASCII")
-        #expect(text.text.trimmingCharacters(in: [" "]) == "PLEASE REPORT TO JOBOURG TRAFFIC CHANNEL 13")
+        #expect(text.text?.trimmingCharacters(in: [" "]) == "PLEASE REPORT TO JOBOURG TRAFFIC CHANNEL 13")
 
         print(report.description())
     }

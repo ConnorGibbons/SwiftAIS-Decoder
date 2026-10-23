@@ -38,14 +38,12 @@ public struct AidToNavigationReport: AISMessage {
         self.messageType = messageType
 
         let mmsiBits: UInt32 = try bits.read(8...37, "mmsiNumber")
-        guard let mmsi = MMSI(value: mmsiBits) else { throw .invalidValue(field: "mmsiNumber", rawValue: UInt64(mmsiBits)) }
-        self.mmsiNumber = mmsi
+        self.mmsiNumber = MMSI(value: mmsiBits)
 
         self.aidType = try bits.read(38...42, "aidType")
 
         let nameBits: BitBuffer = try bits.read(43...162, "name")
-        guard let name = AISText(raw: nameBits) else { throw .invalidText(field: "name") }
-        self.name = name
+        self.name = AISText(raw: nameBits)
 
         self.positionAccuracy = try bits.read(163...163, "positionAccuracy")
         self.longitude = Longitude(rawValue: try bits.read(164...191, "longitude"))
@@ -66,11 +64,7 @@ public struct AidToNavigationReport: AISMessage {
             self.spare = spareBit
             if(bits.count > 272) {
                 if let nameExtensionBits: BitBuffer = bits[272...(bits.count - 1)] {
-                    if let nameExtension = AISText(raw: nameExtensionBits) {
-                        self.nameExtension = nameExtension
-                    } else {
-                        self.nameExtension = nil
-                    }
+                    self.nameExtension = AISText(raw: nameExtensionBits)
                 } else {
                     self.nameExtension = nil
                 }
@@ -104,10 +98,11 @@ public struct AidToNavigationReport: AISMessage {
     }
 
     private var fullName: String {
-        guard let nameExtension = nameExtension, !nameExtension.text.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return name.text
+        guard let nameText = name.text else { return name.description }
+        guard let extensionText = nameExtension?.text, !extensionText.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return nameText
         }
-        return name.text + nameExtension.text
+        return nameText + extensionText
     }
     
     

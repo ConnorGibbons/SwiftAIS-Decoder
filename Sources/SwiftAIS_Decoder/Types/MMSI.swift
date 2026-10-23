@@ -8,19 +8,24 @@
 public struct MMSI {
     public var value: UInt32
     
-    public init?(value: UInt32) {
-        guard value <= 0b111011100110101100100111111111 else { return nil } // 999 999 999
+    public init(value: UInt32) {
         self.value = value
     }
-    
+
+    public var isValid: Bool {
+        return value <= 0b111011100110101100100111111111 // 999 999 999
+    }
+
     public var description: String {
+        guard isValid else { return "\(value) [bad data]" }
         return String(format: "%09u", value)
     }
 
     /// The country or territory allocated to this MMSI's Maritime Identification Digits
-    /// Sourced from `description` so leading zeroes are preserved. Returns "Unknown" if the MID is unallocated.
+    /// Sourced from `description` so leading zeroes are preserved. Returns "Unknown" if the MID is unallocated or the MMSI is invalid.
     public var country: String {
-        guard let mid = UInt16(description.prefix(3)),
+        guard isValid,
+              let mid = UInt16(description.prefix(3)),
               let areaCode = AreaCode(rawValue: mid) else {
             return "Unknown"
         }
