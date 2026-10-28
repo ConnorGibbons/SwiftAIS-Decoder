@@ -51,8 +51,8 @@ public struct AddresedSafetyMessage: AISMessage {
     public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
-            row("Destination MMSI:", "\(destinationMMSI.country) - \(destinationMMSI.description)"),
+            row("MMSI:", "\(mmsiNumber.description)"),
+            row("Destination MMSI:", "\(destinationMMSI.description)"),
             row("Sequence Number:", "\(sequenceNumber)"),
             row("Retransmit:", retransmit.description),
             row("Message:", text?.text ?? "\(payload.count) bits")

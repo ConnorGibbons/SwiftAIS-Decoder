@@ -41,11 +41,11 @@ public struct BinaryAcknowledge: AISMessage {
         if mmsis.isEmpty {
             acknowledged = "None"
         } else {
-            acknowledged = mmsis.map { "\($0.country) - \($0.description)" }.joined(separator: "\n" + row("", ""))
+            acknowledged = mmsis.map { $0.description }.joined(separator: "\n" + row("", ""))
         }
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Acknowledged MMSIs:", acknowledged)
         ] as [String]).joined(separator: "\n")
     }

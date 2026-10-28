@@ -23,7 +23,7 @@ public struct TimeStamp {
         case 63:
             return "Positioning System Inoperative"
         default:
-            return "\(rawValue) seconds"
+            return "\(String(format: "%02d", rawValue))"
         }
     }
 }

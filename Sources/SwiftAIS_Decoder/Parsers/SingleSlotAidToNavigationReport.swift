@@ -60,7 +60,7 @@ public struct SingleSlotAidToNavigationReport: AISMessage {
     public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Timestamp:", timeStamp.description),
             row("Latitude:", latitude.description),
             row("Longitude:", longitude.description),

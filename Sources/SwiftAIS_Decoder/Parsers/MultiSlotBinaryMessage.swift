@@ -89,13 +89,13 @@ public struct MultiSlotBinaryMessage: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Addressed:", addressed.description)
         ]
 
         // A broadcast message has no destination, and an unstructured payload carries no DAC/FID header.
         if let destinationMMSI {
-            rows.append(row("Destination MMSI:", "\(destinationMMSI.country) - \(destinationMMSI.description)"))
+            rows.append(row("Destination MMSI:", destinationMMSI.description))
         }
 
         rows.append(row("Structured:", structuredFlag.description))

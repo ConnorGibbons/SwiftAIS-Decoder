@@ -100,7 +100,7 @@ public struct UTCHour {
     
     public var description: String {
         if let hour = hour {
-            return "\(hour)"
+            return "\(String(format: "%02d",hour))"
         }
         else {
             return "Unavailable \(rawValue)"
@@ -125,7 +125,7 @@ public struct UTCMinute {
     
     public var description: String {
         if let minute = minute {
-            return "\(minute)"
+            return "\(String(format: "%02d", minute))"
         }
         else {
             return "Unavailable \(rawValue)"

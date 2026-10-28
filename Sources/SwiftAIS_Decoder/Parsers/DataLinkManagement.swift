@@ -122,7 +122,7 @@ public struct DataLinkManagement: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Slot 1:", slotDescription(offset: offset1, reservedSlots: reservedSlots1, timeout: timeout1, increment: increment1))
         ]
 

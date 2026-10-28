@@ -48,7 +48,7 @@ public struct BinaryBroadcastMessage: AISMessage {
     public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Area Code (DAC):", "\(areaCode.description) (\(areaCode.rawValue))"),
             row("Functional ID:", "\(functionalID)"),
             row("Payload:", text?.text ?? "\(payload.count) bits")

@@ -87,7 +87,7 @@ public struct ChannelManagement: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Channel A:", channelA.description),
             row("Channel B:", channelB.description),
             row("TX/RX Mode:", txrx.description),
@@ -98,10 +98,10 @@ public struct ChannelManagement: AISMessage {
         // Whether destination MMSIs or a lat/long region follow is gated on the addressed flag.
         if addressed == .addressed {
             if let dest1 = dest1 {
-                rows.append(row("Destination 1:", "\(dest1.country) - \(dest1.description)"))
+                rows.append(row("Destination 1:", dest1.description))
             }
             if let dest2 = dest2 {
-                rows.append(row("Destination 2:", "\(dest2.country) - \(dest2.description)"))
+                rows.append(row("Destination 2:", dest2.description))
             }
         } else if let region = region {
             rows.append(row("Region:", region.description))

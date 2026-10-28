@@ -57,7 +57,7 @@ public struct GroupAssignmentCommand: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Region:", region.description),
             row("Station Type:", stationType.description)
         ]

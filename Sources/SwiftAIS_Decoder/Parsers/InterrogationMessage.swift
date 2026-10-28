@@ -87,8 +87,8 @@ public struct InterrogationMessage: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
-            row("Interrogated MMSI:", "\(interrogatedMMSI_1.country) - \(interrogatedMMSI_1.description)")
+            row("MMSI:", mmsiNumber.description),
+            row("Interrogated MMSI:", interrogatedMMSI_1.description)
         ]
         
         // The first station can be asked for up to two message types, so its requests are listed one per line.
@@ -101,7 +101,7 @@ public struct InterrogationMessage: AISMessage {
         // An interrogated MMSI of 0 addresses no station, so the second block is skipped here even though
         // the parsed values are still kept on the message.
         if let interrogatedMMSI_2 = interrogatedMMSI_2, interrogatedMMSI_2.value != 0 {
-            rows.append(row("Interrogated MMSI:", "\(interrogatedMMSI_2.country) - \(interrogatedMMSI_2.description)"))
+            rows.append(row("Interrogated MMSI:", interrogatedMMSI_2.description))
             if let requestedMessageType_3 = requestedMessageType_3 {
                 rows.append(row("Requested:", requestDescription(requestedMessageType_3, slotOffset: slotOffset_3)))
             }

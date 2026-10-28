@@ -55,8 +55,8 @@ public struct AssignmentModeCommand: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
-            row("Assigned MMSI:", "\(destination1.country) - \(destination1.description)"),
+            row("MMSI:", mmsiNumber.description),
+            row("Assigned MMSI:", destination1.description),
             row("Assignment:", assignmentDescription(offset: offset1, increment: increment1))
         ]
 
@@ -64,7 +64,7 @@ public struct AssignmentModeCommand: AISMessage {
         // present. A destination of 0 means the sender filled the block in without addressing anyone, so
         // it's skipped here even though the parsed values are still kept on the message.
         if let destination2 = destination2, let offset2 = offset2, let increment2 = increment2, destination2.value != 0 {
-            rows.append(row("Assigned MMSI:", "\(destination2.country) - \(destination2.description)"))
+            rows.append(row("Assigned MMSI:", destination2.description))
             rows.append(row("Assignment:", assignmentDescription(offset: offset2, increment: increment2)))
         }
 

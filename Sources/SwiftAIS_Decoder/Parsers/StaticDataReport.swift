@@ -133,7 +133,7 @@ public struct StaticDataReport: AISMessage {
     public func description() -> String {
         var rows: [String] = [
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Part:", part.description)
         ]
 
@@ -159,7 +159,7 @@ public struct StaticDataReport: AISMessage {
 
             // An auxiliary craft sends its mothership's MMSI in the slot the dimensions would otherwise occupy.
             if let mothershipMMSI {
-                rows.append(row("Mothership MMSI:", "\(mothershipMMSI.country) - \(mothershipMMSI.description)"))
+                rows.append(row("Mothership MMSI:", mothershipMMSI.description))
             }
             else {
                 rows.append(row("Dimensions (m):", "Bow \(dimensionToBow ?? 0), Stern \(dimensionToStern ?? 0), Port \(dimensionToPort ?? 0), Starboard \(dimensionToStarboard ?? 0)"))

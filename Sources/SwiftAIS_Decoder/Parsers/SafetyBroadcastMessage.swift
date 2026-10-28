@@ -44,7 +44,7 @@ public struct SafetyBroadcastMessage: AISMessage {
     public func description() -> String {
         return ([
             "*** \(messageType.description) (Type \(messageType.rawValue)) ***",
-            row("MMSI:", "\(mmsiNumber.country) - \(mmsiNumber.description)"),
+            row("MMSI:", mmsiNumber.description),
             row("Payload:", text?.text ?? "\(payload.count) bits")
         ] as [String]).joined(separator: "\n")
     }

@@ -5,41 +5,105 @@
 //  Created by Connor Gibbons on 7/8/26.
 //
 
+public enum MMSIStationType {
+    case shipStation
+    case groupShipStation
+    case coastStation
+    case groupCoastStation      // 00MID0000 / 009990000 wildcards
+    case sarAircraft
+    case handheld               // 8MIDxxxxx
+    case childCraft             // 98MIDxxxx, craft associated with a parent ship
+    case navigationalAid        // 99MIDxxxx
+    case sart                   // 970xxxxxx
+    case manOverboard           // 972xxxxxx
+    case epirb                  // 974xxxxxx
+    case amrdGroupB             // 979xxxxxx
+    case invalid
+    
+    public var description: String {
+        switch self {
+        case .shipStation:       return "Ship station"
+        case .groupShipStation:  return "Group ship station"
+        case .coastStation:      return "Coast station"
+        case .groupCoastStation: return "Group coast station"
+        case .sarAircraft:       return "SAR aircraft"
+        case .handheld:          return "Handheld VHF"
+        case .childCraft:        return "Craft associated with parent ship"
+        case .navigationalAid:   return "Aid to navigation"
+        case .sart:              return "AIS-SART"
+        case .manOverboard:      return "Man overboard device"
+        case .epirb:             return "EPIRB-AIS"
+        case .amrdGroupB:        return "AMRD Group B device"
+        case .invalid:           return "Invalid"
+        }
+    }
+}
+
 public struct MMSI {
-    public var value: UInt32
+    public let value: UInt32
+    public let isValid: Bool
+    public let mmsiNumber: String?
+    public let stationType: MMSIStationType
+    public let mid: UInt16?
+    public let country: String?
     
     public init(value: UInt32) {
         self.value = value
+        self.isValid = MMSI.mmsiIsValid(value: value)
+        if(self.isValid) {
+            self.mmsiNumber = MMSI.getMMSIString(value: value)
+            let stationAndMid = MMSI.getStationTypeAndMID(mmsi: mmsiNumber!)
+            self.stationType = stationAndMid.0
+            if let mid = stationAndMid.1 {
+                self.mid = mid
+                self.country = AreaCode(rawValue: mid)?.description
+            }
+            else {
+                self.mid = nil
+                self.country = nil
+            }
+        }
+        else {
+            self.mmsiNumber = nil
+            self.stationType = .invalid
+            self.mid = nil
+            self.country = nil
+        }
     }
 
-    public var isValid: Bool {
+    public static func mmsiIsValid(value: UInt32) -> Bool {
         return value <= 0b111011100110101100100111111111 // 999 999 999
     }
 
     public var description: String {
         guard isValid else { return "\(value) [bad data]" }
+        return "\(mmsiNumber!), Station Type: \(stationType.description), Country: \(country ?? "unknown")"
+    }
+    
+    private static func getMMSIString(value: UInt32) -> String {
         return String(format: "%09u", value)
     }
+    
+    private static func getStationTypeAndMID(mmsi: String) -> (MMSIStationType, UInt16?) {
+        guard mmsi.count == 9, mmsi.allSatisfy(\.isNumber) else { return (.invalid,nil) }
 
-    /// The country or territory allocated to this MMSI's Maritime Identification Digits
-    /// Sourced from `description` so leading zeroes are preserved. Returns "Unknown" if the MID is unallocated or the MMSI is invalid.
-    public var country: String {
-        guard isValid,
-              let mid = UInt16(description.prefix(3)),
-              let areaCode = AreaCode(rawValue: mid) else {
-            return "Unknown"
+        func mid(at offset: Int) -> UInt16? { UInt16(mmsi.dropFirst(offset).prefix(3)) }
+
+        switch mmsi {
+        case _ where mmsi.hasPrefix("970"): return (.sart, nil)
+        case _ where mmsi.hasPrefix("972"): return (.manOverboard, nil)
+        case _ where mmsi.hasPrefix("974"): return (.epirb, nil)
+        case _ where mmsi.hasPrefix("979"): return (.amrdGroupB, nil)
+        case _ where mmsi.hasPrefix("99"):  return (.navigationalAid, mid(at: 2))
+        case _ where mmsi.hasPrefix("98"):  return (.childCraft, mid(at: 2))
+        case _ where mmsi.hasPrefix("111"): return (.sarAircraft, mid(at: 3))
+        case _ where mmsi.hasPrefix("00"):  if(mmsi.hasSuffix("0000")) { return (.groupCoastStation, mid(at: 2)) }; return (.coastStation, mid(at: 2))
+        case _ where mmsi.hasPrefix("0"):   return (.groupShipStation, mid(at: 1))
+        case _ where mmsi.hasPrefix("8"):   return (.handheld, mid(at: 1))
+        case _ where ("2"..."7").contains(mmsi.prefix(1)): return (.shipStation, mid(at: 0))
+        default: return (.invalid, nil)
         }
-        return areaCode.description
     }
-    
-    
-}
-
-public enum IdentityType: UInt8 {
-    case shipGroup = 0
-    case searchAndRescueAircraft = 1
-    case individualShip = 2
-    case individualShip2 = 3
     
 }
 
