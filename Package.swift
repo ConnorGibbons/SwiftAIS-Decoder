@@ -31,6 +31,7 @@ let package = Package(
             dependencies: [
                 "SwiftAIS_Decoder",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Networking", package: "Networking")
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
@@ -42,6 +43,11 @@ let package = Package(
                 "SwiftAIS_Decoder",
             ],
         ),
-
+        .testTarget(
+            name: "SwiftAIS_DecoderCLITests",
+            dependencies: [
+                "SwiftAIS_DecoderCLI",
+            ],
+        )
     ]
 )

@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "F7838BF9-5B09-48B2-A4D8-985C01B9C326",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "'\/Users\/connorgibbons\/Documents\/Notes\/AIS Documentation\/AISNMEASamples.txt'"
+      }
+    ],
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:",
+      "identifier" : "SwiftAIS_DecoderCLI",
+      "name" : "SwiftAIS_DecoderCLI"
+    },
+    "testInteropMode" : "complete"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftAIS_DecoderTests",
+        "name" : "SwiftAIS_DecoderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftAIS_DecoderCLITests",
+        "name" : "SwiftAIS_DecoderCLITests"
+      }
+    }
+  ],
+  "version" : 1
+}

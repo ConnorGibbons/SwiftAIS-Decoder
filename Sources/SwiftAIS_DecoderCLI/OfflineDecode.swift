@@ -1,5 +1,5 @@
 //
-//  OfflineParse.swift
+//  OfflineDecode.swift
 //  SwiftAIS-Decoder
 //
 //  Created by Connor Gibbons on 10/12/26.
@@ -9,73 +9,23 @@ import Foundation
 import SwiftAIS_Decoder
 
 
-final class AISNMEALineReader {
-    // NMEA Line reader specifically for extracting AIS sentences from a file of newline separated sentences.
-    private let handle: FileHandle
-    private let chunkSize: Int
-    private var buffer: [UInt8] = []
-    private var lineStartPosition = 0
-    private var eofReached = false
-
-    init(url: URL, chunkSize: Int = 256 * 1024) throws {
-        self.handle = try FileHandle(forReadingFrom: url)
-        self.chunkSize = chunkSize
-    }
-
-    deinit { try? handle.close() }
-
-    func next() throws -> [UInt8]? {
-        while true {
-            if let newlinePosition = buffer[lineStartPosition...].firstIndex(of: UInt8(ascii: "\n")) {
-                let line = line(in: lineStartPosition..<newlinePosition)
-                lineStartPosition = newlinePosition + 1
-                if let line { return Array(line) }
-                continue // blank or non-AIS line: skip it
-            }
-            if eofReached {
-                guard lineStartPosition < buffer.count else { return nil }
-                let line = line(in: lineStartPosition..<buffer.count)
-                lineStartPosition = buffer.count
-                return line.map(Array.init) // nil here really is end of file
-            }
-            buffer.removeFirst(lineStartPosition)
-            lineStartPosition = 0
-            if let chunk = try handle.read(upToCount: chunkSize), !chunk.isEmpty {
-                buffer.append(contentsOf: chunk)
-            } else {
-                eofReached = true
-            }
-        }
-    }
-
-    private func line(in range: Range<Int>) -> ArraySlice<UInt8>? {
-        var end = range.upperBound
-        if end > range.lowerBound, buffer[end - 1] == UInt8(ascii: "\r") { end -= 1 }
-        let line = buffer[range.lowerBound..<end]
-        if let sentenceStart = line.firstIndex(where: {$0 == UInt8(ascii: "!")}) {
-            return line[sentenceStart...]
-        } else {
-            return nil // If it's some other sentence type that isn't "!"-prefixed, it will land here
-        }
-    }
-    
-}
-
-func offlineDecode(fileURL: URL) throws {
+func offlineDecode(fileURL: URL, args: Arguments) throws {
     var errors: [(Error, String?)] = [] // Error & a debug string tuple
     var messages: [AISMessage] = []
     
     func logError(err: Error, debug: String?) {
         errors.append((err,debug))
     }
-    
+    var decodeTime: Double = 0.0
     let reader = try AISNMEALineReader(url: fileURL)
     let decoder = AISDecoder()
     while let sentence = try reader.next() {
         let sentenceAsString = String(decoding: sentence, as: UTF8.self) // input is ASCII but this works
         do {
+            let start = DispatchTime.now()
             let aisSentence = try AISNMEA0183Sentence(raw: sentenceAsString)
             if let aisMessage = try decoder.inputSentence(sentence: aisSentence) { messages.append(aisMessage) }
+            decodeTime += (Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)
         }
         catch {
             logError(err: error, debug: "Offending sentence: \(sentenceAsString)")
@@ -83,10 +33,10 @@ func offlineDecode(fileURL: URL) throws {
         }
     }
     
-    printStats(errors: errors, messages: messages)
+    printStats(errors: errors, messages: messages, decodeTime: decodeTime)
 }
 
-private func printStats(errors: [(Error, String?)], messages: [AISMessage]) {
+private func printStats(errors: [(Error, String?)], messages: [AISMessage], decodeTime: Double) {
     var messageTypeCounts: [AISMessageType: Int] = [:]
     for message in messages {
         messageTypeCounts[message.messageType, default: 0] += 1
@@ -99,6 +49,8 @@ private func printStats(errors: [(Error, String?)], messages: [AISMessage]) {
 
     // Messages
     print("Messages decoded: \(messages.count)")
+    print("Time spent decoding: \(decodeTime) ms")
+    print("Decoding time per message: \(decodeTime / Double(messages.count)) ms")
     let sortedTypes = messageTypeCounts.sorted { "\($0.key)" < "\($1.key)" }
     let labelWidth = sortedTypes.map { "\($0.key)".count }.max() ?? 0
     let countWidth = String(sortedTypes.map(\.value).max() ?? 0).count

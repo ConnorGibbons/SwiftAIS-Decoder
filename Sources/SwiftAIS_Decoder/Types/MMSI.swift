@@ -4,6 +4,7 @@
 //
 //  Created by Connor Gibbons on 7/8/26.
 //
+import Foundation
 
 public enum MMSIStationType {
     case shipStation
@@ -81,8 +82,23 @@ public struct MMSI {
     }
     
     private static func getMMSIString(value: UInt32) -> String {
-        return String(format: "%09u", value)
+        var mmsiString = ""
+        
+        func tenPow(exp: Int) -> UInt32 {
+            var val: UInt32 = 1
+            for _ in 0..<exp {
+                val = val*10
+            }
+            return val
+        }
+       
+        for i in 1..<10 {
+            mmsiString += String((value / tenPow(exp: 9-i)) % 10)
+        }
+        
+        return mmsiString
     }
+    
     
     private static func getStationTypeAndMID(mmsi: String) -> (MMSIStationType, UInt16?) {
         guard mmsi.count == 9, mmsi.allSatisfy(\.isNumber) else { return (.invalid,nil) }

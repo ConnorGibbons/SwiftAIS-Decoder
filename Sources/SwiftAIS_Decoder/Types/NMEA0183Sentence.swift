@@ -83,6 +83,7 @@ public enum AISChannel: String {
     case _3 = "3" // Alias for C
     case D = "D" // AIS D: VHF Channel 76, 156.825MHz   "AIS 4", used for long-range
     case _4 = "4" // Alias for D
+    case missing = "" // Technically valid & does show up in test data
 }
 
 
@@ -141,10 +142,11 @@ public class AISNMEA0183Sentence: NMEA0183Sentence {
     private static func getPayloadBits(payload: String, fillBits: UInt8) throws(NMEASentenceError) -> BitBuffer {
         var bits = BitBuffer()
         var i = 0
+        let len = payload.count
         for char in payload {
             i += 1
             var trimCount = 0
-            if(i == payload.count) { trimCount = Int(fillBits) }
+            if(i == len) { trimCount = Int(fillBits) }
             guard var byte = char.asciiValue,
                   (48...87).contains(byte) || (96...119).contains(byte) else { throw .invalidPayloadCharacter(char) } // 88-95 unused, invalid chars
             byte = byte - 48; if byte > 40 { byte = byte - 8 }
