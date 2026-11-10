@@ -72,7 +72,7 @@ let messageTypeToParser: [AISMessageType: @Sendable (BitBuffer) throws -> AISMes
     .singleSlotAidToNavigationReport: SingleSlotAidToNavigationReport.init
 ]
 
-public class AISDecoder {
+public class AISDecoder: @unchecked Sendable {
     private var state: AISDecoderState
     
     public init() {

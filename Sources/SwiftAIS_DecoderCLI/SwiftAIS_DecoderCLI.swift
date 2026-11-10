@@ -11,23 +11,22 @@ import Networking
 
 enum SwiftAIS_DecoderCLIErrors: Error {
     case noInputProvided
-    case failedToCreateInputServer
+    case failedToCreateAnyInputs
 }
 
 class ProgramState: @unchecked Sendable {
     var decodedMessages: [AISMessage] = []
-    var decoders: [String: (StreamingAISNMEALineReader,AISDecoder)] = [:] // Maps TCPConnection.connectionName to a decoder and a line reader.
     var outputConnections: [TCPConnection] = []
-    var inputServer: TCPServer? = nil
+    var inputConnections: [TCPConnection] = []
     let args: Arguments
     
     init(args: Arguments) throws {
         self.args = args
+        guard !args.inputs.isEmpty else { throw SwiftAIS_DecoderCLIErrors.noInputProvided }
         if(!args.outputs.isEmpty) {
             createOutputConnections()
         }
-        guard let inputPort = args.inputPort else { throw SwiftAIS_DecoderCLIErrors.noInputProvided }
-        try createInputServer()
+        try createInputConnections()
     }
     
     private func createOutputConnections() {
@@ -42,23 +41,26 @@ class ProgramState: @unchecked Sendable {
         }
     }
     
-    private func createInputServer() throws {
-        guard let port = args.inputPort else { throw SwiftAIS_DecoderCLIErrors.failedToCreateInputServer }
-        let inputServer = try TCPServer(port: port, maxConnections: 10, actionOnNewConnection: acceptNewInputConnection, actionOnReceive: acceptInput)
-    }
-    
-    private func acceptNewInputConnection(newInputConnection: TCPConnection) {
-        let newDecoder = AISDecoder()
-        let newLineReader = StreamingAISNMEALineReader()
-        decoders.updateValue((newLineReader,newDecoder), forKey: newInputConnection.connectionName)
-    }
-    
-    private func acceptInput(connectionName: String, inputData: Data) {
-        guard let (lineReader, decoder) = decoders[connectionName] else {
-            print("Received input from unknown connection: \(connectionName)")
-            return
+    private func createInputConnections() throws {
+        for input in args.inputs {
+            do {
+                let newDecoder = AISDecoder()
+                let newLineReader = StreamingAISNMEALineReader()
+                let newConnection = try TCPConnection(onRead: {
+                    self.acceptInput(decoder: newDecoder, lineReader: newLineReader, inputData: $0)
+                }, host: input.ip, port: Int(input.port))
+                self.inputConnections.append(newConnection)
+            }
+            catch {
+                print("Failed to create input connection for IP: \(input.ip), Port: \(input.port)")
+            }
         }
-        
+        if(self.inputConnections.isEmpty) {
+            throw SwiftAIS_DecoderCLIErrors.failedToCreateAnyInputs
+        }
+    }
+    
+    private func acceptInput(decoder: AISDecoder, lineReader: StreamingAISNMEALineReader, inputData: Data) {
         let sentences = lineReader.insert(chars: [UInt8](inputData))
         for sentence in sentences {
             do {
@@ -76,8 +78,8 @@ class ProgramState: @unchecked Sendable {
     private func emitAISMessage(message: AISMessage) {
         let desc = message.description()
         
-        if(args.logNMEASentences) {
-            print(desc)
+        if(args.logDecodedMessages) {
+            print(desc + "\n")
         }
         
         for connection in outputConnections {
@@ -94,9 +96,9 @@ class ProgramState: @unchecked Sendable {
 
 struct Arguments {
     var filePath: String? //
-    var logNMEASentences: Bool
+    var logDecodedMessages: Bool
     var outputs: [Endpoint]
-    var inputPort: UInt16?
+    var inputs: [Endpoint]
 }
 
 @main
@@ -106,13 +108,13 @@ struct SwiftAIS_DecoderCLI: ParsableCommand {
     var filePath: String?
     
     @Option(name: .short, help: "Format: IP:Port, provides a server to output parsed JSON data to.")
-    var outputs: [String]
+    var outputs: [String] = []
     
-    @Option(name: .short, help: "Value to use as a port for the NMEA input server.")
-    var inputPort: UInt16?
+    @Option(name: .short, help: "Format: IP:Port, provides a server to connect to for NMEA input.")
+    var inputs: [String] = []
     
-    @Flag(name: .short, help: "Print valid NMEA Sentence to stdout")
-    var nmeaSentencesToConsole: Bool = false
+    @Flag(name: .customShort("n"), help: "Print decoded messages to stdout")
+    var logDecodedMessages: Bool = false
     
     
     
@@ -129,16 +131,27 @@ struct SwiftAIS_DecoderCLI: ParsableCommand {
             }
             return accCpy
         })
+        let inputEndpoints: [Endpoint] = inputs.reduce([], { acc, endpointString in
+            var accCpy = acc
+            do {
+                let endpoint = try Endpoint(fromString: endpointString)
+                accCpy.append(endpoint)
+            }
+            catch {
+               print("Invalid endpoint: \(endpointString), \(error)")
+            }
+            return accCpy
+        })
         
-        let args = Arguments(filePath: filePath, logNMEASentences: nmeaSentencesToConsole, outputs: outputEndpoints, inputPort: inputPort)
+        let args = Arguments(filePath: filePath, logDecodedMessages: logDecodedMessages, outputs: outputEndpoints, inputs: inputEndpoints )
         if let path = filePath { // Offline decode path
             let fileURL = URL(string: path)
             try offlineDecode(fileURL: fileURL!, args: args)
             return
         }
         let state = try ProgramState(args: args)
-        
-        
+        let sem = DispatchSemaphore(value: 0)
+        sem.wait()
     }
     
     
